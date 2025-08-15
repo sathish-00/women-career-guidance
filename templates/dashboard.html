@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Welcome, {{ user.username | default('Guest') }}!</h1>
+        <nav>
+            <a href="{{ url_for('home') }}" class="button">Home</a>
+            <a href="{{ url_for('logout') }}" class="button">Logout</a>
+        </nav>
+    </header>
+
+    <div class="dashboard-layout">
+
+        <aside class="profile-summary">
+            <h3>Your Profile</h3>
+            {% if user %}
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Age:</strong> {{ user.age }}</p>
+                <p><strong>Skills:</strong> {{ user.skills | default('None specified') }}</p>
+                
+                {# Profile Picture Display - Clickable #}
+                <div class="profile-pic-wrapper">
+                    {% if user.profile_pic %}
+                        <a href="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" target="_blank" title="View Profile Picture">
+                            <img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" alt="Profile Picture" class="profile-pic">
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('static', filename='default_profile.png') }}" target="_blank" title="View Default Profile Picture">
+                            <img src="{{ url_for('static', filename='default_profile.png') }}" alt="Default Profile Picture" class="profile-pic default">
+                        </a>
+                    {% endif %}
+                </div>
+                
+               
+                {# NEW: Edit Profile Button #}
+                <a href="/edit_profile" class="button edit-button">Edit Profile</a> 
+            {% else %}
+                <p>Profile information not available.</p>
+            {% endif %}
+        </aside>
+
+        <main class="main-content">
+            <section class="career-suggestions">
+                <h3>Career Suggestions Based on Your Skills</h3>
+                {% if jobs %}
+                    <ul class="job-list">
+                    {% for job in jobs %}
+                        <li class="job-item">
+                            <h4>{{ job.name }}</h4>
+                            <p>{{ job.description }}</p>
+                            {% if job.learn_more %}
+                                <a href="{{ job.learn_more }}" target="_blank" class="learn-more-link">Learn More</a>
+                            {% endif %}
+                            {% if job.skills_required %}
+                                <p class="skills-required"><strong>Skills:</strong> {{ job.skills_required }}</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No specific career options found matching your skills. Try adding more diverse skills to your profile!</p>
+                    <p>You can also explore general <a href="{{ url_for('career_options') }}">Career Options</a> or <a href="{{ url_for('career_videos') }}">Career Videos</a>.</p>
+                {% endif %}
+            </section>
+
+            <section class="quick-links">
+                <h3>Quick Links</h3>
+                <div class="links-grid">
+                    <a href="{{ url_for('career_options') }}" class="quick-link-card">
+                        <h4>Explore All Careers</h4>
+                        <p>Browse a comprehensive list of career opportunities.</p>
+                    </a>
+                    <a href="{{ url_for('career_videos') }}" class="quick-link-card">
+                        <h4>Watch Career Videos</h4>
+                        <p>Gain insights from educational videos.</p>
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="quick-link-card">
+                        <h4>Contact Us</h4>
+                        <p>Get in touch for personalized guidance.</p>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>

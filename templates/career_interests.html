@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Options</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* CSS for the blinking microphone icon */
+        .blinking {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Career Options</h1>
+
+    {% if available_skills %}
+    <div class="skills-form-container">
+        <h2>Select Your Skills</h2>
+        <form method="POST" action="{{ url_for('career_interests') }}">
+            {% for skill in available_skills %}
+                <label>
+                    <input type="checkbox" name="skills" value="{{ skill }}"
+                        {% if skill in current_skills %}checked{% endif %}>
+                    {{ skill }}
+                </label><br>
+            {% endfor %}
+            <button type="submit">Save Skills</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input type="text" id="career-search" placeholder="Type or speak to search...">
+            <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
+            <button id="search-btn" onclick="searchCareer()">🔍</button>
+        </div>
+    </div>
+
+    <div class="career-container">
+        <div class="career-grid">
+            {% if jobs %}
+                {% for job in jobs %}
+                <div class="career-card">
+                    <h2>{{ job.name }}</h2>  
+                    <p><strong>Description:</strong> {{ job.description }}</p>
+                    <p><strong>Skills Required:</strong> {{ job.skills_required }}</p>
+                    <a href="{{ job.learn_more }}" class="career-link" target="_blank">Learn More</a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No career options found. Try searching for something else.</p>
+            {% endif %}
+        </div>
+        <p class="back-to-home"><a href="/">Back to Home</a></p>
+    </div>
+
+    <script>
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const voiceIcon = document.getElementById('voice-icon');
+        const searchInput = document.getElementById('career-search');
+        
+        function searchCareer() {
+            const query = searchInput.value.trim();
+            if (query) {
+                window.location.href = "{{ url_for('career_options') }}?query=" + encodeURIComponent(query);
+            }
+        }
+
+        function startVoiceSearch() {
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.start();
+                voiceIcon.classList.add('blinking');
+
+                recognition.onresult = function(event) {
+                    const speechResult = event.results[0][0].transcript;
+                    searchInput.value = speechResult;
+                    searchCareer();
+                };
+
+                recognition.onend = function() {
+                    voiceIcon.classList.remove('blinking');
+                };
+
+                recognition.onerror = function(event) {
+                    voiceIcon.classList.remove('blinking');
+                    console.error('Speech recognition error:', event.error);
+                };
+            } else {
+                alert('Web Speech API is not supported in this browser. Please try Chrome or Edge.');
+            }
+        }
+    </script>
+</body>
+</html>
