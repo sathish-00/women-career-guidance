@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Career Videos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='career_videos.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+ 
+<script src="{{ url_for('static', filename='search.js') }}"></script>
+
+</head>
+<div class="search-container">
+    <input type="text" id="searchBar" placeholder="Search career videos...">
+    <i id="searchIcon" class="fas fa-search" onclick="searchVideos()"></i> <!-- Search Icon -->
+</div>
+
+
+
+<div class="search-container">
+    <div class="search-box">
+        <i class="fas fa-search"></i> <!-- Search Icon -->
+        <input type="text" id="searchBar" placeholder="Search career videos...">
+        <i id="micIcon" class="fas fa-microphone" onclick="startVoiceSearch()"></i> <!-- Voice Icon -->
+    </div>
+</div>
+
+<!-- Speech Box for Showing Spoken Words -->
+<div id="speechBox" class="speech-box hidden"></div> 
+
+
+
+
+
+
+
+    <script>
+    function searchVideos() {
+        var query = $("#searchBar").val();
+        if (query.length > 2) { // Start searching after typing 3 characters
+            $.get("/search_videos", { query: query }, function(data) {
+                $("#suggestions").html(data.suggestions);
+                $("#videoResults").html(data.results);
+            });
+        }
+    }
+    </script>
+    <div class="career-container">
+        <h1>Career Guidance Videos</h1>
+        <p>Watch insightful videos to learn about various career paths.</p>
+
+        <div class="video-list">
+            <div class="video-item">
+                <iframe width="100%" height="250" src="https://www.youtube.com/embed/QYjCs0HuCmM" frameborder="0" allowfullscreen></iframe>
+                <p><strong>Nursing Career Path</strong></p>
+            </div>
+
+            <div class="video-item">
+                <iframe width="100%" height="250" src="https://www.youtube.com/embed/HNg9kd2yHog" frameborder="0" allowfullscreen></iframe>
+                <p><strong>Sewing & Tailoring Career Guidance</strong></p>
+            </div>
+
+            <div class="video-item">
+                <iframe width="100%" height="250" src="https://www.youtube.com/embed/6Wv-AXtEnfM" frameborder="0" allowfullscreen></iframe>
+                <p><strong>Farming Techniques for Beginners</strong></p>
+            </div>
+        </div>
+
+        <p><a href="/">Back to Home</a></p>
+    </div>
+</body>
+</html>

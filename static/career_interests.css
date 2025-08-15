@@ -1,0 +1,235 @@
+/* General container for the page */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+}
+
+/* Renamed from .interests-container to .profile-container to match your HTML */
+.profile-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 650px; /* Adjusted max-width for overall profile form */
+    text-align: center;
+    box-sizing: border-box;
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align labels/inputs to the left */
+    gap: 20px; /* Space between form sections/groups */
+}
+
+/* Styling for generic labels (Qualification, Jobs Interested In) */
+form > label {
+    display: block; /* Ensure label takes its own line */
+    font-weight: 600;
+    color: #555;
+    font-size: 1em;
+    margin-bottom: -10px; /* Pull label closer to the input it belongs to */
+    margin-top: 10px; /* Space from previous element */
+}
+
+/* --- Skills Checkbox Section --- */
+.skills-checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Responsive grid for skills */
+    gap: 12px; /* Space between individual checkboxes */
+    width: 100%; /* Ensure it spans full width of form */
+    margin-top: 10px; /* Space below the "Skills:" label */
+    margin-bottom: 10px; /* Space before next form element */
+}
+
+.skill-checkbox-label {
+    display: flex; /* Use flexbox to align checkbox and text */
+    align-items: center; /* Vertically center them */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px 15px; /* Padding inside each checkbox card */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    font-size: 0.95em;
+    color: #343a40;
+    font-weight: 500;
+}
+
+.skill-checkbox-label:hover {
+    border-color: #007bff;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+    background-color: #e9f5ff; /* Light blue hover */
+}
+
+/* Hide default checkbox and style custom one */
+.skill-checkbox-label input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px; /* Size of custom checkbox */
+    height: 20px;
+    border: 2px solid #6c757d; /* Gray border */
+    border-radius: 4px;
+    margin-right: 10px; /* Space between checkbox and text */
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    flex-shrink: 0; /* Prevent checkbox from shrinking */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Custom checkmark for selected checkboxes */
+.skill-checkbox-label input[type="checkbox"]:checked {
+    background-color: #28a745; /* Green when checked */
+    border-color: #28a745;
+}
+
+.skill-checkbox-label input[type="checkbox"]:checked::after {
+    content: '✓'; /* Unicode checkmark */
+    font-size: 15px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+}
+
+/* Style for the text when the checkbox is checked */
+.skill-checkbox-label input[type="checkbox"]:checked + .skill-name { /* If you wrap text in span.skill-name */
+    color: #007bff; /* Blue text when selected */
+    font-weight: 600;
+}
+/* If the text is directly inside the label like in your current HTML, use this: */
+.skill-checkbox-label input[type="checkbox"]:checked ~ span { /* Adjust if text is within a span */
+    color: #007bff;
+    font-weight: 600;
+}
+/* If text is directly inside label, the entire label will change text color */
+.skill-checkbox-label input[type="checkbox"]:checked ~ span {
+    color: #007bff; /* Blue text when selected */
+    font-weight: 600;
+}
+
+
+/* --- General Input Field Styling (Qualification, Jobs Interested In) --- */
+select,
+input[type="text"] {
+    width: calc(100% - 24px); /* Full width minus padding */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+    margin-top: 5px; /* Space below its label */
+}
+
+select:focus,
+input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Specific styling for the select dropdown arrow */
+select {
+    -webkit-appearance: none; /* Remove default arrow */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+    padding-right: 30px; /* Make space for the custom arrow */
+}
+
+
+/* --- Buttons --- */
+button[type="submit"] {
+    background-color: #28a745; /* Green for Save Profile */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 30px; /* Space above save button */
+    width: auto; /* Allow button to size itself */
+    align-self: center; /* Center the button within the flex form */
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.home-button-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px; /* Space above back to home button */
+}
+
+.home-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #6c757d; /* Grey */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 30px;
+        margin: 15px;
+    }
+    .skills-checkbox-group {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Smaller cards on tablets */
+    }
+    h2 {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-container {
+        padding: 25px;
+        margin: 10px;
+    }
+    .skills-checkbox-group {
+        grid-template-columns: 1fr; /* Stack cards on very small screens */
+    }
+    h2 {
+        font-size: 1.8em;
+    }
+    .skill-checkbox-label {
+        padding: 12px 15px;
+    }
+}

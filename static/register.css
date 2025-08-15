@@ -1,0 +1,216 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+}
+
+.register-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-sizing: border-box; /* Include padding/border in element's total width/height */
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-weight: 600;
+}
+
+/* Flash Messages */
+.flash-message {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fff;
+    text-align: left; /* Align text within flash message */
+}
+
+.flash-message.success { background-color: #4CAF50; }
+.flash-message.error { background-color: #f44336; }
+.flash-message.info { background-color: #2196F3; }
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    /* We will control spacing using margins on .form-group instead of form gap */
+}
+
+/* New: Styling for the form-group wrapper */
+.form-group {
+    margin-bottom: 20px; /* Space between each label-input block */
+    text-align: left; /* Ensure label starts at left */
+}
+
+.form-group:last-of-type {
+    margin-bottom: 0; /* No margin after the last form group before the button */
+}
+
+
+label {
+    display: block; /* Make label take its own line */
+    font-weight: 600;
+    margin-bottom: 8px; /* Space between label and its input */
+    color: #555;
+    font-size: 0.95em;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="file"] {
+    width: calc(100% - 24px); /* Adjust for 12px padding on each side */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box; /* Crucial for width calculation */
+    -webkit-appearance: none; /* For consistent file input styling */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Password Input Specific Styling */
+.password-input-wrapper {
+    position: relative;
+    display: flex; /* To align input and toggle icon */
+    align-items: center;
+    width: 100%;
+}
+
+.password-input-wrapper input {
+    flex-grow: 1; /* Allow input to take available space */
+    padding-right: 40px; /* Make space for the toggle icon */
+    width: auto; /* Override calc(100%-24px) for flex item */
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #888;
+    user-select: none;
+}
+/* You'll need to add an icon or text here in JS or via ::before/:after pseudo-elements */
+/* For example, using FontAwesome or simple text like "👁️" */
+.password-toggle::before {
+    content: '👁️'; /* Example: eye icon, replace with a proper icon font/svg */
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+/* Error Messages */
+.error-message {
+    color: #dc3545; /* Red */
+    font-size: 0.85em;
+    margin-top: 5px; /* Space above error message */
+    display: block; /* Ensure it takes its own line */
+    text-align: left;
+}
+
+/* Password Strength Meter */
+p { /* Styling for the password strength text */
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.strength-meter {
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    height: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #ddd; /* Default */
+    transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.strength-bar.weak { background-color: #f44336; }
+.strength-bar.medium { background-color: #ffc107; }
+.strength-bar.strong { background-color: #4CAF50; }
+
+/* Buttons */
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px; /* Space above the register button */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+.home-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #6c757d; /* Gray */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .register-container {
+        margin: 20px;
+        padding: 25px;
+    }
+
+    h2 {
+        font-size: 1.8em;
+    }
+
+    button[type="submit"] {
+        font-size: 1em;
+        padding: 10px 15px;
+    }
+}

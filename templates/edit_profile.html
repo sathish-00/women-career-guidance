@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}"> {# Re-using register.css for basic form styling #}
+
+    
+    {# And if you created a separate edit_profile.css file, check this one too: #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit_profile.css') }}">
+    
+</head>
+    <style>
+        /* Additional styling specific to edit_profile page, or override register.css */
+        .edit-profile-container {
+            max-width: 600px; /* Slightly wider to accommodate more content */
+            margin: 50px auto; /* Center the container */
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            background-color: #fff;
+        }
+
+        .current-profile-pic-preview {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px dashed #ddd; /* Visual cue for the drop area */
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .current-profile-pic-preview img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 50%; /* Makes the image circular */
+            object-fit: cover;
+            border: 3px solid #007bff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .current-profile-pic-preview p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 0;
+        }
+
+        /* Style for the multi-select skills dropdown */
+        select[multiple] {
+            min-height: 150px; /* Make it taller to show more options */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        select[multiple] option {
+            padding: 8px;
+        }
+
+        select[multiple] option:checked {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .form-hint {
+            font-size: 0.8em;
+            color: #777;
+            margin-top: -10px; /* Adjust spacing */
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-container edit-profile-container">
+        <h2>Edit Your Profile</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="flash-message {{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('edit_profile') }}" enctype="multipart/form-data">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" readonly> {# Username is usually not editable #}
+
+           <h4>
+            <small class="form-hint">Username cannot be changed.</small>
+           </h4>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" value="{{ user.age }}" required min="0">
+
+            <label for="skills">Skills:</label>
+            <select id="skills" name="skills" multiple>
+                {% for skill in available_skills %}
+                    <option value="{{ skill }}" {% if skill in current_skills %}selected{% endif %}>
+                        {{ skill }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <small class="form-hint"></small>
+
+
+            <label>Current Profile Picture:</label>
+            <div class="current-profile-pic-preview">
+                {% if user.profile_pic %}
+                    <img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" alt="Current Profile Picture">
+                    <p>Filename: {{ user.profile_pic }}</p>
+                {% else %}
+                    <img src="{{ url_for('static', filename='default_profile.png') }}" alt="Default Profile Picture">
+                    <p>No profile picture uploaded yet.</p>
+                {% endif %}
+            </div>
+
+            <label for="profile_pic">Upload New Profile Picture (Optional):</label>
+            <input type="file" id="profile_pic" name="profile_pic" accept="image/*, application/pdf">
+
+<h4>
+            <small class="form-hint">Accepted formats: images (PNG, JPG, JPEG, GIF) or PDF.</small>
+</h4>
+
+            <button type="submit">Save Changes</button>
+        </form>
+        <div>
+            <a href="{{ url_for('dashboard') }}" class="back-button">Back to Dashboard</a>
+        </div>
+    </div>
+
+</body>
+</html>
