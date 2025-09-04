@@ -11,9 +11,11 @@
     <h1>Career Options</h1>
 
     <div class="search-container">
-        <input type="text" id="career-search" placeholder="Type or speak to search...">
-        <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
-        <button id="search-btn" onclick="searchCareer()">🔍</button>
+        <div class="search-input-wrapper">
+            <input type="text" id="career-search" placeholder="Type or speak to search...">
+            <i class="fa-solid fa-magnifying-glass" id="search-icon" onclick="searchCareer()"></i>
+            <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
+        </div>
     </div>
 
     <div class="career-container">
@@ -21,10 +23,21 @@
             {% if jobs %}
                 {% for job in jobs %}
                 <div class="career-card">
-                    <h2>{{ job.name }}</h2>  
+                    <h2>{{ job.name }}</h2>
                     <p><strong>Description:</strong> {{ job.description }}</p>
-                    <p><strong>Skills Required:</strong> {{ job.skills_required }}</p>
-                    <a href="{{ job.learn_more }}" class="career-link" target="_blank">Learn More</a>
+                    <p class="skills-list">
+                        <strong>Skills Required:</strong>
+                        {% for skill in job.skills_required.split(',') %}
+                            {% if skill.strip() %}
+                                <span class="skill-item">
+                                    {{ skill.strip() }}
+                                    {% if skill.strip() in available_skills %}
+                                        <a href="{{ available_skills[skill.strip()].reference }}" target="_blank" class="skill-link">(Learn More)</a>
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
                 </div>
                 {% endfor %}
             {% else %}

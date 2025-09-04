@@ -1,0 +1,175 @@
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #8B008B; /* Changed the title color to a thick violet */
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+/* Updated Search Bar and Voice Assistant Styling */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    width: 400px;
+    max-width: 90%;
+}
+
+#career-search {
+    width: 100%;
+    height: 40px;
+    font-size: 18px;
+    padding: 8px 80px 8px 15px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#career-search:focus {
+    border-color: #888;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+#search-icon, #voice-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+#search-icon {
+    right: -35px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+#search-icon:hover {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+#voice-icon {
+    right: 5px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+#voice-icon:hover {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+/* Career Cards Grid */
+.career-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.career-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.career-card {
+    width: 300px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.career-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.career-card h2 {
+    color: #007bff;
+    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.career-card p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.career-card strong {
+    font-weight: bold;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+.skill-item {
+    background-color: #e6f2ff;
+    border-radius: 5px;
+    padding: 3px 8px;
+    margin: 5px 5px 0 0;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.skill-link {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: normal;
+    font-style: italic;
+    margin-left: 5px;
+}
+
+.skill-link:hover {
+    text-decoration: underline;
+}
+
+/* Back-to-home link styling */
+.back-to-home {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-to-home a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.back-to-home a:hover {
+    color: #495057;
+    text-decoration: underline;
+}
+
+/* Blinking animation for voice icon */
+@keyframes blink {
+    0% { background-color: transparent; }
+    50% { background-color: #fffde7; }
+    100% { background-color: transparent; }
+}
+
+.blinking {
+    animation: blink 1s infinite;
+}

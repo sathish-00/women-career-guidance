@@ -1,9 +1,8 @@
 import sqlite3
 import os
-from flask import Flask, request, redirect, session, url_for, render_template, g, jsonify, flash
+from flask import Flask, request, redirect, session, url_for, render_template, g, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import base64
 
 # --- Configuration for file uploads and database ---
 UPLOAD_FOLDER = 'static/profile_pics'
@@ -49,7 +48,9 @@ def init_db():
             name TEXT NOT NULL,
             description TEXT NOT NULL,
             learn_more TEXT NOT NULL,
-            skills_required TEXT
+            skills_required TEXT,
+            application_form_url TEXT,
+            is_vacant INTEGER
         )''')
         db.execute('''CREATE TABLE IF NOT EXISTS contact_messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,28 +65,171 @@ def init_db():
         if 'skills_required' not in columns:
             print("Adding 'skills_required' column to career_options table...")
             db.execute("ALTER TABLE career_options ADD COLUMN skills_required TEXT;")
+        if 'application_form_url' not in columns:
+            print("Adding 'application_form_url' column to career_options table...")
+            db.execute("ALTER TABLE career_options ADD COLUMN application_form_url TEXT;")
+        if 'is_vacant' not in columns:
+            print("Adding 'is_vacant' column to career_options table...")
+            db.execute("ALTER TABLE career_options ADD COLUMN is_vacant INTEGER;")
         db.commit()
 
 # --- Global Data ---
-available_skills = [
-    "Python Programming", "Web Development (Frontend)", "Web Development (Backend)",
-    "Database Management (SQL)", "Machine Learning", "Data Analysis",
-    "Cloud Computing (AWS/Azure/GCP)", "Network Administration", "Cybersecurity",
-    "Project Management", "Communication", "Problem Solving", "Teamwork",
-    "Graphic Design", "Content Writing", "Digital Marketing", "Sales",
-    "Customer Service", "Financial Analysis", "Nursing", "Teaching",
-    "Agriculture", "Tailoring", "Poultry Farming"
-]
+# Corrected syntax and updated URLs for the CAREER_VIDEOS dictionary.
+CAREER_VIDEOS = {
+    'nursing': {
+        'title': 'Nursing Career Path',
+        'url': 'https://www.youtube.com/embed/QYjCs0HuCmM',
+        'skills': ['nursing', 'healthcare', 'patient care']
+    },
+    'sewing': {
+        'title': 'Sewing & Tailoring Career Guidance',
+        'url': 'https://www.youtube.com/embed/HNg9kd2yHog',
+        'skills': ['sewing', 'tailoring', 'fashion design']
+    },
+    'farming': {
+        'title': 'Farming Techniques for Beginners',
+        'url': 'https://www.youtube.com/embed/6Wv-AXtEnfM',
+        'skills': ['farming', 'agriculture', 'gardening']
+    },
+    'software_engineer': {
+        'title': 'A Day in the Life of a Software Engineer',
+        'url': 'https://www.youtube.com/embed/VBDrUSGXjIY',
+        'skills': ['software engineering', 'python', 'javascript', 'coding', 'programming']
+    },
+    'digital_marketing': {
+        'title': 'The World of Digital Marketing',
+        'url': 'https://www.youtube.com/embed/anAjYN8ilgw',
+        'skills': ['digital marketing', 'seo', 'social media', 'advertising']
+    },
+    'graphic_design': {
+        'title': 'What is Graphic Design?',
+        'url': 'https://www.youtube.com/embed/ss6T3h4pzIQ',
+        'skills': ['graphic design', 'photoshop', 'illustrator', 'creativity']
+    },
+    'machine_learning': {
+        'title': 'Introduction to Machine Learning',
+        'url': 'https://www.youtube.com/embed/bk12t0Xz5FM',
+        'skills': ['machine learning', 'data analysis', 'programming', 'python']
+    }
+}
+available_skills = {
+    # Technology and Engineering
+    "Python Programming": {
+        "description": "The use of the Python language for developing software, web applications, and data analysis.",
+        "reference": "https://www.python.org/doc/"
+    },
+    "Web Development (Frontend)": {
+        "description": "Creating the user-facing part of a website using HTML, CSS, and JavaScript.",
+        "reference": "https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories"
+    },
+    "Web Development (Backend)": {
+        "description": "Building the server-side logic and database interactions of web applications.",
+        "reference": "https://www.geeksforgeeks.org/backend-developer-introduction-skills-and-career-path/"
+    },
+    "Database Management (SQL)": {
+        "description": "Managing data in relational databases using Structured Query Language (SQL).",
+        "reference": "https://www.w3schools.com/sql/"
+    },
+    "Machine Learning": {
+        "description": "Using algorithms and statistical models to enable computer systems to learn from data.",
+        "reference": "https://www.ibm.com/topics/machine-learning"
+    },
+    "Data Analysis": {
+        "description": "Inspecting, cleaning, transforming, and modeling data to discover useful information and support decision-making.",
+        "reference": "https://www.coursera.org/articles/what-is-data-analytics"
+    },
+    "Cloud Computing (AWS/Azure/GCP)": {
+        "description": "Delivering computing services—including servers, storage, databases, networking, and software—over the Internet.",
+        "reference": "https://aws.amazon.com/what-is-cloud-computing/"
+    },
+    "Cybersecurity": {
+        "description": "Protecting computer systems and networks from digital attacks.",
+        "reference": "https://www.cisa.gov/cybersecurity"
+    },
+    # Business and Management
+    "Project Management": {
+        "description": "The application of processes, methods, skills, knowledge and experience to achieve specific project objectives.",
+        "reference": "https://www.pmi.org/about/learn-about-pmi/what-is-project-management"
+    },
+    "Financial Analysis": {
+        "description": "Evaluating businesses, projects, and budgets to determine their performance and suitability for investment.",
+        "reference": "https://www.investopedia.com/terms/f/financial-analysis.asp"
+    },
+    "Sales": {
+        "description": "The activity of selling products or services, including prospecting, presenting, and closing deals.",
+        "reference": "https://blog.hubspot.com/sales/what-is-sales"
+    },
+    "Digital Marketing": {
+        "description": "Promoting products or services using digital technologies, primarily on the internet.",
+        "reference": "https://neilpatel.com/what-is-digital-marketing/"
+    },
+    # Creative and Communication
+    "Graphic Design": {
+        "description": "Creating visual content to communicate messages using typography, imagery, and color.",
+        "reference": "https://www.aiga.org/design/what-is-design"
+    },
+    "Content Writing": {
+        "description": "The process of planning, writing, and editing web content, typically for digital marketing purposes.",
+        "reference": "https://www.copyblogger.com/what-is-content-writing/"
+    },
+    "Communication": {
+        "description": "The process of conveying information, ideas, and feelings to others effectively.",
+        "reference": "https://hbr.org/2012/03/how-to-be-a-better-communicato"
+    },
+    # Healthcare and Social Services
+    "Nursing": {
+        "description": "Providing care for individuals, families, and communities to help them attain, maintain, or recover optimal health.",
+        "reference": "https://www.nursingworld.org/careers-and-images-in-nursing/what-do-nurses-do/"
+    },
+    "Teaching": {
+        "description": "The process of educating students, which includes preparing lessons, conducting classes, and assessing progress.",
+        "reference": "https://www.teachforamerica.org/about-us/what-we-do/what-is-a-teacher"
+    },
+    "Customer Service": {
+        "description": "Providing support and assistance to customers before, during, and after a purchase.",
+        "reference": "https://www.zendesk.com/blog/what-is-customer-service/"
+    },
+    # Trades and Agriculture
+    "Agriculture": {
+        "description": "The science and practice of farming, including cultivating plants and raising livestock for food and products.",
+        "reference": "https://www.nationalgeographic.org/encyclopedia/farmer/"
+    },
+    "Tailoring": {
+        "description": "The craft of designing, creating, and altering garments to fit an individual's specific body measurements.",
+        "reference": "https://www.fashiondesigncollege.com/blog/what-is-a-tailor"
+    },
+    "Poultry Farming": {
+        "description": "The practice of raising chickens, ducks, or turkeys and other domestic birds for meat and eggs.",
+        "reference": "https://www.nal.usda.gov/farms-and-agriculture/poultry-farming-information-and-resources"
+    },
+    "Network Administration": {
+        "description": "Maintaining computer hardware and software that make up a computer network, including deployment, maintenance, and monitoring.",
+        "reference": "https://www.comptia.org/certifications/network"
+    },
+    # Foundational Skills
+    "Problem Solving": {
+        "description": "Identifying and defining a problem, generating potential solutions, and choosing and implementing the best option.",
+        "reference": "https://www.skillsyouneed.com/ips/problem-solving.html"
+    },
+    "Teamwork": {
+        "description": "Collaborating with a group of people to achieve a common goal efficiently.",
+        "reference": "https://www.indeed.com/career-advice/career-development/teamwork-skills"
+    },
+}
 
 example_career_options = [
-    {"name": "Python Developer", "description": "Develops software applications, web backends, and automation scripts using Python.", "learn_more": "https://www.freecodecamp.org/news/what-does-a-python-developer-do/", "skills_required": "Python Programming,Web Development (Backend),Database Management (SQL),Problem Solving"},
-    {"name": "Web Designer", "description": "Focuses on the visual and interactive elements of websites, ensuring a good user experience.", "learn_more": "https://www.coursera.org/articles/what-does-a-web-designer-do", "skills_required": "Web Development (Frontend),Graphic Design"},
-    {"name": "Data Scientist", "description": "Applies statistical methods, machine learning, and programming skills to extract insights from data.", "learn_more": "https://www.ibm.com/topics/data-scientist", "skills_required": "Python Programming,Data Analysis,Machine Learning"},
-    {"name": "Nurse", "description": "Provides direct patient care, administers medication, and educates patients and their families.", "learn_more": "https://www.nursingworld.org/careers-and-images-in-nursing/what-do-nurses-do/", "skills_required": "Nursing,Communication,Teamwork"},
-    {"name": "Teacher", "description": "Educates students of various ages and subjects, developing curricula and assessing progress.", "learn_more": "https://www.teachforamerica.org/about-us/what-we-do/what-is-a-teacher", "skills_required": "Teaching,Communication,Problem Solving"},
-    {"name": "Farmer", "description": "Manages agricultural production, including crops or livestock, for food or raw materials.", "learn_more": "https://www.nationalgeographic.org/encyclopedia/farmer/", "skills_required": "Agriculture"},
-    {"name": "Tailor", "description": "Designs, repairs, and alters garments, working with fabrics and sewing techniques.", "learn_more": "https://www.fashiondesigncollege.com/blog/what-is-a-tailor", "skills_required": "Tailoring"},
-    {"name": "Poultry Farmer", "description": "Raises domesticated birds like chickens, ducks, or turkeys for meat, eggs, or feathers.", "learn_more": "https://www.nal.usda.gov/farms-and-agriculture/poultry-farming-information-and-resources", "skills_required": "Poultry Farming,Agriculture"}
+    # Updated to include application_form_url and is_vacant
+    {"name": "Python Developer", "description": "Develops software applications, web backends, and automation scripts using Python.", "learn_more": "https://www.freecodecamp.org/news/what-does-a-python-developer-do/", "skills_required": "Python Programming,Web Development (Backend),Database Management (SQL),Problem Solving", "application_form_url": "https://forms.gle/your-python-developer-form", "is_vacant": 1},
+    {"name": "Web Designer", "description": "Focuses on the visual and interactive elements of websites, ensuring a good user experience.", "learn_more": "https://www.coursera.org/articles/what-does-a-web-designer-do", "skills_required": "Web Development (Frontend),Graphic Design", "application_form_url": "https://forms.gle/your-web-designer-form", "is_vacant": 0},
+    {"name": "Data Scientist", "description": "Applies statistical methods, machine learning, and programming skills to extract insights from data.", "learn_more": "https://www.ibm.com/topics/data-scientist", "skills_required": "Python Programming,Data Analysis,Machine Learning", "application_form_url": "https://forms.gle/your-data-scientist-form", "is_vacant": 1},
+    {"name": "Nurse", "description": "Provides direct patient care, administers medication, and educates patients and their families.", "learn_more": "https://www.nursingworld.org/careers-and-images-in-nursing/what-do-nurses-do/", "skills_required": "Nursing,Communication,Teamwork", "application_form_url": "https://forms.gle/your-nurse-form", "is_vacant": 1},
+    {"name": "Teacher", "description": "Educates students of various ages and subjects, developing curricula and assessing progress.", "learn_more": "https://www.teachforamerica.org/about-us/what-we-do/what-is-a-teacher", "skills_required": "Teaching,Communication,Problem Solving", "application_form_url": "https://forms.gle/your-teacher-form", "is_vacant": 0},
+    {"name": "Farmer", "description": "Manages agricultural production, including crops or livestock, for food or raw materials.", "learn_more": "https://www.nationalgeographic.org/encyclopedia/farmer/", "skills_required": "Agriculture", "application_form_url": "https://forms.gle/your-farmer-form", "is_vacant": 1},
+    {"name": "Tailor", "description": "Designs, repairs, and alters garments, working with fabrics and sewing techniques.", "learn_more": "https://www.fashiondesigncollege.com/blog/what-is-a-tailor", "skills_required": "Tailoring", "application_form_url": "https://forms.gle/your-tailor-form", "is_vacant": 1},
+    {"name": "Poultry Farmer", "description": "Raises domesticated birds like chickens, ducks, or turkeys and other domestic birds for meat and eggs.", "learn_more": "https://www.nal.usda.gov/farms-and-agriculture/poultry-farming-information-and-resources", "skills_required": "Poultry Farming,Agriculture", "application_form_url": "https://forms.gle/your-poultry-farmer-form", "is_vacant": 0},
+    {"name": "Game Developer", "description": "Creates and designs video games for various platforms.", "learn_more": "https://www.youtube.com/watch?v=uFw24T8_x90", "skills_required": "Python Programming,Web Development (Backend),Problem Solving", "application_form_url": "https://forms.gle/your-game-developer-form", "is_vacant": 1},
+    {"name": "UX/UI Designer", "description": "Designs user-friendly interfaces and experiences.", "learn_more": "https://www.youtube.com/watch?v=sU14z71a-jU", "skills_required": "Web Development (Frontend),Graphic Design,Communication,Problem Solving", "application_form_url": "https://forms.gle/your-ux-ui-designer-form", "is_vacant": 1},
+    {"name": "Digital Marketer", "description": "Develops and implements online marketing strategies.", "learn_more": "https://www.youtube.com/watch?v=eK3t4q8G24o", "skills_required": "Digital Marketing,Content Writing,Communication,Sales", "application_form_url": "https://forms.gle/your-digital-marketer-form", "is_vacant": 1}
 ]
 
 # --- Flask Routes ---
@@ -174,17 +318,19 @@ def dashboard():
         user = db.execute("SELECT * FROM users WHERE username = ?", (session["username"],)).fetchone()
         user_skills_list = user["skills"].split(',') if user and user["skills"] else []
         user_skills_list = [s.strip() for s in user_skills_list if s.strip()]
+        
         relevant_jobs = []
-        career_options_db = db.execute("SELECT * FROM career_options").fetchall()
+        career_options_db = db.execute("SELECT * FROM career_options WHERE is_vacant = 1").fetchall()
+
         for job_option in career_options_db:
             job_skills_raw = job_option['skills_required']
             if job_skills_raw:
                 job_skills_list = [s.strip() for s in job_skills_raw.split(',') if s.strip()]
+                
+                # Check for overlap between user's skills and job's required skills
                 if any(user_skill in job_skills_list for user_skill in user_skills_list):
                     relevant_jobs.append(job_option)
-        if not relevant_jobs:
-            fallback_jobs = db.execute("SELECT * FROM career_options LIMIT 5").fetchall()
-            relevant_jobs = fallback_jobs
+        
         return render_template("dashboard.html", user=user, jobs=relevant_jobs)
     flash("You need to log in first!", "error")
     return redirect(url_for("login"))
@@ -221,7 +367,6 @@ def edit_profile():
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
                 profile_pic_filename_to_save = filename
-                flash("Profile picture updated!", "success")
             elif file.filename != '':
                 flash("Only image (png, jpg, jpeg, gif) files are allowed for profile picture.", "error")
                 current_skills_for_template = user["skills"].split(",") if user and user["skills"] else []
@@ -248,24 +393,33 @@ def career_options():
     query = request.args.get('query', '').strip()
     db = get_db()
     if query:
-        # Search the database for careers matching the query
         search_term = f"%{query}%"
         jobs = db.execute("SELECT * FROM career_options WHERE name LIKE ? OR description LIKE ?", 
                           (search_term, search_term)).fetchall()
     else:
-        # If no query, show all careers
         jobs = db.execute("SELECT * FROM career_options").fetchall()
     
-    return render_template("career_options.html", jobs=jobs)
+    return render_template("career_options.html", jobs=jobs, available_skills=available_skills)
 
 @app.route('/career_videos')
 def career_videos():
-    videos = [
-        {"title": "Nursing Career Path", "link": "https://www.youtube.com/embed/QYjCs0HuCmM"},
-        {"title": "Sewing & Tailoring Career Guidance", "link": "https://www.youtube.com/embed/HNg9kd2yHog"},
-        {"title": "Farming Techniques for Beginners", "link": "https://www.youtube.com/embed/6Wv-AXtEnfM"}
-    ]
-    return render_template("career_videos.html", videos=videos)
+    # Attempt to get user skills from the session
+    if 'username' in session:
+        db = get_db()
+        user = db.execute("SELECT skills FROM users WHERE username = ?", (session['username'],)).fetchone()
+        user_skills = user['skills'].split(',') if user and user['skills'] else []
+        # Sanitize skills to remove whitespace
+        user_skills = [s.strip() for s in user_skills]
+    else:
+        # If no user is logged in, provide a default empty list
+        user_skills = []
+
+    # Pass the complete video list and the user's skills to the template
+    return render_template(
+        "career_videos.html", 
+        videos=CAREER_VIDEOS,
+        user_skills=user_skills
+    )
 
 @app.route('/search_videos')
 def search_videos():
@@ -329,8 +483,8 @@ if __name__ == '__main__':
         if db.execute("SELECT COUNT(*) FROM career_options").fetchone()[0] == 0:
             print("Populating example career options...")
             for job in example_career_options:
-                db.execute("INSERT INTO career_options (name, description, learn_more, skills_required) VALUES (?, ?, ?, ?)",
-                           (job['name'], job['description'], job['learn_more'], job['skills_required']))
+                db.execute("INSERT INTO career_options (name, description, learn_more, skills_required, application_form_url, is_vacant) VALUES (?, ?, ?, ?, ?, ?)",
+                           (job['name'], job['description'], job['learn_more'], job['skills_required'], job['application_form_url'], job['is_vacant']))
             db.commit()
             print("Example career options populated.")
         else:

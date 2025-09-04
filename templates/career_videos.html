@@ -3,72 +3,79 @@
 <head>
     <title>Career Videos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='career_videos.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-
- 
-<script src="{{ url_for('static', filename='search.js') }}"></script>
-
 </head>
-<div class="search-container">
-    <input type="text" id="searchBar" placeholder="Search career videos...">
-    <i id="searchIcon" class="fas fa-search" onclick="searchVideos()"></i> <!-- Search Icon -->
-</div>
+<body>
 
+    <a href="{{ url_for('home') }}" class="back-home-button">Back to Home</a>
+<h1 id="videos-title">Career Guidance Videos</h1>
 
-
-<div class="search-container">
-    <div class="search-box">
-        <i class="fas fa-search"></i> <!-- Search Icon -->
-        <input type="text" id="searchBar" placeholder="Search career videos...">
-        <i id="micIcon" class="fas fa-microphone" onclick="startVoiceSearch()"></i> <!-- Voice Icon -->
+    <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Search for career videos...">
+        <i class="fas fa-search search-icon" onclick="searchVideos()"></i> 
+        <i id="micIcon" class="fas fa-microphone voice-icon" onclick="startVoiceSearch()"></i>
     </div>
-</div>
 
-<!-- Speech Box for Showing Spoken Words -->
-<div id="speechBox" class="speech-box hidden"></div> 
+    <div id="speechBox" class="speech-box hidden"></div>
 
-
-
-
-
-
-
-    <script>
-    function searchVideos() {
-        var query = $("#searchBar").val();
-        if (query.length > 2) { // Start searching after typing 3 characters
-            $.get("/search_videos", { query: query }, function(data) {
-                $("#suggestions").html(data.suggestions);
-                $("#videoResults").html(data.results);
-            });
-        }
-    }
-    </script>
     <div class="career-container">
-        <h1>Career Guidance Videos</h1>
-        <p>Watch insightful videos to learn about various career paths.</p>
+        <center>
+            <p>Watch insightful videos to learn about various career paths.</p> 
+        </center>
 
         <div class="video-list">
-            <div class="video-item">
-                <iframe width="100%" height="250" src="https://www.youtube.com/embed/QYjCs0HuCmM" frameborder="0" allowfullscreen></iframe>
-                <p><strong>Nursing Career Path</strong></p>
+            {% for key, video_item in videos.items() %}
+            <div class="video-item" data-skills="{{ video_item.skills | join(' ') }}">
+                <iframe width="100%" height="250" src="{{ video_item.url }}" frameborder="0" allowfullscreen></iframe>
+                <p><strong>{{ video_item.title }}</strong></p>
             </div>
-
-            <div class="video-item">
-                <iframe width="100%" height="250" src="https://www.youtube.com/embed/HNg9kd2yHog" frameborder="0" allowfullscreen></iframe>
-                <p><strong>Sewing & Tailoring Career Guidance</strong></p>
-            </div>
-
-            <div class="video-item">
-                <iframe width="100%" height="250" src="https://www.youtube.com/embed/6Wv-AXtEnfM" frameborder="0" allowfullscreen></iframe>
-                <p><strong>Farming Techniques for Beginners</strong></p>
-            </div>
+            {% endfor %}
         </div>
-
-        <p><a href="/">Back to Home</a></p>
     </div>
+    
+    <script>
+        const userSkills = {{ user_skills | tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='search.js') }}"></script>
+    <script>
+        function searchVideos() {
+            const searchBar = document.getElementById('searchBar');
+            const videoItems = document.querySelectorAll('.video-item');
+            const query = searchBar.value.toLowerCase();
+
+            videoItems.forEach(item => {
+                const title = item.querySelector('p').textContent.toLowerCase();
+                if (title.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.addEventListener('keyup', searchVideos);
+            highlightMatchingVideos(userSkills); 
+        });
+
+        // The new function to highlight videos based on user skills
+        function highlightMatchingVideos(skills) {
+            const videoItems = document.querySelectorAll('.video-item');
+            videoItems.forEach(item => {
+                const videoSkills = item.getAttribute('data-skills').toLowerCase().split(' ');
+                const titleElement = item.querySelector('p strong');
+                
+                const isMatch = skills.some(userSkill => videoSkills.includes(userSkill.toLowerCase()));
+                
+                if (isMatch) {
+                    titleElement.classList.add('highlighted-title');
+                } else {
+                    titleElement.classList.remove('highlighted-title');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

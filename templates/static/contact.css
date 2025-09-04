@@ -1,0 +1,212 @@
+/* ==================================== */
+/* General & Typography */
+/* ==================================== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fdfdfe; /* Changed to a very light off-white color */
+    color: #343a40;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 960px;
+    margin: 50px auto 20px auto;
+    padding: 0 15px;
+}
+
+/* ==================================== */
+/* Two-Column Layout */
+/* ==================================== */
+.contact-split-layout {
+    display: flex;
+    gap: 40px;
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    padding: 30px 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* ==================================== */
+/* Left Side: Contact Form */
+/* ==================================== */
+.contact-section {
+    flex: 1 1 500px;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.contact-section .main-contact-heading {
+    color: #34495e;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* ==================================== */
+/* Right Side: Image and Details */
+/* ==================================== */
+.contact-info-section {
+    flex: 1 1 300px;
+    text-align: center;
+    padding: 20px;
+}
+
+.contact-info-section h3 {
+    color: #343a40;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.contact-image-container {
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px;
+    margin: 0 auto 20px;
+}
+
+.contact-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contact-details p {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.contact-details .fas {
+    color: #28a745;
+    margin-right: 10px;
+}
+
+/* New style for timings text */
+.contact-details p strong {
+    color: #343a40;
+}
+
+/* ==================================== */
+/* Form Elements */
+/* ==================================== */
+.form-label {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+    background-color: #fefefe;
+}
+
+.btn-primary {
+    background-color: #ADD8E6;
+    border-color: #ADD8E6;
+    color: #34495e;
+    padding: 10px 20px;
+    font-size: 0.95em;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #87CEFA;
+    border-color: #87CEFA;
+    transform: translateY(-2px);
+}
+
+/* New Back to Home button style */
+.back-to-home-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    background-color: #f0f0f0;
+    border-color: #ddd;
+    color: #343a40;
+}
+
+.back-to-home-btn:hover {
+    background-color: #e0e0e0;
+    border-color: #ccc;
+}
+
+/* ==================================== */
+/* Other elements and media queries */
+/* ==================================== */
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+    padding: 12px 25px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.flashes {
+    list-style: none;
+    padding: 0;
+}
+
+.alert {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+footer {
+    text-align: center;
+    background-color: #eaf2f8;
+    color: #495057;
+    padding: 2px 0;
+    border-top: 1px solid #d0d7dd;
+    font-size: 0.9em;
+    overflow: hidden;
+}
+
+/* Adjusted spacing for the container inside the footer */
+footer .container {
+    margin: 5px auto 2px auto;
+}
+
+/* New style for animated text in the footer */
+.animate-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 5px auto;
+    animation: linear-move 5s linear infinite;
+    display: inline-block;
+}
+
+@keyframes linear-move {
+    0% {
+        transform: translateX(-5%);
+        color: #ffc107;
+    }
+    50% {
+        transform: translateX(5%);
+        color: #28a745;
+    }
+    100% {
+        transform: translateX(-5%);
+        color: #ffc107;
+    }
+}

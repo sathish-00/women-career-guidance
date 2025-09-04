@@ -38,9 +38,7 @@
                     {% endif %}
                 </div>
                 
-               
-                {# NEW: Edit Profile Button #}
-                <a href="/edit_profile" class="button edit-button">Edit Profile</a> 
+                <a href="{{ url_for('edit_profile') }}" class="button edit-button">Edit Profile</a> 
             {% else %}
                 <p>Profile information not available.</p>
             {% endif %}
@@ -49,31 +47,42 @@
         <main class="main-content">
             <section class="career-suggestions">
                 <h3>Career Suggestions Based on Your Skills</h3>
-                {% if jobs %}
-                    <ul class="job-list">
-                    {% for job in jobs %}
-                        <li class="job-item">
-                            <h4>{{ job.name }}</h4>
+                <div class="career-cards-container">
+                    {% if jobs %}
+                        {% for job in jobs %}
+                        <div class="career-card">
+                            <h3>{{ job.name }}</h3>
                             <p>{{ job.description }}</p>
-                            {% if job.learn_more %}
-                                <a href="{{ job.learn_more }}" target="_blank" class="learn-more-link">Learn More</a>
-                            {% endif %}
-                            {% if job.skills_required %}
-                                <p class="skills-required"><strong>Skills:</strong> {{ job.skills_required }}</p>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No specific career options found matching your skills. Try adding more diverse skills to your profile!</p>
-                    <p>You can also explore general <a href="{{ url_for('career_options') }}">Career Options</a> or <a href="{{ url_for('career_videos') }}">Career Videos</a>.</p>
-                {% endif %}
+                            <div class="skills-list">
+                                <p><strong>Required Skills:</strong></p>
+                                {% for skill in job.skills_required.split(',') %}
+                                    <span class="skill-tag">{{ skill.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="job-status">
+                                {% if job.is_vacant == 1 %}
+                                    <span class="status-badge vacant">Vacancy Available</span>
+                                    <a href="{{ job.application_form_url }}" target="_blank" class="apply-button">Apply Now 📝</a>
+                                {% else %}
+                                    <span class="status-badge no-vacant">No Vacancy</span>
+                                {% endif %}
+                            </div>
+                            
+                            <a href="{{ job.learn_more }}" target="_blank" class="learn-more-link">Learn More</a>
+                            
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-match-message">No vacant jobs found that match your skills. Please go back and add more skills or check for vacancies later.</p>
+                    {% endif %}
+                </div>
             </section>
 
             <section class="quick-links">
                 <h3>Quick Links</h3>
                 <div class="links-grid">
-                    <a href="{{ url_for('career_options') }}" class="quick-link-card">
+                    <a href="{{ url_for('career_interests') }}" class="quick-link-card">
                         <h4>Explore All Careers</h4>
                         <p>Browse a comprehensive list of career opportunities.</p>
                     </a>
