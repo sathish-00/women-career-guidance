@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Register</title>
@@ -120,3 +121,70 @@
 
 </body>
 </html>
+=======
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+</head>
+<body>
+
+    <div class="register-container">
+        <h2>Create an Account</h2>
+
+        {# This 'message' block is likely from an older Flask flash system or custom. #}
+        {# The 'get_flashed_messages' block below is the standard Flask way. #}
+        {% if message %}
+            <p class="flash-message success">{{ message }}</p>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="flash-message {{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
+
+            <div class="form-group"> {# NEW: Grouping for consistent spacing #}
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required placeholder="Enter your desired username">
+            </div>
+
+            <div class="form-group"> {# NEW: Grouping for consistent spacing #}
+                <label for="password">Password:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" name="password" required minlength="8" oninput="validatePassword()" placeholder="At least 8 characters">
+                    <span id="togglePassword" class="password-toggle"></span>
+                </div>
+                <span id="passwordError" class="error-message"></span>
+                <p>Password strength: <span id="strengthLabel">Weak</span></p>
+                <div id="strengthMeter" class="strength-meter">
+                    <div id="strengthBar" class="strength-bar"></div>
+                </div>
+            </div>
+
+            <div class="form-group"> {# NEW: Grouping for consistent spacing #}
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required min="0" oninput="validateAge()" placeholder="Enter your age">
+                <span id="ageError" class="error-message"></span>
+            </div>
+
+            <div class="form-group"> {# NEW: Grouping for consistent spacing #}
+                <label for="profile_pic">Profile Picture:</label>
+                <input type="file" id="profile_pic" name="profile_pic" accept="image/*, application/pdf" placeholder="Upload an image or PDF (optional)">
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+        <div>
+            <a href="{{ url_for('home') }}" class="home-button">Back to Home</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='register.js') }}"></script>
+</body>
+</html>
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876

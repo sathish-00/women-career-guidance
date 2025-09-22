@@ -1,7 +1,11 @@
 /* General Page Styling */
 body {
     font-family: Arial, sans-serif;
+<<<<<<< HEAD
     background-color: #fafafa;
+=======
+    background-color: #f4f7f9;
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     color: #333;
     margin: 0;
     padding: 0;
@@ -9,11 +13,16 @@ body {
 
 h1 {
     text-align: center;
+<<<<<<< HEAD
     color: #8B008B; /* Changed the title color to a thick violet */
+=======
+    color: #005a9c;
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     margin-top: 40px;
     margin-bottom: 30px;
 }
 
+<<<<<<< HEAD
 /* Updated Search Bar and Voice Assistant Styling */
 .search-container {
     display: flex;
@@ -34,11 +43,30 @@ h1 {
     padding: 8px 80px 8px 15px;
     border-radius: 10px;
     border: 2px solid #ccc;
+=======
+/* Search Bar and Voice Assistant */
+.search-container {
+    display: flex;
+    justify-content: center; /* Centers the search bar horizontally */
+    margin-bottom: 40px;
+    position: relative; /* This is crucial for positioning the icons */
+}
+
+#career-search {
+    width: 400px;
+    max-width: 90%; /* Added max-width for better responsiveness */
+    height: 40px;
+    font-size: 18px;
+    padding: 8px 80px 8px 15px; /* Increased padding to make space for both icons */
+    border-radius: 10px;
+    border: 2px solid #007BFF;
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     outline: none;
     transition: all 0.3s ease;
 }
 
 #career-search:focus {
+<<<<<<< HEAD
     border-color: #888;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
@@ -68,6 +96,41 @@ h1 {
 
 #voice-icon:hover {
     color: rgba(0, 0, 0, 0.8);
+=======
+    border-color: #0056b3;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+#voice-icon, #search-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+#voice-icon {
+    right: 50px; /* Positions the voice icon inside the search bar */
+    font-size: 24px;
+    color: #4285F4;
+    transition: color 0.2s;
+}
+
+#voice-icon:hover {
+    color: #3367d6;
+}
+
+#search-btn {
+    right: 15px; /* Positions the search icon inside the search bar */
+    font-size: 22px;
+    color: #555;
+    transition: color 0.2s;
+}
+
+#search-btn:hover {
+    color: #000;
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 }
 
 /* Career Cards Grid */
@@ -78,29 +141,48 @@ h1 {
 }
 
 .career-grid {
+<<<<<<< HEAD
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+=======
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     gap: 25px;
     margin-bottom: 40px;
 }
 
 .career-card {
+<<<<<<< HEAD
     width: 300px;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+=======
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     padding: 25px;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .career-card:hover {
     transform: translateY(-5px);
+<<<<<<< HEAD
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .career-card h2 {
     color: #007bff;
+=======
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.career-card h2 {
+    color: #007BFF;
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     font-size: 22px;
     margin-top: 0;
     margin-bottom: 10px;
@@ -116,6 +198,7 @@ h1 {
     font-weight: bold;
 }
 
+<<<<<<< HEAD
 .skills-list {
     display: flex;
     flex-wrap: wrap;
@@ -145,13 +228,35 @@ h1 {
 }
 
 /* Back-to-home link styling */
+=======
+.career-link {
+    display: inline-block;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.career-link:hover {
+    background-color: #0056b3;
+}
+
+/* Back to Home Link */
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 .back-to-home {
     text-align: center;
     margin-top: 20px;
 }
 
 .back-to-home a {
+<<<<<<< HEAD
     color: #000000;
+=======
+    color: #007BFF;
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     text-decoration: none;
     font-weight: bold;
     font-size: 16px;
@@ -159,6 +264,7 @@ h1 {
 }
 
 .back-to-home a:hover {
+<<<<<<< HEAD
     color: #495057;
     text-decoration: underline;
 }
@@ -172,4 +278,15 @@ h1 {
 
 .blinking {
     animation: blink 1s infinite;
+=======
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Flashing effect for search results */
+@keyframes blink {
+    0% { background-color: transparent; }
+    50% { background-color: #e6f2ff; }
+    100% { background-color: transparent; }
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 }

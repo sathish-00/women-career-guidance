@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+<<<<<<< HEAD
 <h1 style="font-family: Arial, sans-serif; color: #722c6e;">Career Options</h1>
 
 <h2 style="color: #2980b9; border-bottom: 2px solid #2980b9; padding-bottom: 5px;">Today's Jobs</h2>
@@ -39,12 +40,22 @@
     <div style="text-align: center; margin-top: 30px;">
   <h2 style="color: #b99329; border-bottom: 2px solid #7fb929; padding-bottom: 5px; display: inline-block;">All Available Jobs</h2>
 </div>
+=======
+    <h1>Career Options</h1>
+
+    <div class="search-container">
+        <input type="text" id="career-search" placeholder="Type or speak to search...">
+        <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
+        <button id="search-btn" onclick="searchCareer()">🔍</button>
+    </div>
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 
     <div class="career-container">
         <div class="career-grid">
             {% if jobs %}
                 {% for job in jobs %}
                 <div class="career-card">
+<<<<<<< HEAD
                     <h2>{{ job.name }}</h2>
                     <p><strong>Description:</strong> {{ job.description }}</p>
                     <p class="skills-list">
@@ -60,6 +71,12 @@
                             {% endif %}
                         {% endfor %}
                     </p>
+=======
+                    <h2>{{ job.name }}</h2>  
+                    <p><strong>Description:</strong> {{ job.description }}</p>
+                    <p><strong>Skills Required:</strong> {{ job.skills_required }}</p>
+                    <a href="{{ job.learn_more }}" class="career-link" target="_blank">Learn More</a>
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
                 </div>
                 {% endfor %}
             {% else %}
@@ -68,10 +85,13 @@
         </div>
         <p class="back-to-home"><a href="/">Back to Home</a></p>
     </div>
+<<<<<<< HEAD
     
 <!-- Render 'jobs' list here as you do currently -->
 
 
+=======
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 
     <script>
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
