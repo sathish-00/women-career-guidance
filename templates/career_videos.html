@@ -9,7 +9,7 @@
 <body>
 
     <a href="{{ url_for('home') }}" class="back-home-button">Back to Home</a>
-<h1 id="videos-title">Career Guidance Videos</h1>
+    <h1 id="videos-title">Career Guidance Videos</h1>
 
     <div class="search-container">
         <input type="text" id="searchBar" placeholder="Search for career videos...">
@@ -25,9 +25,9 @@
         </center>
 
         <div class="video-list">
-            {% for key, video_item in videos.items() %}
-            <div class="video-item" data-skills="{{ video_item.skills | join(' ') }}">
-                <iframe width="100%" height="250" src="{{ video_item.url }}" frameborder="0" allowfullscreen></iframe>
+            {% for video_item in videos %}
+            <div class="video-item" data-skills="{{ video_item.skills | default('') }}">
+                <iframe width="100%" height="250" src="{{ video_item.url or '#' }}" frameborder="0" allowfullscreen></iframe>
                 <p><strong>{{ video_item.title }}</strong></p>
             </div>
             {% endfor %}
@@ -36,9 +36,7 @@
     
     <script>
         const userSkills = {{ user_skills | tojson }};
-    </script>
-    <script src="{{ url_for('static', filename='search.js') }}"></script>
-    <script>
+        
         function searchVideos() {
             const searchBar = document.getElementById('searchBar');
             const videoItems = document.querySelectorAll('.video-item');
@@ -60,15 +58,16 @@
             highlightMatchingVideos(userSkills); 
         });
 
-        // The new function to highlight videos based on user skills
+        // Highlight video titles that match user skills
         function highlightMatchingVideos(skills) {
             const videoItems = document.querySelectorAll('.video-item');
             videoItems.forEach(item => {
-                const videoSkills = item.getAttribute('data-skills').toLowerCase().split(' ');
+                const videoSkillsStr = item.getAttribute('data-skills') || '';
+                const videoSkills = videoSkillsStr.toLowerCase().split(/\s*,\s*/);
                 const titleElement = item.querySelector('p strong');
-                
+
                 const isMatch = skills.some(userSkill => videoSkills.includes(userSkill.toLowerCase()));
-                
+
                 if (isMatch) {
                     titleElement.classList.add('highlighted-title');
                 } else {
@@ -77,5 +76,7 @@
             });
         }
     </script>
+
+    <script src="{{ url_for('static', filename='search.js') }}"></script>
 </body>
 </html>

@@ -8,7 +8,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>Career Options</h1>
+<h1 style="font-family: Arial, sans-serif; color: #722c6e;">Career Options</h1>
+
+<h2 style="color: #2980b9; border-bottom: 2px solid #2980b9; padding-bottom: 5px;">Today's Jobs</h2>
+{% if todays_jobs %}
+  <ul style="list-style: none; padding: 0;">
+  {% for job in todays_jobs %}
+    <li style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px; font-family: Arial, sans-serif;">
+      <strong style="color: #2980b9; font-size: 1.1em;">{{ job['name'] }}</strong>: {{ job['description'] }}<br />
+      <em style="color: #7f8c8d;">Location:</em> {{ job['location'] or "N/A" }}, 
+      <em style="color: #7f8c8d; margin-left: 10px;">Vacancies:</em> {{ job['total_labour_vacancy'] }}<br />
+      <a href="{{ job['application_form_url'] or '#' }}" style="color: #2980b9; text-decoration: none; font-weight: bold;">Apply Here</a>
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p style="font-style: italic; color: #7f8c8d;">No jobs posted today.</p>
+{% endif %}
+
+
+
 
     <div class="search-container">
         <div class="search-input-wrapper">
@@ -17,6 +36,9 @@
             <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
         </div>
     </div>
+    <div style="text-align: center; margin-top: 30px;">
+  <h2 style="color: #b99329; border-bottom: 2px solid #7fb929; padding-bottom: 5px; display: inline-block;">All Available Jobs</h2>
+</div>
 
     <div class="career-container">
         <div class="career-grid">
@@ -46,6 +68,10 @@
         </div>
         <p class="back-to-home"><a href="/">Back to Home</a></p>
     </div>
+    
+<!-- Render 'jobs' list here as you do currently -->
+
+
 
     <script>
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

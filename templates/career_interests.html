@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Your Skills</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='career_interests.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <title>Select Your Skills</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='career_interests.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Select Your Skills</h1>
-
-        {% if available_skills %}
-        <div class="skills-form-container">
-            <form method="POST" action="{{ url_for('career_interests') }}">
-                <div class="skills-list">
-                    {% for skill_name, skill_info in available_skills.items()|sort %}
-                    <div class="skill-card">
-                        <label class="skill-option">
-                            <input type="checkbox" name="skills" value="{{ skill_name }}"
-                                {% if skill_name in current_skills %}checked{% endif %}>
-                            <span>{{ skill_name }}</span>
-                        </label>
-                        <p class="skill-description">{{ skill_info.description }}</p>
-                        <a href="{{ skill_info.reference }}" target="_blank" class="skill-reference">Learn More</a>
-                    </div>
-                    {% endfor %}
-                </div>
-                <button type="submit">Save Skills</button>
-            </form>
-        </div>
-        {% endif %}
-
-        <p class="back-to-home"><a href="/">Back to Home</a></p>
+  <h2>Select Your Skills</h2>
+  <form method="POST" action="{{ url_for('career_interests') }}">
+    <div class="skills-list">
+      {%- if available_skills is mapping %}
+        {% for skill, info in available_skills.items()|sort %}
+          <div class="skill-option">
+            <label>
+              <input type="checkbox" name="skills" value="{{ skill }}" {% if skill in current_skills %}checked{% endif %} />
+              {{ skill }}
+            </label>
+            <p>{{ info.description }}</p>
+            <a href="{{ info.reference }}" target="_blank">Learn More</a>
+          </div>
+        {% endfor %}
+      {%- elif available_skills is iterable %}
+        {# Fallback if available_skills is a list of skill names #}
+        {% for skill in available_skills %}
+          <div class="skill-option">
+            <label>
+              <input type="checkbox" name="skills" value="{{ skill }}" {% if skill in current_skills %}checked{% endif %} />
+              {{ skill }}
+            </label>
+          </div>
+        {% endfor %}
+      {%- else %}
+        <p>No skills data available.</p>
+      {%- endif %}
     </div>
+    <button type="submit">Save Skills</button>
+  </form>
 </body>
 </html>

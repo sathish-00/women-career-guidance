@@ -1,0 +1,93 @@
+/* career_interests.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 900px;
+    margin: 40px auto;
+    background-color: #fefefe;
+    color: #2c3e50;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #2a6ebb;
+    margin-bottom: 30px;
+}
+
+/* Container with wrapped skill options */
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Single skill option card */
+.skill-option {
+    background: #f4f8ff;
+    border: 1px solid #aac1f7;
+    border-radius: 6px;
+    padding: 16px 20px;
+    width: 210px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.skill-option:hover {
+    background-color: #d9e6ff;
+}
+
+/* Checkbox label layout */
+.skill-option label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.skill-option input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+/* Description paragraph */
+.skill-option p {
+    margin: 0 0 8px 28px;
+    font-size: 0.9em;
+    color: #4a5a7c;
+}
+
+/* Learn More link */
+.skill-option a {
+    margin-left: 28px;
+    font-size: 0.9em;
+    color: #3366cc;
+    text-decoration: none;
+}
+
+.skill-option a:hover {
+    text-decoration: underline;
+}
+
+/* Save button style */
+button[type="submit"] {
+    background-color: #2a6ebb;
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 6px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #1e4f8c;
+}

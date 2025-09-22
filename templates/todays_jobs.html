@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Today's Jobs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='todays_jobs.css') }}">
+</head>
+<body>
+    <h2>Today's Jobs</h2>
+    {% if jobs %}
+      <ul>
+      {% for job in jobs %}
+        <li>
+          <strong>{{ job['name'] }}</strong>: {{ job['description'] }}<br />
+          <em>Location:</em> {{ job['location'] or "N/A" }}, 
+          <em>Vacancies:</em> {{ job['total_labour_vacancy'] }}<br />
+          <a href="{{ job['application_form_url'] or '#' }}">Apply Here</a>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>No jobs posted today.</p>
+    {% endif %}
+    <a href="{{ url_for('career_options') }}">Back to Career Options</a>
+</body>
+</html>

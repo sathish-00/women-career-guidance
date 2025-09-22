@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Terms and Conditions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='terms.css') }}" />
+</head>
+<body>
+    <h1>Terms and Conditions</h1>
+    <p>Welcome to our career guidance platform. By applying for jobs through this website, you agree to the following terms and conditions:</p>
+    <ul>
+        <li>You confirm that all information you provide is accurate and truthful.</li>
+        <li>Your application data will be shared with job providers who post openings on this platform.</li>
+        <li>We do not guarantee job placement or outcomes based on your application.</li>
+        <li>We reserve the right to remove any inappropriate content or applications.</li>
+        <li>By submitting an application here, you consent to our data processing practices as outlined in our privacy policy.</li>
+        <li>Use of this platform is at your own risk.</li>
+    </ul>
+    <p>For detailed policies, please contact our support team.</p>
+
+   <button onclick="location.href='{{ url_for('apply', job_id=job_id) if job_id else url_for('home') }}'" 
+        style="margin-top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer;">
+    ← Back
+</button>
+
+</body>
+</html>

@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}" />
 </head>
 <body>
-
-
 
     <div class="login-container">
         <h2>Login</h2>
 
-        {# Display Flask flash messages here #}
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -22,25 +19,26 @@
             {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ url_for('login') }}"> {# Use url_for for better practice #}
+        <form method="POST" action="{{ url_for('login') }}">
             <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required> {# Added ID for consistency, though not strictly needed for this form #}
+            <input type="text" name="username" id="username" required />
 
             <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required> {# Added ID #}
+            <input type="password" name="password" id="password" required />
 
             <button type="submit">Login</button>
         </form>
 
-        <p class="signup-link">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p> {# Added a link to register #}
+        <p class="signup-link">
+            Don't have an account? 
+            <a href="{{ url_for('register') }}">Register as Job Seeker</a> or 
+            <a href="{{ url_for('register_admin') }}">Register as Admin</a>
+        </p>
+
         <div class="home-button-container">
             <a href="{{ url_for('home') }}" class="home-button">Back to Home</a>
         </div>
     </div>
-
-
-    {# Removed all client-side JavaScript login logic.
-       Flask's backend will handle the form submission and authentication. #}
 
 </body>
 </html>
