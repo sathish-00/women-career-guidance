@@ -8,6 +8,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+<<<<<<< HEAD
+<h1 style="font-family: Arial, sans-serif; color: #722c6e;">Career Options</h1>
+
+<h2 style="color: #2980b9; border-bottom: 2px solid #2980b9; padding-bottom: 5px;">Today's Jobs</h2>
+{% if todays_jobs %}
+  <ul style="list-style: none; padding: 0;">
+  {% for job in todays_jobs %}
+    <li style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px; font-family: Arial, sans-serif;">
+      <strong style="color: #2980b9; font-size: 1.1em;">{{ job['name'] }}</strong>: {{ job['description'] }}<br />
+      <em style="color: #7f8c8d;">Location:</em> {{ job['location'] or "N/A" }}, 
+      <em style="color: #7f8c8d; margin-left: 10px;">Vacancies:</em> {{ job['total_labour_vacancy'] }}<br />
+      <a href="{{ job['application_form_url'] or '#' }}" style="color: #2980b9; text-decoration: none; font-weight: bold;">Apply Here</a>
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p style="font-style: italic; color: #7f8c8d;">No jobs posted today.</p>
+{% endif %}
+
+
+
+
+    <div class="search-container">
+        <div class="search-input-wrapper">
+            <input type="text" id="career-search" placeholder="Type or speak to search...">
+            <i class="fa-solid fa-magnifying-glass" id="search-icon" onclick="searchCareer()"></i>
+            <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 30px;">
+  <h2 style="color: #b99329; border-bottom: 2px solid #7fb929; padding-bottom: 5px; display: inline-block;">All Available Jobs</h2>
+</div>
+=======
     <h1>Career Options</h1>
 
     <div class="search-container">
@@ -15,16 +48,35 @@
         <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
         <button id="search-btn" onclick="searchCareer()">🔍</button>
     </div>
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 
     <div class="career-container">
         <div class="career-grid">
             {% if jobs %}
                 {% for job in jobs %}
                 <div class="career-card">
+<<<<<<< HEAD
+                    <h2>{{ job.name }}</h2>
+                    <p><strong>Description:</strong> {{ job.description }}</p>
+                    <p class="skills-list">
+                        <strong>Skills Required:</strong>
+                        {% for skill in job.skills_required.split(',') %}
+                            {% if skill.strip() %}
+                                <span class="skill-item">
+                                    {{ skill.strip() }}
+                                    {% if skill.strip() in available_skills %}
+                                        <a href="{{ available_skills[skill.strip()].reference }}" target="_blank" class="skill-link">(Learn More)</a>
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+=======
                     <h2>{{ job.name }}</h2>  
                     <p><strong>Description:</strong> {{ job.description }}</p>
                     <p><strong>Skills Required:</strong> {{ job.skills_required }}</p>
                     <a href="{{ job.learn_more }}" class="career-link" target="_blank">Learn More</a>
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
                 </div>
                 {% endfor %}
             {% else %}
@@ -33,6 +85,13 @@
         </div>
         <p class="back-to-home"><a href="/">Back to Home</a></p>
     </div>
+<<<<<<< HEAD
+    
+<!-- Render 'jobs' list here as you do currently -->
+
+
+=======
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 
     <script>
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

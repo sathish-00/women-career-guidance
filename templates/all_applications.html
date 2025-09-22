@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>All Applications</title>
+</head>
+<body>
+  <h1>All Applications for Your Jobs</h1>
+  {% if applications %}
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Job Name</th>
+        <th>Applicant Name</th>
+        <th>Contact Info</th>
+        <th>Resume</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in applications %}
+      <tr>
+        <td><a href="{{ url_for('view_applications', job_id=app['job_id']) }}">{{ app['job_name'] }}</a></td>
+        <td>{{ app['applicant_name'] }}</td>
+        <td>{{ app['contact_info'] or 'N/A' }}</td>
+        <td>
+          {% if app['resume_filename'] %}
+            <a href="{{ url_for('uploaded_resume', filename=app['resume_filename']) }}" target="_blank">View Resume</a>
+          {% else %}
+            No resume uploaded
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No applications found.</p>
+  {% endif %}
+  <p><a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post New Job</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='post_job.css') }}">
+
+</head>
+<body>
+  <h2>Post a New Job</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <p class="flash {{ category }}">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    <label for="name">Job Name:</label>
+    <input type="text" id="name" name="name" required /><br/>
+
+    <label for="description">Job Description:</label>
+    <textarea id="description" name="description" required></textarea><br/>
+
+    <label for="learn_more">Learn More (Link):</label>
+    <input type="url" id="learn_more" name="learn_more" /><br/>
+
+    <label for="skills_required">Skills Required (comma separated):</label>
+    <input type="text" id="skills_required" name="skills_required" /><br/>
+
+    <label for="application_form_url">Application Form URL:</label>
+    <input type="url" id="application_form_url" name="application_form_url" /><br/>
+
+    <button type="submit">Post Job</button>
+  </form>
+
+  <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

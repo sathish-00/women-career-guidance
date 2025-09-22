@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Apply for {{ job.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='apply.css') }}" />
+</head>
+<body>
+
+<!-- Flash message display -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <p class="flash {{ category }}">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<h1>Apply for Job: {{ job.name }}</h1>
+
+<p><strong>Description:</strong> {{ job.description }}</p>
+<p><strong>Skills Required:</strong> {{ job.skills_required or 'Not specified' }}</p>
+<p><strong>Location:</strong> {{ job.location or 'Not specified' }}</p>
+
+<hr />
+
+<h2>Application Form</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <label for="first_name">First Name *</label><br />
+    <input type="text" id="first_name" name="first_name" required /><br /><br />
+
+    <label for="last_name">Last Name *</label><br />
+    <input type="text" id="last_name" name="last_name" required /><br /><br />
+
+    <label for="dob">Date of Birth *</label><br />
+    <input type="date" id="dob" name="dob" required /><br /><br />
+
+    <label for="address">Address *</label><br />
+    <textarea id="address" name="address" rows="3" required></textarea><br /><br />
+
+    <label for="pincode">Pincode *</label><br />
+    <input type="text" id="pincode" name="pincode" pattern="\d{6}" title="6 digit pincode" required /><br /><br />
+
+    <label for="mobile">Mobile Number *</label><br />
+    <input type="tel" id="mobile" name="mobile" pattern="\d{10}" title="10 digit mobile number" required /><br /><br />
+
+    <label for="experience">Experience (years) *</label><br />
+    <input type="number" id="experience" name="experience" min="0" step="0.1" required /><br /><br />
+
+    <label for="skills">Skills *</label><br />
+    <textarea id="skills" name="skills" rows="3" placeholder="List relevant skills" required></textarea><br /><br />
+
+    <label for="preferred_location">Preferred Location *</label><br />
+    <select id="preferred_location" name="preferred_location">
+        <option value="" disabled selected>Select your preferred location</option>
+        {% for loc in preferred_locations %}
+            <option value="{{ loc }}">{{ loc }}</option>
+        {% endfor %}
+    </select><br /><br />
+
+    <label for="resume">Upload Resume (PDF, max 2MB) *</label><br />
+    <input type="file" id="resume" name="resume" accept=".pdf,application/pdf" required /><br /><br />
+
+    <label>
+      <input type="checkbox" id="terms_checkbox" name="terms" required />
+      I agree to the <a href="{{ url_for('terms', job_id=job.id) }}" target="_blank">Terms and Conditions</a> *
+    </label><br /><br />
+
+    <button type="submit">Submit Application</button>
+    <a href="{{ url_for('dashboard') }}">Cancel</a>
+</form>
+
+</body>
+</html>

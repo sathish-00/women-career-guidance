@@ -3,6 +3,83 @@
 <head>
     <title>Career Videos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='career_videos.css') }}">
+<<<<<<< HEAD
+    <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <a href="{{ url_for('home') }}" class="back-home-button">Back to Home</a>
+    <h1 id="videos-title">Career Guidance Videos</h1>
+
+    <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Search for career videos...">
+        <i class="fas fa-search search-icon" onclick="searchVideos()"></i> 
+        <i id="micIcon" class="fas fa-microphone voice-icon" onclick="startVoiceSearch()"></i>
+    </div>
+
+    <div id="speechBox" class="speech-box hidden"></div>
+
+    <div class="career-container">
+        <center>
+            <p>Watch insightful videos to learn about various career paths.</p> 
+        </center>
+
+        <div class="video-list">
+            {% for video_item in videos %}
+            <div class="video-item" data-skills="{{ video_item.skills | default('') }}">
+                <iframe width="100%" height="250" src="{{ video_item.url or '#' }}" frameborder="0" allowfullscreen></iframe>
+                <p><strong>{{ video_item.title }}</strong></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script>
+        const userSkills = {{ user_skills | tojson }};
+        
+        function searchVideos() {
+            const searchBar = document.getElementById('searchBar');
+            const videoItems = document.querySelectorAll('.video-item');
+            const query = searchBar.value.toLowerCase();
+
+            videoItems.forEach(item => {
+                const title = item.querySelector('p').textContent.toLowerCase();
+                if (title.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.addEventListener('keyup', searchVideos);
+            highlightMatchingVideos(userSkills); 
+        });
+
+        // Highlight video titles that match user skills
+        function highlightMatchingVideos(skills) {
+            const videoItems = document.querySelectorAll('.video-item');
+            videoItems.forEach(item => {
+                const videoSkillsStr = item.getAttribute('data-skills') || '';
+                const videoSkills = videoSkillsStr.toLowerCase().split(/\s*,\s*/);
+                const titleElement = item.querySelector('p strong');
+
+                const isMatch = skills.some(userSkill => videoSkills.includes(userSkill.toLowerCase()));
+
+                if (isMatch) {
+                    titleElement.classList.add('highlighted-title');
+                } else {
+                    titleElement.classList.remove('highlighted-title');
+                }
+            });
+        }
+    </script>
+
+    <script src="{{ url_for('static', filename='search.js') }}"></script>
+=======
 <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -70,5 +147,6 @@
 
         <p><a href="/">Back to Home</a></p>
     </div>
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 </body>
 </html>

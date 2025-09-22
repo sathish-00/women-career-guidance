@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin_dashboard.css') }}">
+</head>
+<body>
+  <h2>Admin Dashboard - Job Postings</h2>
+
+  <nav>
+    <a href="{{ url_for('post_job') }}">Post New Job</a> |
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+      {% for category, message in messages %}
+        <p class="flash {{ category }}">{{ message }}</p>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <section>
+    <h3>Admin Profile</h3>
+    <a href="{{ url_for('edit_admin_profile') }}">Edit Profile</a>
+    {% if profile %}
+      <table border="1" cellspacing="0" cellpadding="6">
+        <tr><th>Shop Name</th><td>{{ profile.shop_name or 'N/A' }}</td></tr>
+        <tr><th>Total Labour Vacancy</th><td>{{ profile.total_labour_vacancy or 'N/A' }}</td></tr>
+        <tr><th>Total Staff</th><td>{{ profile.total_staff or 'N/A' }}</td></tr>
+        <tr><th>Location</th><td>{{ profile.location or 'N/A' }}</td></tr>
+        <tr><th>Hand Based Salary</th><td>{{ profile.hand_based_salary or 'N/A' }}</td></tr>
+        <tr><th>Incentives</th><td>{{ profile.incentives or 'N/A' }}</td></tr>
+        <tr><th>Branches</th><td>{{ profile.branches or 'N/A' }}</td></tr>
+        <tr><th>Contact Info</th><td>{{ profile.contact_info or 'N/A' }}</td></tr>
+        <tr><th>Written Test</th><td>{{ profile.written_test or 'N/A' }}</td></tr>
+      </table>
+    {% else %}
+      <p>No admin profile data found.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h3>Job Postings</h3>
+    <table border="1" cellspacing="0" cellpadding="6">
+      <thead>
+        <tr>
+          <th>Job Name</th>
+          <th>Description</th>
+          <th>Skills Required</th>
+          <th>Total Vacancies</th>
+          <th>Applications Received</th>
+          <th>Vacant</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td>{{ job['name'] }}</td>
+          <td>{{ job['description'] }}</td>
+          <td>{{ job['skills_required'] or 'N/A' }}</td>
+          <td>
+            {% if job.total_labour_vacancy is not none %}
+              {{ job.total_labour_vacancy }}
+            {% else %}
+              Not Set
+            {% endif %}
+          </td>
+          <td>{{ job['applications_received'] }}</td>
+          <td>{{ 'Yes' if job['is_vacant'] else 'No' }}</td>
+          <td>
+            <a href="{{ url_for('view_applications', job_id=job['id']) }}">View Applications</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7">No job postings found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <nav>
+      <a href="{{ url_for('home') }}">Home</a> |
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+  </footer>
+</body>
+</html>

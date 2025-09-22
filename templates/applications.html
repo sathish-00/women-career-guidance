@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Applications for {{ job.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='applications.css') }}" />
+</head>
+<body>
+    <h1>Applications for Job: {{ job.name }}</h1>
+
+    {% if applications %}
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Applicant Name</th>
+                <th>Contact Info</th>
+                <th>Resume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.applicant_name }}</td>
+                <td>{{ app.contact_info or 'N/A' }}</td>
+                <td>
+                    {% if app.resume_filename %}
+                       <a href="{{ url_for('uploaded_resume', filename=app.resume_filename) }}" target="_blank">View Resume</a>
+
+                    {% else %}
+                        No resume submitted
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No applications received yet for this job.</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>

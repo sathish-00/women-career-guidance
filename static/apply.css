@@ -1,0 +1,109 @@
+/* apply.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f9fc;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    text-align: center;
+}
+
+h1, h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+form {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 15px;
+    color: #34495e;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+input[type="number"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 5px;
+    border: 1px solid #ccd6dd;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #2980b9;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+button[type="submit"] {
+    margin-top: 25px;
+    background-color: #2980b9;
+    color: white;
+    padding: 14px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 600;
+}
+
+button[type="submit"]:hover {
+    background-color: #1e6091;
+}
+
+a.button-cancel {
+    display: inline-block;
+    margin-left: 15px;
+    padding: 14px 25px;
+    background-color: #bdc3c7;
+    color: #2c3e50;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+a.button-cancel:hover {
+    background-color: #95a5a6;
+}
+
+@media (max-width: 600px) {
+    form {
+        padding: 20px;
+    }
+}

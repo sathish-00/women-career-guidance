@@ -1,6 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
+  <meta charset="UTF-8" />
+  <title>Select Your Skills</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='career_interests.css') }}">
+</head>
+<body>
+  <h2>Select Your Skills</h2>
+  <form method="POST" action="{{ url_for('career_interests') }}">
+    <div class="skills-list">
+      {%- if available_skills is mapping %}
+        {% for skill, info in available_skills.items()|sort %}
+          <div class="skill-option">
+            <label>
+              <input type="checkbox" name="skills" value="{{ skill }}" {% if skill in current_skills %}checked{% endif %} />
+              {{ skill }}
+            </label>
+            <p>{{ info.description }}</p>
+            <a href="{{ info.reference }}" target="_blank">Learn More</a>
+          </div>
+        {% endfor %}
+      {%- elif available_skills is iterable %}
+        {# Fallback if available_skills is a list of skill names #}
+        {% for skill in available_skills %}
+          <div class="skill-option">
+            <label>
+              <input type="checkbox" name="skills" value="{{ skill }}" {% if skill in current_skills %}checked{% endif %} />
+              {{ skill }}
+            </label>
+          </div>
+        {% endfor %}
+      {%- else %}
+        <p>No skills data available.</p>
+      {%- endif %}
+    </div>
+    <button type="submit">Save Skills</button>
+  </form>
+</body>
+</html>
+=======
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Options</title>
@@ -107,3 +146,4 @@
     </script>
 </body>
 </html>
+>>>>>>> 005e43991de0473e54b734e957cb8331c9975876
