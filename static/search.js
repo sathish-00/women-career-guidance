@@ -1,61 +1,70 @@
-function startVoiceSearch() {
-    console.log("Mic clicked. Listening...");
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-<<<<<<< HEAD
-    recognition.lang = "en-US";
-=======
-    recognition.lang = "en-US"; // Set language
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
-    recognition.start();
+// This file handles the voice search functionality
 
-    recognition.onstart = function() {
-        console.log("Microphone is active.");
-    };
-
-    recognition.onresult = function(event) {
-        const voiceInput = event.results[0][0].transcript;
-        console.log("Captured text:", voiceInput);
-        document.getElementById("searchBar").value = voiceInput;
-<<<<<<< HEAD
-        searchVideos(); // Call searchVideos after voice input is added to the search bar
-=======
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
-    };
-
-    recognition.onerror = function(event) {
-        console.error("Speech recognition error:", event.error);
-    };
-}
-<<<<<<< HEAD
-function searchVideos() {
-    const searchBar = document.getElementById("searchBar");
-    const videoItems = document.querySelectorAll('.video-item');
-    const query = searchBar.value.toLowerCase();
-
-    videoItems.forEach(item => {
-        const title = item.querySelector('p').textContent.toLowerCase();
-        if (title.includes(query)) {
-            item.style.display = 'block';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
 document.addEventListener('DOMContentLoaded', function() {
-    const searchBar = document.getElementById("searchBar");
-    searchBar.addEventListener('keyup', searchVideos);
-});
-=======
-    function searchVideos() {
-    let query = document.getElementById("searchBar").value.trim();
+    const micIcon = document.getElementById('micIcon');
+    const searchInput = document.getElementById('searchBar');
+    const speechBox = document.getElementById('speechBox');
+    
+    // Check for browser support of the Web Speech API
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    if (query === "") {
-        alert("Please enter a search term!");
+    if (!SpeechRecognition) {
+        console.warn('Web Speech API not supported in this browser.');
+        micIcon.style.display = 'none'; // Hide microphone icon if not supported
         return;
     }
 
-    console.log("Searching for:", query); // ✅ Debugging check
-    // Perform the actual search (modify as needed)
-    window.location.href = `/search?query=${encodeURIComponent(query)}`;
+    function startVoiceSearch() {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = function() {
+            micIcon.classList.add('blinking');
+            speechBox.classList.remove('hidden');
+            speechBox.textContent = 'Listening...';
+        };
+
+        recognition.onresult = function(event) {
+            const speechResult = event.results[0][0].transcript;
+            searchInput.value = speechResult;
+            speechBox.textContent = 'Heard: ' + speechResult;
+            searchVideos(); // Calls the search function defined in the HTML script block
+        };
+
+        recognition.onend = function() {
+            micIcon.classList.remove('blinking');
+            speechBox.classList.add('hidden');
+        };
+
+        recognition.onerror = function(event) {
+            micIcon.classList.remove('blinking');
+            speechBox.classList.remove('hidden');
+            speechBox.textContent = 'Error: ' + event.error;
+            console.error('Speech recognition error:', event.error);
+        };
+
+        try {
+            recognition.start();
+        } catch (e) {
+            console.error("Recognition already started or error:", e);
+        }
+    }
+
+    // Attach the voice search function globally (needed because it's called from onclick in HTML)
+    window.startVoiceSearch = startVoiceSearch;
+});
+
+// Add blinking animation to CSS if not already present
+// NOTE: You should have this in your career_videos.css
+/*
+@keyframes blinking {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
+.blinking {
+    animation: blinking 1s infinite;
+}
+*/

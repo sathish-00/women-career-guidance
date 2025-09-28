@@ -1,42 +1,95 @@
-/* Base styling for admin dashboard page */
+/* General Layout and Typography */
 body {
     font-family: Arial, sans-serif;
-    background-color: #fafafa;
-    margin: 30px auto;
-    max-width: 1100px;
-    color: #222;
+    background-color: #f4f7f9;
+    color: #34495e;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Heading styles */
+.container {
+    max-width: 1200px;
+    width: 95%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+}
+
 h2 {
+    color: #1a73e8;
     text-align: center;
-    color: #004085;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
 }
 
-/* Navigation links */
-a {
-    text-decoration: none;
-    color: white;
-    background-color: #007bff;
-    padding: 8px 15px;
-    border-radius: 5px;
-    margin: 0 8px 20px 0;
+h3 {
+    color: #4a69bd;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+/* Navigation and Buttons */
+.main-nav {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.btn-nav {
     display: inline-block;
-    transition: background-color 0.3s ease;
-}
-
-a:hover {
-    background-color: #0056b3;
-}
-
-/* Flash message styling */
-.flash {
+    background-color: #4CAF50;
+    color: white;
     padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 5px;
+    transition: background-color 0.2s;
+}
+
+.btn-nav:hover {
+    background-color: #45a049;
+}
+
+.btn-logout {
+    background-color: #f44336;
+}
+
+.btn-logout:hover {
+    background-color: #d32f2f;
+}
+
+.btn-edit {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #1a73e8;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+
+/* Flash Messages */
+.flash-messages {
+    opacity: 1; 
+    transition: opacity 1s ease-out;
     margin-bottom: 20px;
+    text-align: center;
+}
+
+.flash {
+    padding: 10px 20px;
+    border-radius: 5px;
     font-weight: 600;
-    border-radius: 6px;
-    max-width: 600px;
+    display: block; /* Ensures messages stack properly */
 }
 
 .flash.success {
@@ -51,44 +104,157 @@ a:hover {
     border: 1px solid #f5c6cb;
 }
 
-/* Table styling */
-table {
+/* --- Profile Table Styling --- */
+.profile-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
-    box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+    margin-bottom: 40px;
 }
 
-th, td {
-    padding: 15px 20px;
-    border: 1px solid #ddd;
+.profile-table th, .profile-table td {
+    padding: 10px 15px;
+    border: 1px solid #e0e0e0;
+    font-size: 0.95em;
+}
+
+.profile-table th {
+    width: 30%;
+    background-color: #f8f8f8;
+    font-weight: 600;
+    color: #4a69bd;
+}
+
+/* --- Job Postings Table Styling --- */
+.job-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.job-table th, .job-table td {
+    padding: 12px 15px;
     text-align: left;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 0.9em;
 }
 
-th {
-    background-color: #007bff;
+.job-table thead th {
+    background-color: #4a69bd;
     color: white;
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
 }
 
-tbody tr:nth-child(even) {
+.job-table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-tbody tr:hover {
-    background-color: #e2e6ea;
+/* Status Indicators */
+.status-open {
+    color: #28a745; /* Green */
+    font-weight: bold;
 }
 
-/* Bottom navigation container */
-nav {
-    margin-top: 30px;
+.status-closed {
+    color: #dc3545; /* Red */
+    font-weight: bold;
 }
 
-nav a {
-    background-color: #6c757d;
+/* Action Links */
+.action-links a {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+    margin-right: 5px;
+    transition: background-color 0.2s;
 }
 
-nav a:hover {
-    background-color: #495057;
+.btn-view {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-view:hover {
+    background-color: #138496;
+}
+
+.btn-delete {
+    background-color: #f44336; /* Red for Delete */
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #d32f2f;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #34495e;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer-nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: 500;
+}
+
+.footer-nav a:hover {
+    text-decoration: underline;
+}
+
+
+/* --- Responsive Adjustments (Mobile View) --- */
+@media screen and (max-width: 600px) {
+    .job-table {
+        border: 0;
+    }
+    
+    .job-table thead {
+        display: none;
+    }
+    
+    .job-table tr {
+        margin-bottom: 15px;
+        display: block;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+    
+    .job-table td {
+        display: block;
+        text-align: right;
+        padding-left: 50%; /* Space for the data label */
+        position: relative;
+        border: none;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    
+    .job-table td::before {
+        /* Creates the data label text */
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        color: #4a69bd;
+    }
+    
+    .job-table td:last-child {
+        border-bottom: 0;
+    }
+    
+    .action-links {
+        text-align: center;
+        padding: 10px 0;
+    }
+    
+    .container {
+        padding: 15px;
+    }
 }

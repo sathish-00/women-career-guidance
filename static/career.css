@@ -1,33 +1,27 @@
 /* General Page Styling */
 body {
     font-family: Arial, sans-serif;
-<<<<<<< HEAD
-    background-color: #fafafa;
-=======
     background-color: #f4f7f9;
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     color: #333;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
 }
 
 h1 {
     text-align: center;
-<<<<<<< HEAD
-    color: #8B008B; /* Changed the title color to a thick violet */
-=======
-    color: #005a9c;
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
+    color: #a1741a;
     margin-top: 40px;
     margin-bottom: 30px;
+    font-size: 40px;
 }
 
-<<<<<<< HEAD
-/* Updated Search Bar and Voice Assistant Styling */
+/* Search Bar and Voice Assistant */
 .search-container {
     display: flex;
     justify-content: center;
     margin-bottom: 40px;
+    position: relative;
 }
 
 .search-input-wrapper {
@@ -42,33 +36,14 @@ h1 {
     font-size: 18px;
     padding: 8px 80px 8px 15px;
     border-radius: 10px;
-    border: 2px solid #ccc;
-=======
-/* Search Bar and Voice Assistant */
-.search-container {
-    display: flex;
-    justify-content: center; /* Centers the search bar horizontally */
-    margin-bottom: 40px;
-    position: relative; /* This is crucial for positioning the icons */
-}
-
-#career-search {
-    width: 400px;
-    max-width: 90%; /* Added max-width for better responsiveness */
-    height: 40px;
-    font-size: 18px;
-    padding: 8px 80px 8px 15px; /* Increased padding to make space for both icons */
-    border-radius: 10px;
-    border: 2px solid #007BFF;
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
+    border: 2px solid #434548;
     outline: none;
     transition: all 0.3s ease;
 }
 
 #career-search:focus {
-<<<<<<< HEAD
-    border-color: #888;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    border-color: #3b3c3e;
+    box-shadow: 0 0 8px rgba(167, 188, 212, 0.2);
 }
 
 #search-icon, #voice-icon {
@@ -80,58 +55,112 @@ h1 {
     transition: color 0.2s;
 }
 
+/* Base Color: Subtle, semi-transparent black */
 #search-icon {
-    right: -35px;
-    color: rgba(0, 0, 0, 0.5);
+    right: 35px;
+    color: rgba(0, 0, 0, 0.5); 
 }
 
 #search-icon:hover {
-    color: rgba(0, 0, 0, 0.8);
+    color: rgba(0, 0, 0, 0.8); /* Darker on hover */
 }
 
+/* Voice Icon: Now matches the base and hover colors of the Search Icon */
 #voice-icon {
     right: 5px;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.5); 
 }
 
 #voice-icon:hover {
     color: rgba(0, 0, 0, 0.8);
-=======
-    border-color: #0056b3;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+.blinking {
+    animation: blink 1s infinite;
 }
 
-#voice-icon, #search-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    background: none;
-    border: none;
+@keyframes blink {
+    0% { background-color: transparent; }
+    50% { background-color: #e6f2ff; }
+    100% { background-color: transparent; }
 }
 
-#voice-icon {
-    right: 50px; /* Positions the voice icon inside the search bar */
-    font-size: 24px;
-    color: #4285F4;
-    transition: color 0.2s;
+/* --- Job Section Styling --- */
+.job-section {
+    margin-bottom: 40px;
 }
 
-#voice-icon:hover {
-    color: #3367d6;
+.section-title {
+    text-align: center;
+    font-size: 1.8em;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
-#search-btn {
-    right: 15px; /* Positions the search icon inside the search bar */
-    font-size: 22px;
+/* Today's Jobs List */
+.job-list { 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ANIMATION: Staggered Fade-in for Today's Jobs */
+.job-card { 
+    background: #e9f5ff;
+    border-left: 5px solid #4a69bd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    animation: fadeIn 0.4s ease-out both; 
+    opacity: 0;
+}
+
+.job-list > .job-card:nth-child(1) { animation-delay: 0.1s; }
+.job-list > .job-card:nth-child(2) { animation-delay: 0.2s; }
+.job-list > .job-card:nth-child(3) { animation-delay: 0.3s; }
+.job-list > .job-card:nth-child(4) { animation-delay: 0.4s; }
+
+
+.job-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.job-title {
+    color: #4a69bd;
+    margin-top: 0;
+    font-size: 1.2em;
+}
+
+.job-description {
+    font-size: 0.9em;
     color: #555;
-    transition: color 0.2s;
 }
 
-#search-btn:hover {
-    color: #000;
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
+.job-meta {
+    font-size: 0.8em;
+    color: #777;
+    margin: 10px 0;
 }
+
+.apply-button {
+    display: inline-block;
+    background-color: #4a69bd;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.apply-button:hover {
+    background-color: #3b5093;
+}
+
 
 /* Career Cards Grid */
 .career-container {
@@ -141,71 +170,57 @@ h1 {
 }
 
 .career-grid {
-<<<<<<< HEAD
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-=======
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     gap: 25px;
     margin-bottom: 40px;
+    align-items: stretch;
 }
 
+/* ANIMATION: Applied to Career Card */
 .career-card {
-<<<<<<< HEAD
-    width: 300px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-=======
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     padding: 25px;
     transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    animation: slideInFromLeft 0.6s ease-out both; 
+    opacity: 0;
 }
 
 .career-card:hover {
     transform: translateY(-5px);
-<<<<<<< HEAD
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.career-card h2 {
-    color: #007bff;
-=======
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
+/* FIXED: Staggered Animation Delay for smooth entry */
+.career-grid > .career-card:nth-child(1) { animation-delay: 0.1s; }
+.career-grid > .career-card:nth-child(2) { animation-delay: 0.25s; }
+.career-grid > .career-card:nth-child(3) { animation-delay: 0.4s; }
+.career-grid > .career-card:nth-child(4) { animation-delay: 0.55s; }
+.career-grid > .career-card:nth-child(5) { animation-delay: 0.7s; }
+.career-grid > .career-card:nth-child(6) { animation-delay: 0.85s; }
+
+
 .career-card h2 {
     color: #007BFF;
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     font-size: 22px;
     margin-top: 0;
     margin-bottom: 10px;
 }
+/* ... (rest of career-card styles) ... */
 
-.career-card p {
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-.career-card strong {
-    font-weight: bold;
-}
-
-<<<<<<< HEAD
+/* Skills as badges in career card */
 .skills-list {
     display: flex;
     flex-wrap: wrap;
     margin-top: -10px;
     margin-bottom: 15px;
 }
-
 .skill-item {
     background-color: #e6f2ff;
     border-radius: 5px;
@@ -214,7 +229,6 @@ h1 {
     font-size: 14px;
     white-space: nowrap;
 }
-
 .skill-link {
     color: #0056b3;
     text-decoration: none;
@@ -222,71 +236,105 @@ h1 {
     font-style: italic;
     margin-left: 5px;
 }
-
 .skill-link:hover {
     text-decoration: underline;
 }
 
 /* Back-to-home link styling */
-=======
-.career-link {
-    display: inline-block;
-    background-color: #007BFF;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.career-link:hover {
-    background-color: #0056b3;
-}
-
-/* Back to Home Link */
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 .back-to-home {
     text-align: center;
     margin-top: 20px;
 }
-
 .back-to-home a {
-<<<<<<< HEAD
-    color: #000000;
-=======
     color: #007BFF;
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
     text-decoration: none;
     font-weight: bold;
     font-size: 16px;
     transition: color 0.2s;
 }
-
 .back-to-home a:hover {
-<<<<<<< HEAD
-    color: #495057;
-    text-decoration: underline;
-}
-
-/* Blinking animation for voice icon */
-@keyframes blink {
-    0% { background-color: transparent; }
-    50% { background-color: #fffde7; }
-    100% { background-color: transparent; }
-}
-
-.blinking {
-    animation: blink 1s infinite;
-=======
     color: #0056b3;
     text-decoration: underline;
 }
 
-/* Flashing effect for search results */
-@keyframes blink {
-    0% { background-color: transparent; }
-    50% { background-color: #e6f2ff; }
-    100% { background-color: transparent; }
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .career-container {
+        padding: 0 5px;
+    }
+    .career-grid {
+        grid-template-columns: 1fr;
+    }
+    h1 {
+        font-size: 1.5em;
+    }
+}
+
+/* --- ANIMATION KEYFRAMES --- */
+/* Keyframes for the main career cards to slide in */
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100px); 
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* New Keyframes for Today's Jobs to fade in */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.no-jobs {
+    /* Retained original styles */
+    text-align: center;
+    font-style: italic;
+    color: #7f8c8d;
+    font-size: 1.1em;
+    padding: 10px;
+    white-space: nowrap; 
+    
+    /* Animation applied to the no-jobs message */
+    animation: slideInFromLeft 1.2s ease-out both; 
+}
+
+
+/* --- FINAL FIX FOR VOICE ICON COLOR OVERRIDE --- */
+/* This rule ensures the requested dark color takes precedence */
+.search-input-wrapper #voice-icon.fa-solid {
+    color: #5b5d5e !important; 
+}
+
+.search-input-wrapper #voice-icon.fa-solid:hover {
+    color: #1a252f !important;
+}
+/* --- Styling for the Clickable Location Link (.map-link) --- */
+
+.job-meta .map-link {
+    /* Base style to make the text look clickable */
+    color: #3f897a; /* Professional Teal color */
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0 5px; /* Slight padding to separate it from the pipe '|' */
+    transition: color 0.2s ease;
+}
+
+.job-meta .map-link:hover {
+    color: #159a80; /* Darker teal on hover */
+    text-decoration: underline;
+}
+
+/* --- Styling for the Map Pin Icon --- */
+.job-meta .fa-map-marker-alt {
+    color: #f44336; /* Bright Red/Orange for the pin icon */
+    margin-left: 4px;
+    font-size: 1em; /* Ensures the icon size matches the text size */
 }

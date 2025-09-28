@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Filter Career Videos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='career_interests.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Filter Videos by Job Demand</h1>
+        <p>Select the skills you want to learn about based on current job openings:</p>
+
+        <form method="POST" action="{{ url_for('display_filtered_videos') }}">
+            <div class="skills-list">
+                {% if available_skills %}
+                    {% for skill in available_skills %}
+                        <div class="skill-option">
+                            <label>
+                                <input type="checkbox" name="skill" value="{{ skill }}" />
+                                {{ skill }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No job postings found to generate relevant skills.</p>
+                {% endif %}
+            </div>
+
+            <button type="submit">Show Relevant Videos</button>
+        </form>
+
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+</body>
+</html>

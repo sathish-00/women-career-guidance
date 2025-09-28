@@ -4,100 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Options</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
 </head>
 <body>
-<<<<<<< HEAD
-<h1 style="font-family: Arial, sans-serif; color: #722c6e;">Career Options</h1>
+    <div class="container">
+        <h1 class="page-title">Career Options</h1>
 
-<h2 style="color: #2980b9; border-bottom: 2px solid #2980b9; padding-bottom: 5px;">Today's Jobs</h2>
-{% if todays_jobs %}
-  <ul style="list-style: none; padding: 0;">
-  {% for job in todays_jobs %}
-    <li style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px; font-family: Arial, sans-serif;">
-      <strong style="color: #2980b9; font-size: 1.1em;">{{ job['name'] }}</strong>: {{ job['description'] }}<br />
-      <em style="color: #7f8c8d;">Location:</em> {{ job['location'] or "N/A" }}, 
-      <em style="color: #7f8c8d; margin-left: 10px;">Vacancies:</em> {{ job['total_labour_vacancy'] }}<br />
-      <a href="{{ job['application_form_url'] or '#' }}" style="color: #2980b9; text-decoration: none; font-weight: bold;">Apply Here</a>
-    </li>
-  {% endfor %}
-  </ul>
-{% else %}
-  <p style="font-style: italic; color: #7f8c8d;">No jobs posted today.</p>
-{% endif %}
-
-
-
-
-    <div class="search-container">
-        <div class="search-input-wrapper">
-            <input type="text" id="career-search" placeholder="Type or speak to search...">
-            <i class="fa-solid fa-magnifying-glass" id="search-icon" onclick="searchCareer()"></i>
-            <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input type="text" id="career-search" placeholder="Type or speak to search...">
+                <i class="fa-solid fa-magnifying-glass search-icon" id="search-icon" onclick="searchCareer()"></i>
+                <i class="fa-solid fa-microphone voice-icon" id="voice-icon" onclick="startVoiceSearch()"></i>
+            </div>
         </div>
-    </div>
-    <div style="text-align: center; margin-top: 30px;">
-  <h2 style="color: #b99329; border-bottom: 2px solid #7fb929; padding-bottom: 5px; display: inline-block;">All Available Jobs</h2>
-</div>
-=======
-    <h1>Career Options</h1>
 
-    <div class="search-container">
-        <input type="text" id="career-search" placeholder="Type or speak to search...">
-        <i class="fa-solid fa-microphone" id="voice-icon" onclick="startVoiceSearch()"></i>
-        <button id="search-btn" onclick="searchCareer()">🔍</button>
-    </div>
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
-
-    <div class="career-container">
-        <div class="career-grid">
-            {% if jobs %}
-                {% for job in jobs %}
-                <div class="career-card">
-<<<<<<< HEAD
-                    <h2>{{ job.name }}</h2>
-                    <p><strong>Description:</strong> {{ job.description }}</p>
-                    <p class="skills-list">
-                        <strong>Skills Required:</strong>
-                        {% for skill in job.skills_required.split(',') %}
-                            {% if skill.strip() %}
-                                <span class="skill-item">
-                                    {{ skill.strip() }}
-                                    {% if skill.strip() in available_skills %}
-                                        <a href="{{ available_skills[skill.strip()].reference }}" target="_blank" class="skill-link">(Learn More)</a>
-                                    {% endif %}
-                                </span>
+        <div class="job-section">
+            <h2 class="section-title today">Today's Jobs</h2>
+            <div class="job-list">
+                {% if todays_jobs %}
+                    {% for job in todays_jobs %}
+                        <div class="job-card">
+                            <h3 class="job-title">{{ job['name'] }}</h3>
+                            <p class="job-description">{{ job['description'] }}</p>
+                            <p class="job-meta">
+                                <strong>Location:</strong> 
+                                {% if job['location'] %}
+                                    <a href="https://www.google.com/maps/search/{{ job['location'] | urlencode }}" 
+                                       target="_blank"
+                                       class="map-link">
+                                       {{ job['location'] }} <i class="fas fa-map-marker-alt"></i>
+                                    </a>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                                | <strong>Vacancies:</strong> {{ job['total_labour_vacancy'] }}
+                            </p>
+                            {% if job.application_form_url %}
+                                <a href="{{ job.application_form_url }}" class="apply-button" target="_blank">Apply Here 📝</a>
+                            {% else %}
+                                <a href="{{ url_for('apply', job_id=job.id) }}" class="apply-button">Apply Now 📝</a>
                             {% endif %}
-                        {% endfor %}
-                    </p>
-=======
-                    <h2>{{ job.name }}</h2>  
-                    <p><strong>Description:</strong> {{ job.description }}</p>
-                    <p><strong>Skills Required:</strong> {{ job.skills_required }}</p>
-                    <a href="{{ job.learn_more }}" class="career-link" target="_blank">Learn More</a>
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
-                </div>
-                {% endfor %}
-            {% else %}
-                <p>No career options found. Try searching for something else.</p>
-            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-jobs">No jobs posted today.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="job-section">
+            <h2 class="section-title all-jobs">All Available Jobs</h2>
+            
+            <div class="row"> 
+                {% if jobs %}
+                    {% for job in jobs %}
+                        <div class="col-lg-4 col-md-6 col-12 mb-4">
+                            <div class="career-card h-100"> 
+                                <h3 class="card-title">{{ job.name }}</h3>
+                                <p class="card-description"><strong>Description:</strong> {{ job.description }}</p>
+                                
+                                <p class="job-meta">
+                                    <strong>Location:</strong> 
+                                    {% if job['location'] %}
+                                        <a href="https://www.google.com/maps/search/{{ job['location'] | urlencode }}" 
+                                           target="_blank"
+                                           class="map-link">
+                                           {{ job['location'] }} <i class="fas fa-map-marker-alt"></i>
+                                        </a>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </p>
+                                <p class="skills-list"><strong>Skills Required:</strong>
+                                    {% for skill in job.skills_required.split(',') %}
+                                        {% if skill.strip() %}
+                                            <span class="skill-item">{{ skill.strip() }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                                <a href="{{ url_for('career_guidance', job_name=job.name) }}" class="career-link">Learn More about this career</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <p class="no-jobs">No career options found. Try searching for something else.</p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
         <p class="back-to-home"><a href="/">Back to Home</a></p>
     </div>
-<<<<<<< HEAD
-    
-<!-- Render 'jobs' list here as you do currently -->
-
-
-=======
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 
     <script>
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const voiceIcon = document.getElementById('voice-icon');
         const searchInput = document.getElementById('career-search');
-        
+
         function searchCareer() {
             const query = searchInput.value.trim();
             if (query) {

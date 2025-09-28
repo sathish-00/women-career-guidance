@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Job: {{ job.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit_job_post.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Edit Job Posting: {{ job.name }}</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" id="flash-messages">
+                {% for category, message in messages %}
+                    <p class="flash {{ category }}">{{ message }}</p>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('edit_job_post', job_id=job.id) }}">
+            
+            <div class="form-group">
+                <label for="name">Job Name:</label>
+                <input type="text" id="name" name="name" value="{{ job.name }}" required />
+            </div>
+
+            <div class="form-group">
+                <label for="total_labour_vacancy">Total Vacancies:</label>
+                <input type="number" id="total_labour_vacancy" name="total_labour_vacancy" 
+                       value="{{ job.total_labour_vacancy }}" required min="0" />
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Job Description:</label>
+                <textarea id="description" name="description" required>{{ job.description }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="skills_required">Skills Required (comma separated):</label>
+                <input type="text" id="skills_required" name="skills_required" 
+                       value="{{ job.skills_required or '' }}" />
+            </div>
+
+            <div class="form-group">
+                <label for="learn_more">Learn More (Link):</label>
+                <input type="url" id="learn_more" name="learn_more" 
+                       value="{{ job.learn_more or '' }}" />
+            </div>
+
+            <div class="form-group">
+                <label for="application_form_url">Application Form URL:</label>
+                <input type="url" id="application_form_url" name="application_form_url" 
+                       value="{{ job.application_form_url or '' }}" />
+            </div>
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

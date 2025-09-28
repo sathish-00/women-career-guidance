@@ -1,0 +1,52 @@
+/* Add these styles to your upload_video.css */
+
+.search-results-area {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-results-area h3 {
+    margin-top: 0;
+    color: #4a69bd;
+}
+
+.search-result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.select-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.select-button:hover {
+    background-color: #1e7e34;
+}
+
+.selected-message {
+    padding: 10px;
+    background-color: #d4edda;
+    border-radius: 5px;
+    color: #155724;
+}
+
+.error {
+    color: #dc3545;
+}

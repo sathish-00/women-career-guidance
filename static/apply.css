@@ -9,9 +9,14 @@ body {
     text-align: center;
 }
 
-h1, h2 {
-    color: #2c3e50;
+h1 {
+    color: #afd84e;
     margin-bottom: 20px;
+    text-align: center;
+}
+h2 {
+    color: #789cbe;
+    margin-bottom: 15px;
     text-align: center;
 }
 
@@ -29,11 +34,12 @@ label {
     display: block;
     margin-bottom: 6px;
     margin-top: 15px;
-    color: #34495e;
+    color: #2c2e30;
 }
 
 input[type="text"],
 input[type="date"],
+input[type="email"],
 input[type="tel"],
 input[type="number"],
 input[type="file"],
@@ -49,6 +55,7 @@ textarea {
 
 input[type="text"]:focus,
 input[type="date"]:focus,
+input[type="email"]:focus,
 input[type="tel"]:focus,
 input[type="number"]:focus,
 input[type="file"]:focus,

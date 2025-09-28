@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Career Video</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='upload_video.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Upload New Career Video</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="flash {{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Video Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description (Optional):</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="search_query">1. Search YouTube for Video:</label>
+                <input type="text" id="search_query" name="search_query" placeholder="e.g., 'Python career tips' or 'Waiter training'">
+                <button type="button" onclick="searchYouTube()" class="search-button">Search</button>
+            </div>
+
+            <div id="search_results" class="search-results-area">
+                </div>
+
+            <div class="form-group">
+                <label for="final_url">2. Selected Video Embed Link (Read-Only):</label>
+                <input type="url" id="final_url" name="filename_to_save" readonly required>
+            </div>
+            
+            <div class="form-group">
+                <label for="tags">Video Tags (Comma separated skills for relevance):</label>
+                <input type="text" id="tags" name="tags" placeholder="e.g., python, interview, communication" required>
+            </div>
+
+            <button type="submit" id="submit_button">Post Video</button>
+        </form>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">Back to Dashboard</a>
+    </div>
+
+<script>
+    function displayResults(data) {
+        const resultsDiv = document.getElementById('search_results');
+        resultsDiv.innerHTML = ''; // Clear previous results
+
+        if (data.length === 0) {
+            resultsDiv.innerHTML = '<p class="no-results">No videos found. Try a different query.</p>';
+            return;
+        }
+
+        resultsDiv.innerHTML = '<h3>Select a Video:</h3>';
+        
+        data.forEach(item => {
+            const resultElement = document.createElement('div');
+            resultElement.className = 'search-result-item';
+            
+            // Note: The title is sanitized here to prevent JS errors when passing to selectVideo()
+            const sanitizedTitle = item.title.replace(/'/g, "\\'"); 
+            
+            resultElement.innerHTML = `
+                <p><strong>${item.title}</strong> (${item.duration})</p>
+                <button type="button" class="select-button" 
+                    onclick="selectVideo('${item.link}', '${sanitizedTitle}')">
+                    Select
+                </button>
+            `;
+            resultsDiv.appendChild(resultElement);
+        });
+    }
+
+    function searchYouTube() {
+        const query = document.getElementById('search_query').value;
+        if (query) {
+            // This calls the working Flask route
+            fetch(`{{ url_for('youtube_search_api') }}?q=${encodeURIComponent(query)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('API key is invalid or network error.');
+                    }
+                    return response.json();
+                })
+                .then(data => displayResults(data))
+                .catch(error => {
+                    document.getElementById('search_results').innerHTML = '<p class="error">Search failed: ' + error.message + '</p>';
+                    console.error('Fetch error:', error);
+                });
+        }
+    }
+    
+    function selectVideo(link, title) {
+        // 1. Set the final link (which is the embed URL) and title
+        document.getElementById('final_url').value = link;
+        document.getElementById('title').value = title; 
+        
+        // 2. Update the UI to confirm selection
+        document.getElementById('search_results').innerHTML = '<p class="selected-message">Video selected: <strong>' + title + '</strong>. Now add tags and submit.</p>';
+    }
+</script>
+</body>
+</html>

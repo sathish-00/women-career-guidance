@@ -1,456 +1,104 @@
-<<<<<<< HEAD
-/* BODY AND BACKGROUND */
+/* --- General Body & Container Styles --- */
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: url('../images/background-rural.jpg') no-repeat center center fixed;
-  background-size: cover;
-  color: #333;
-  min-height: 100vh;
-  position: relative;
-  padding-bottom: 120px;
-  box-sizing: border-box;
-  overflow-x: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 0;
+.main-content {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 40px 20px;
+    flex-grow: 1; 
 }
 
-/* Suggestion box top-left with increased height */
-.suggestion-box {
-  position: fixed;
-  top: 5px;
-  left: 20px;
-  width: 380px;
-  bottom: 2px;
-
-  max-width: 85vw;
-  height: 70vh;
-  max-height: calc(100vh - 60px);
-  overflow-y: auto;
-  background-color: rgba(255, 255, 255, 0.90);
-  padding: 25px 25px 40px 25px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  z-index: 900;
-  font-size: 1em;
-  color: #2c3e50;
-  line-height: 1.6;
-  box-sizing: border-box;
-}
-
-.suggestion-box h3 {
-  margin-top: 0;
-  margin-bottom: 25px;
-  font-weight: 700;
-  font-size: 1.3em;
-  text-align: left;
-}
-
-.suggestion-box ul {
-  padding-left: 20px;
-  margin: 0;
-}
-
-.suggestion-box li {
-  margin-bottom: 5px;
-  list-style-type: disc;
-}
-
-/* Registration card: reduced size and near top */
+/* --- Card Containers --- */
 .register-container {
-  position: fixed;
-  top: 5px;               /* Lower from top */
-  right: 15px;             /* Smaller right margin */
-  width: 950px;
-  bottom:15px;            /* Reduced width */
-  max-width: 95vw;
-  height: 70vh;            /* Reduced height */
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
-  background-color: rgba(255, 255, 255, 0.97);
-  padding: 35px 30px;      /* Reduced padding */
-  border-radius: 16px;     /* Smaller rounding */
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15); /* Softer shadow */
-  z-index: 1000;
-  box-sizing: border-box;
-  margin-bottom: 1px;
-
-  text-align: left;
+    background-color: rgba(255, 255, 255, 0.96);
+    border-radius: 14px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    padding: 35px 30px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0;
 }
 
-/* Scrollbars */
-.register-container::-webkit-scrollbar,
-.suggestion-box::-webkit-scrollbar {
-  width: 6px;
-}
-.register-container::-webkit-scrollbar-thumb,
-.suggestion-box::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.2);
-  border-radius: 10px;
+.suggestion-box {
+    background-color: rgba(255, 255, 255, 0.96);
+    border-radius: 14px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    padding: 35px 30px;
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    color: #2c3e50;
+    font-size: 1em;
+    line-height: 1.6;
 }
 
-/* Form layout */
+/* --- Typography & Headings --- */
+h2 {
+    text-align: center;
+    color: #447fa7;
+    margin-bottom: 25px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+/* --- Form layout & Spacing --- */
 .form-row {
-  display: flex;
-  gap: 1px;
-  justify-content: space-between;
-  margin-bottom: 8px;
+    display: flex;
+    gap: 15px;
+    margin-bottom: 0px;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
-.form-row .form-group {
-  flex: 1;
-  min-width: 30%;
-}
-
-/* Form groups */
 .form-group {
-  text-align: left;
-}
-.form-group:last-of-type {
-  margin-bottom: 8px;
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 15px;
 }
 
-/* Labels */
 label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #555;
-  font-size: 0.95em;
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 0.95em;
+    text-align: left;
 }
 
-/* Inputs */
 input[type='text'],
 input[type='password'],
 input[type='number'],
 input[type='file'] {
-  width: calc(100% - 24px);
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1em;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  box-sizing: border-box;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-input[type='text']:focus,
-input[type='password']:focus,
-input[type='number']:focus,
-input[type='file']:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-  outline: none;
-}
-
-/* Password input wrapper */
-.password-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-.password-input-wrapper input {
-  flex-grow: 1;
-  padding-right: 40px;
-  width: auto;
-}
-.password-toggle {
-  position: absolute;
-  right: 12px;
-  cursor: pointer;
-  font-size: 1.2em;
-  color: #888;
-  user-select: none;
-}
-.password-toggle::before {
-  content: '';
-  display: inline-block;
-  vertical-align: middle;
-}
-
-/* Error messages */
-.error-message {
-  color: #dc3545;
-  font-size: 0.85em;
-  margin-top: 5px;
-  display: block;
-  text-align: left;
-}
-
-/* Password strength label and bar */
-.password-strength-text {
-  font-size: 0.9em;
-  color: #666;
-  margin: 8px 0 4px 0;
-  text-align: left;
-}
-
-.strength-meter {
-  height: 10px;
-  background-color: #e0e0e0;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 15px;
-}
-.strength-bar {
-  height: 100%;
-  width: 0;
-  background-color: #ddd;
-  transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
-}
-.strength-bar.weak {
-  background-color: #f44336;
-}
-.strength-bar.medium {
-  background-color: #ffc107;
-}
-.strength-bar.strong {
-  background-color: #4caf50;
-}
-
-/* Submit button */
-button[type='submit'] {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1em;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 20px;
-}
-
-button[type='submit']:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
-
-button[type='submit']:active {
-  transform: translateY(0);
-}
-
-/* Home button */
-.home-button {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 10px 15px;
-  background-color: #6c757d;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 0.9em;
-  transition: background-color 0.3s ease;
-}
-
-.home-button:hover {
-  background-color: #393c3e;
-}
-
-/* Footer fixed bottom - further reduced size */
-.site-footer {
-  background-color: #2c3e50;
-  color: white;
-  padding: 3px 15px;          /* Very small vertical padding */
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;
-  font-size: 0.75em;          /* Smaller font for minimal height */
-  line-height: 1;
-  overflow: hidden;           /* Prevent content overflow */
-  z-index: 1100;
-}
-
-.footer-content {
-  display: flex;
-  justify-content: center;     /* Center since less height */
-  flex-wrap: nowrap;           /* No wrap to keep it compact */
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0;
-}
-
-.footer-section {
-  margin: 2px 8px;             /* Minimal margin */
-  min-width: 120px;            /* Reduced width */
-}
-
-.footer-section h4 {
-  margin-bottom: 4px;          /* Very small bottom margin */
-  font-weight: 700;
-}
-
-
-.footer-section {
-  margin: 3px 12px;
-  min-width: 140px;
-}
-
-.footer-section h4 {
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.footer-link {
-  color: #ffffffcc;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-link:hover {
-  color: #1abc9c;
-  text-decoration: underline;
-}
-
-/* Responsive adjustments */
-@media (max-width: 900px) {
-  .register-container,
-  .suggestion-box {
-    left: 50%;
-    transform: translateX(-50%);
-    right: auto;
-    width: 95vw;
-    padding: 25px 10px;
-    max-height: calc(100vh - 140px);
-    top: 18px;
-  }
-
-  .register-container {
-    top: 10px;
-    width: 90vw;
-    height: 55vh;
-    padding: 25px 20px;
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .form-row .form-group {
-    min-width: 100%;
-  }
-}
-=======
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    color: #333;
-}
-
-.register-container {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 450px;
-    text-align: center;
-    box-sizing: border-box; /* Include padding/border in element's total width/height */
-}
-
-h2 {
-    color: #2c3e50;
-    margin-bottom: 30px;
-    font-size: 2em;
-    font-weight: 600;
-}
-
-/* Flash Messages */
-.flash-message {
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    color: #fff;
-    text-align: left; /* Align text within flash message */
-}
-
-.flash-message.success { background-color: #4CAF50; }
-.flash-message.error { background-color: #f44336; }
-.flash-message.info { background-color: #2196F3; }
-
-/* Form Styling */
-form {
-    display: flex;
-    flex-direction: column;
-    /* We will control spacing using margins on .form-group instead of form gap */
-}
-
-/* New: Styling for the form-group wrapper */
-.form-group {
-    margin-bottom: 20px; /* Space between each label-input block */
-    text-align: left; /* Ensure label starts at left */
-}
-
-.form-group:last-of-type {
-    margin-bottom: 0; /* No margin after the last form group before the button */
-}
-
-
-label {
-    display: block; /* Make label take its own line */
-    font-weight: 600;
-    margin-bottom: 8px; /* Space between label and its input */
-    color: #555;
-    font-size: 0.95em;
-}
-
-input[type="text"],
-input[type="password"],
-input[type="number"],
-input[type="file"] {
-    width: calc(100% - 24px); /* Adjust for 12px padding on each side */
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1em;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    box-sizing: border-box; /* Crucial for width calculation */
-    -webkit-appearance: none; /* For consistent file input styling */
-    -moz-appearance: none;
-    appearance: none;
+    box-sizing: border-box;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="number"]:focus,
-input[type="file"]:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-    outline: none;
-}
-
-/* Password Input Specific Styling */
+/* --- Password Input Wrapper --- */
 .password-input-wrapper {
     position: relative;
-    display: flex; /* To align input and toggle icon */
+    display: flex;
     align-items: center;
     width: 100%;
 }
-
 .password-input-wrapper input {
-    flex-grow: 1; /* Allow input to take available space */
-    padding-right: 40px; /* Make space for the toggle icon */
-    width: auto; /* Override calc(100%-24px) for flex item */
+    flex-grow: 1;
+    padding-right: 40px;
 }
-
 .password-toggle {
     position: absolute;
     right: 12px;
@@ -459,55 +107,39 @@ input[type="file"]:focus {
     color: #888;
     user-select: none;
 }
-/* You'll need to add an icon or text here in JS or via ::before/:after pseudo-elements */
-/* For example, using FontAwesome or simple text like "👁️" */
-.password-toggle::before {
-    content: '👁️'; /* Example: eye icon, replace with a proper icon font/svg */
-    display: inline-block;
-    vertical-align: middle;
+.password-toggle::after {
+    content: '👁️';
 }
 
-
-/* Error Messages */
+/* --- Error Messages --- */
 .error-message {
-    color: #dc3545; /* Red */
+    color: #dc3545;
     font-size: 0.85em;
-    margin-top: 5px; /* Space above error message */
-    display: block; /* Ensure it takes its own line */
+    margin-top: 5px;
+    display: block;
     text-align: left;
 }
 
-/* Password Strength Meter */
-p { /* Styling for the password strength text */
+/* --- Password Strength Bar --- */
+.password-strength-text {
     font-size: 0.9em;
     color: #666;
-    margin-top: 10px;
-    margin-bottom: 5px;
+    margin: 8px 0 4px 0;
     text-align: left;
-}
-
-.strength-meter {
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    height: 10px;
-    margin-bottom: 20px;
-    overflow: hidden;
 }
 
 .strength-bar {
     height: 100%;
-    width: 0%;
-    background-color: #ddd; /* Default */
-    transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    width: 0;
+    transition: width 0.3s ease-in-out;
 }
-
-.strength-bar.weak { background-color: #f44336; }
+.strength-bar.weak { background-color: #d26962; }
 .strength-bar.medium { background-color: #ffc107; }
-.strength-bar.strong { background-color: #4CAF50; }
+.strength-bar.strong { background-color: #4caf50; }
 
-/* Buttons */
-button[type="submit"] {
-    background-color: #007bff;
+/* --- Submit Button --- */
+button[type='submit'] {
+    background-color: #356293;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -515,48 +147,120 @@ button[type="submit"] {
     font-size: 1.1em;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 20px; /* Space above the register button */
+    width: 100%;
+    margin-top: 20px;
 }
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
+button[type='submit']:hover {
+    background-color: #406287;
     transform: translateY(-2px);
 }
 
-button[type="submit"]:active {
-    transform: translateY(0);
-}
-
-.home-button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 15px;
-    background-color: #6c757d; /* Gray */
+/* --- Footer --- */
+.site-footer {
+    background-color: #2c3e50;
     color: white;
+    padding: 20px 15px;
+    text-align: center;
+    width: 100%;
+    margin-top: auto;
+}
+.footer-content {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.footer-section {
+    margin: 0;
+    min-width: 120px;
+    text-align: left;
+}
+.footer-section h4 {
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+.footer-link {
+    color: #ffffffcc;
     text-decoration: none;
-    border-radius: 8px;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
 }
+.footer-link:hover { color: #1abc9c; text-decoration: underline; }
 
-.home-button:hover {
-    background-color: #5a6268;
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .register-container {
-        margin: 20px;
-        padding: 25px;
+/* --- Global Animation and Media Queries --- */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        color: #1a73e8;
     }
-
-    h2 {
-        font-size: 1.8em;
+    50% {
+        transform: scale(1.02);
+        color: #1e5f96;
     }
-
-    button[type="submit"] {
-        font-size: 1em;
-        padding: 10px 15px;
+    100% {
+        transform: scale(1);
+        color: #1a73e8;
     }
 }
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
+
+.register-links a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 600;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.register-links a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    .register-container, .suggestion-box {
+        width: 90vw;
+        max-width: 100%;
+        margin: 20px 0;
+    }
+    .site-footer {
+        padding: 15px;
+    }
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .footer-section {
+        text-align: center;
+        min-width: auto;
+    }
+}
+
+/* This part should be at the top or bottom of your file, outside of everything else */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        color: #1a73e8;
+    }
+    50% {
+        transform: scale(1.02);
+        color: #1e5f96;
+    }
+    100% {
+        transform: scale(1);
+        color: #1a73e8;
+    }
+}
+
+.register-links a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 600;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.register-links a:hover {
+    text-decoration: underline;
+}

@@ -1,152 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Videos</title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='career_videos.css') }}">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-    <a href="{{ url_for('home') }}" class="back-home-button">Back to Home</a>
-    <h1 id="videos-title">Career Guidance Videos</h1>
-
-    <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search for career videos...">
-        <i class="fas fa-search search-icon" onclick="searchVideos()"></i> 
-        <i id="micIcon" class="fas fa-microphone voice-icon" onclick="startVoiceSearch()"></i>
+    <center>
+   <div class="search-container">
+    <div class="search-wrapper">
+        <input type="text" id="liveSearchBar" placeholder="Filter these results by keyword..." onkeyup="liveFilterVideos()">
+        
+        <i class="fas fa-microphone voice-icon" id="micIcon" onclick="startVoiceSearch()"></i>
+        <i class="fas fa-search search-icon" onclick="liveFilterVideos()"></i>
     </div>
+</div>
+</center>
+</div>
+        
+        <p class="subtitle">Showing results for: <strong>{{ search_query or 'All Active Job Skills' }}</strong></p>
 
-    <div id="speechBox" class="speech-box hidden"></div>
-
-    <div class="career-container">
-        <center>
-            <p>Watch insightful videos to learn about various career paths.</p> 
-        </center>
-
-        <div class="video-list">
+        <div class="video-grid">
             {% for video_item in videos %}
-            <div class="video-item" data-skills="{{ video_item.skills | default('') }}">
-                <iframe width="100%" height="250" src="{{ video_item.url or '#' }}" frameborder="0" allowfullscreen></iframe>
-                <p><strong>{{ video_item.title }}</strong></p>
-            </div>
+                {% set highlight_class = 'is-relevant' if video_item.is_relevant else '' %}
+                
+                <div class="video-card {{ highlight_class }}" data-tags="{{ video_item.video_tags | default('') }}">
+                    <div class="video-embed">
+                        {% if video_item.filename and video_item.filename.startswith('http') %}
+                            <iframe src="{{ video_item.filename }}" frameborder="0" allowfullscreen></iframe>
+                        {% else %}
+                            <video controls>
+                                <source src="{{ url_for('static', filename='career_videos/' + video_item.filename) }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% endif %}
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">{{ video_item.title }}</h3>
+                        <p class="video-description">
+                            {{ video_item.description or 'No description available.' }}
+                        </p>
+                        {% if video_item.is_relevant %}
+                            <span class="relevant-tag">RECOMMENDED FOR YOU</span>
+                        {% endif %}
+                    </div>
+                </div>
             {% endfor %}
         </div>
-    </div>
-    
-    <script>
-        const userSkills = {{ user_skills | tojson }};
         
-        function searchVideos() {
-            const searchBar = document.getElementById('searchBar');
-            const videoItems = document.querySelectorAll('.video-item');
-            const query = searchBar.value.toLowerCase();
+        {% if not videos %}
+            <p class="no-videos-message">No videos were found for your search.</p>
+        {% endif %}
 
-            videoItems.forEach(item => {
-                const title = item.querySelector('p').textContent.toLowerCase();
-                if (title.includes(query)) {
-                    item.style.display = 'block';
+        <a href="{{ url_for('select_video_skills') }}" class="back-link">← Change Filter Skills</a>
+    </div>
+
+    <script>
+        // CLIENT-SIDE FILTERING LOGIC
+        function liveFilterVideos() {
+            const searchBar = document.getElementById('liveSearchBar');
+            const query = searchBar.value.toLowerCase();
+            const videoCards = document.querySelectorAll('.video-card');
+
+            videoCards.forEach(card => {
+                const title = card.querySelector('.video-title').textContent.toLowerCase();
+                const description = card.querySelector('.video-description').textContent.toLowerCase();
+                
+                if (title.includes(query) || description.includes(query)) {
+                    // Uses 'flex' from CSS to display the cards
+                    card.style.display = 'flex'; 
                 } else {
-                    item.style.display = 'none';
+                    card.style.display = 'none';
                 }
             });
         }
         
         document.addEventListener('DOMContentLoaded', function() {
-            const searchBar = document.getElementById('searchBar');
-            searchBar.addEventListener('keyup', searchVideos);
-            highlightMatchingVideos(userSkills); 
+            const searchBar = document.getElementById('liveSearchBar');
+            searchBar.addEventListener('keyup', liveFilterVideos);
         });
-
-        // Highlight video titles that match user skills
-        function highlightMatchingVideos(skills) {
-            const videoItems = document.querySelectorAll('.video-item');
-            videoItems.forEach(item => {
-                const videoSkillsStr = item.getAttribute('data-skills') || '';
-                const videoSkills = videoSkillsStr.toLowerCase().split(/\s*,\s*/);
-                const titleElement = item.querySelector('p strong');
-
-                const isMatch = skills.some(userSkill => videoSkills.includes(userSkill.toLowerCase()));
-
-                if (isMatch) {
-                    titleElement.classList.add('highlighted-title');
-                } else {
-                    titleElement.classList.remove('highlighted-title');
-                }
-            });
-        }
     </script>
 
     <script src="{{ url_for('static', filename='search.js') }}"></script>
-=======
-<link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-
- 
-<script src="{{ url_for('static', filename='search.js') }}"></script>
-
-</head>
-<div class="search-container">
-    <input type="text" id="searchBar" placeholder="Search career videos...">
-    <i id="searchIcon" class="fas fa-search" onclick="searchVideos()"></i> <!-- Search Icon -->
-</div>
-
-
-
-<div class="search-container">
-    <div class="search-box">
-        <i class="fas fa-search"></i> <!-- Search Icon -->
-        <input type="text" id="searchBar" placeholder="Search career videos...">
-        <i id="micIcon" class="fas fa-microphone" onclick="startVoiceSearch()"></i> <!-- Voice Icon -->
-    </div>
-</div>
-
-<!-- Speech Box for Showing Spoken Words -->
-<div id="speechBox" class="speech-box hidden"></div> 
-
-
-
-
-
-
-
-    <script>
-    function searchVideos() {
-        var query = $("#searchBar").val();
-        if (query.length > 2) { // Start searching after typing 3 characters
-            $.get("/search_videos", { query: query }, function(data) {
-                $("#suggestions").html(data.suggestions);
-                $("#videoResults").html(data.results);
-            });
-        }
-    }
-    </script>
-    <div class="career-container">
-        <h1>Career Guidance Videos</h1>
-        <p>Watch insightful videos to learn about various career paths.</p>
-
-        <div class="video-list">
-            <div class="video-item">
-                <iframe width="100%" height="250" src="https://www.youtube.com/embed/QYjCs0HuCmM" frameborder="0" allowfullscreen></iframe>
-                <p><strong>Nursing Career Path</strong></p>
-            </div>
-
-            <div class="video-item">
-                <iframe width="100%" height="250" src="https://www.youtube.com/embed/HNg9kd2yHog" frameborder="0" allowfullscreen></iframe>
-                <p><strong>Sewing & Tailoring Career Guidance</strong></p>
-            </div>
-
-            <div class="video-item">
-                <iframe width="100%" height="250" src="https://www.youtube.com/embed/6Wv-AXtEnfM" frameborder="0" allowfullscreen></iframe>
-                <p><strong>Farming Techniques for Beginners</strong></p>
-            </div>
-        </div>
-
-        <p><a href="/">Back to Home</a></p>
-    </div>
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 </body>
 </html>

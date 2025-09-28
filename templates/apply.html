@@ -7,7 +7,6 @@
 </head>
 <body>
 
-<!-- Flash message display -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     <div class="flash-messages">
@@ -44,8 +43,11 @@
     <label for="pincode">Pincode *</label><br />
     <input type="text" id="pincode" name="pincode" pattern="\d{6}" title="6 digit pincode" required /><br /><br />
 
+    <label for="applicant_email">Email Address *</label><br />
+    <input type="email" id="applicant_email" name="applicant_email" required /><br /><br />
+    
     <label for="mobile">Mobile Number *</label><br />
-    <input type="tel" id="mobile" name="mobile" pattern="\d{10}" title="10 digit mobile number" required /><br /><br />
+    <input type="tel" id="mobile" name="applicant_phone" pattern="\d{10}" title="10 digit mobile number" required /><br /><br />
 
     <label for="experience">Experience (years) *</label><br />
     <input type="number" id="experience" name="experience" min="0" step="0.1" required /><br /><br />

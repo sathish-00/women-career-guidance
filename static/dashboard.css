@@ -16,7 +16,6 @@ body {
     align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-<<<<<<< HEAD
 .application-message {
     display: inline-block;
     padding: 6px 12px;
@@ -29,13 +28,17 @@ body {
     font-style: italic;
 }
 
-=======
->>>>>>> 005e43991de0473e54b734e957cb8331c9975876
 
 .main-header h1 {
     margin: 0;
     font-size: 1.8em;
 }
+
+.flash-messages {
+    opacity: 1; 
+    transition: opacity 0.5s ease-out; /* Add a 0.5 second fade transition */
+}
+/* The JavaScript then only needs to set the opacity to 0 before removing the element. */
 
 .main-header nav .button {
     background-color: #3498db;

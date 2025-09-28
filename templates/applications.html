@@ -1,43 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Applications for {{ job.name }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='applications.css') }}" />
+    <meta charset="UTF-8">
+    <title>Applications for Job: {{ job.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='applications.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <h1>Applications for Job: {{ job.name }}</h1>
-
-    {% if applications %}
-    <table border="1" cellpadding="5" cellspacing="0">
+    
+    <table>
         <thead>
             <tr>
                 <th>Applicant Name</th>
+                <th>Age</th>
+                <th>Skills</th>
                 <th>Contact Info</th>
                 <th>Resume</th>
+                <th>Profile Picture</th>
             </tr>
         </thead>
         <tbody>
             {% for app in applications %}
             <tr>
                 <td>{{ app.applicant_name }}</td>
-                <td>{{ app.contact_info or 'N/A' }}</td>
+                <td>{{ app.age or 'N/A' }}</td>
+                <td>{{ app.skills or 'N/A' }}</td>
+                
                 <td>
-                    {% if app.resume_filename %}
-                       <a href="{{ url_for('uploaded_resume', filename=app.resume_filename) }}" target="_blank">View Resume</a>
-
+                    {% if app.applicant_email or app.applicant_phone %}
+                        {% if app.applicant_email %}
+                            <i class="fas fa-envelope"></i> Email: <a href="mailto:{{ app.applicant_email }}">{{ app.applicant_email }}</a><br>
+                        {% endif %}
+                        {% if app.applicant_phone %}
+                            <i class="fas fa-phone"></i> Phone: {{ app.applicant_phone }}
+                        {% endif %}
                     {% else %}
-                        No resume submitted
+                        N/A
                     {% endif %}
                 </td>
+                
+                <td>
+                    {% if app.resume_filename %}
+                        <a href="{{ url_for('uploaded_resume', filename=app.resume_filename) }}" target="_blank">View Resume</a>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if app.profile_pic %}
+                        <img src="{{ url_for('static', filename='profile_pics/' + app.profile_pic) }}" alt="{{ app.applicant_name }}'s profile picture" width="50" height="50">
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center;">No applications yet for this job.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    {% else %}
-    <p>No applications received yet for this job.</p>
-    {% endif %}
-
+    
     <p><a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a></p>
 </body>
 </html>

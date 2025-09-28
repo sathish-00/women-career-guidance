@@ -1,43 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post New Job</title>
-
-  <link rel="stylesheet" href="{{ url_for('static', filename='post_job.css') }}">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post New Job</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='post_job.css') }}">
 </head>
 <body>
-  <h2>Post a New Job</h2>
+    <div class="container">
+        <h2>Post a New Job</h2>
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <p class="flash {{ category }}">{{ message }}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="flash {{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-  <form method="POST">
-    <label for="name">Job Name:</label>
-    <input type="text" id="name" name="name" required /><br/>
+        <form method="POST">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Job Name:</label>
+                    <input type="text" id="name" name="name" required />
+                </div>
+                <div class="form-group">
+                    <label for="total_labour_vacancy">Total Vacancies:</label>
+                    <input type="number" id="total_labour_vacancy" name="total_labour_vacancy" required min="0" placeholder="Enter number of vacancies" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Job Description:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="skills_required">Skills Required (comma separated):</label>
+                <input type="text" id="skills_required" name="skills_required" />
+            </div>
 
-    <label for="description">Job Description:</label>
-    <textarea id="description" name="description" required></textarea><br/>
+            <div class="form-group">
+                <label for="learn_more">Learn More (Link):</label>
+                <input type="url" id="learn_more" name="learn_more" />
+            </div>
 
-    <label for="learn_more">Learn More (Link):</label>
-    <input type="url" id="learn_more" name="learn_more" /><br/>
+            <div class="form-group">
+                <label for="application_form_url">Application Form URL:</label>
+                <input type="url" id="application_form_url" name="application_form_url" />
+            </div>
 
-    <label for="skills_required">Skills Required (comma separated):</label>
-    <input type="text" id="skills_required" name="skills_required" /><br/>
+            <div class="form-group">
+                <label for="total_staff">Total Staff:</label>
+                <input type="number" id="total_staff" name="total_staff" required min="0" placeholder="Enter total staff count" />
+            </div>
 
-    <label for="application_form_url">Application Form URL:</label>
-    <input type="url" id="application_form_url" name="application_form_url" /><br/>
+            <button type="submit">Post Job</button>
+        </form>
 
-    <button type="submit">Post Job</button>
-  </form>
-
-  <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">Back to Dashboard</a>
+    </div>
 </body>
 </html>

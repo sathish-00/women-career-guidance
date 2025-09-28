@@ -1,26 +1,37 @@
-/* Admin Post Job Page Styles */
+/* --- General Page Styling --- */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 700px;
-    margin: 40px auto;
-    background-color: #fafafa;
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f9;
     color: #333;
-    padding: 0 15px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
 }
 
 h2 {
     text-align: center;
-    color: #004080;
-    margin-bottom: 30px;
+    color: #4a69bd;
+    margin-bottom: 25px;
 }
 
-/* Flash messages */
+/* --- Flash Messages --- */
 .flash {
-    padding: 12px 18px;
-    margin-bottom: 20px;
-    font-weight: bold;
-    border-radius: 6px;
-    max-width: 600px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .flash.success {
@@ -35,63 +46,71 @@ h2 {
     border: 1px solid #f5c6cb;
 }
 
-/* Form styles */
+/* --- Form Styles --- */
 form {
-    background: white;
-    padding: 30px 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 15px;
 }
 
 label {
+    font-weight: bold;
     display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #222;
+    margin-bottom: 5px;
 }
 
 input[type="text"],
+input[type="number"],
 input[type="url"],
 textarea {
     width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 20px;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    box-sizing: border-box;
     font-size: 1em;
-    font-family: inherit;
-    resize: vertical;
 }
 
 textarea {
-    min-height: 80px;
+    resize: vertical;
+    min-height: 100px;
 }
 
 button[type="submit"] {
-    background-color: #0069d9;
+    background-color: #4a69bd;
+    color: white;
     border: none;
-    padding: 12px 25px;
-    color: #fff;
-    font-size: 1em;
-    font-weight: 600;
+    padding: 12px 20px;
     border-radius: 5px;
+    font-size: 1.1em;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    margin-top: 10px;
 }
 
 button[type="submit"]:hover {
-    background-color: #004a9f;
+    background-color: #3b5093;
 }
 
-/* Back to dashboard link */
-a {
-    display: inline-block;
-    margin-top: 25px;
-    color: #007bff;
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #4a69bd;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: bold;
 }
 
-a:hover {
+.back-link:hover {
     text-decoration: underline;
 }

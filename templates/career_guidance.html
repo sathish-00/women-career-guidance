@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Guide: {{ job.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='guidance_style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="guide-title">AI Career Guide: {{ job.name.capitalize() }}</h1>
+        <p class="summary-intro">This interactive assistant provides real-time guidance based on your questions about the skills required for **{{ job.name }}**.</p>
+        
+        <div id="chat-window">
+            <div class="message ai-message">
+                <span class="user-label">AI Guide:</span>
+                Hello! I am your AI Career Assistant. Ask me anything about the skills required for **{{ job.name }}** or how to crack the interview.
+            </div>
+            </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Ask a question about this career...">
+            <button id="send-button">Send</button>
+        </div>
+
+        <a href="{{ url_for('career_options') }}" class="back-link">← Back to All Career Options</a>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatWindow = document.getElementById('chat-window');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    function displayMessage(sender, message, isLink = false, url = null) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        
+        if (isLink) {
+            messageDiv.innerHTML = `<span class="user-label">AI Guide:</span> ${message} <br><a href="${url}" target="_blank" class="chat-link">Click here to search Google</a>`;
+        } else {
+            messageDiv.innerHTML = `<span class="user-label">${sender === 'user' ? 'You' : 'AI Guide'}:</span> ${message}`;
+        }
+
+        chatWindow.appendChild(messageDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (message === "") return;
+
+        displayMessage('user', message);
+        userInput.value = '';
+
+        try {
+            const response = await fetch('{{ url_for("chat") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
+            });
+            
+            const data = await response.json();
+
+            // --- CRITICAL FIX: Handle structured JSON response ---
+            if (data.action === 'link') {
+                displayMessage('ai', data.message, true, data.url);
+            } else if (data.action === 'message') {
+                displayMessage('ai', data.response);
+            } else {
+                 // Fallback for any unknown structure or direct text responses
+                 displayMessage('ai', data.response || 'Unknown response format.');
+            }
+            // --- End of Fix ---
+
+        } catch (error) {
+            console.error('Chat API Error:', error);
+            displayMessage('ai', 'Sorry, I ran into a technical error while processing your request.');
+        }
+    }
+
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+            e.preventDefault();
+        }
+    });
+});
+</script>
+</body>
+</html>
