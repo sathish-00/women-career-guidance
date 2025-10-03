@@ -65,13 +65,14 @@
     /* Submit Button */
     button {
         margin-top: 30px;
-        padding: 12px 20px;
+        padding: 10px 15px;
         background: linear-gradient(90deg, #4a90e2, #2471a3);
         border: none;
         color: white;
         font-size: 16px;
         font-weight: bold;
         border-radius: 8px;
+        
         cursor: pointer;
         transition: transform 0.2s, box-shadow 0.2s;
     }
@@ -114,20 +115,23 @@
 
 /* Style for the new "Back to Dashboard" button */
 .back-button {
-    display: inline-block;
-    padding: 10px 20px;
+    display: block;
+    padding: 10px 15px;
     background-color: #6c757d; /* A neutral grey color */
     color: white;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 8px; 
     font-size: 16px;
     font-weight: bold;
     text-align: center;
     transition: background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.4);
+    
 }
 
 .back-button:hover {
     background-color: #5a6268;
+    
 }
 
 /* Optional: Adjust original button width if needed */

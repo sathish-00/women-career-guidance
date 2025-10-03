@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Career Interests</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='career_interests.css') }}">
-    
-    {# Font Awesome is needed for the Search and Microphone icons #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -14,7 +12,6 @@
         
         <h2 id="register-heading">Personalize Your Dashboard</h2>
         
-        {# Flash Messages #}
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="flash-messages">
@@ -30,16 +27,12 @@
         <p class="instruction">
             Choose all skills you possess or are interested in learning. This will filter your job dashboard.
         </p>
-
-        {# Note Point #}
         <p class="instruction note-point">
             Note: If you do not select any skills, your dashboard will show no job recommendations.
         </p>
 
-
         <form method="POST" action="{{ url_for('career_interests') }}" id="skillsForm">
             
-            {# --- SEARCH AND VOICE CONTAINER (YOUTUBE STYLE) --- #}
             <div class="search-container">
                 <input 
                     type="text" 
@@ -48,25 +41,17 @@
                     aria-label="Search skills" 
                     onkeyup="filterSkills()"
                 >
-                
-                {# Voice Input Button #}
                 <button type="button" id="voiceBtn" class="search-icon-btn youtube-style-btn" title="Speak to search">
                     <i class="fas fa-microphone"></i> 
                 </button>
-                
-                {# Search Button #}
                 <button type="button" class="search-icon-btn youtube-style-btn" title="Search skills" onclick="filterSkills()">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
-            {# ------------------------------------------------ #}
 
             <div class="skills-list-wrapper" id="skillsListWrapper">
-                
                 {% if available_skills %}
                     <p>Available Skills (Filterable List):</p>
-                    
-                    {# Loop through all skills available from job postings #}
                     {% for skill in available_skills %}
                         <div class="skill-checkbox-item" data-skill-name="{{ skill | lower }}">
                             <input 
@@ -79,11 +64,9 @@
                             <label for="skill_{{ loop.index }}">{{ skill }}</label>
                         </div>
                     {% endfor %}
-                    
                     <p id="noSkillsFound" style="display: none; color: red; margin-top: 20px;">
                         No matching skills found.
                     </p>
-                    
                 {% else %}
                     <p class="info-message">
                         No specific career interests are currently available based on posted jobs. 
@@ -92,27 +75,75 @@
                 {% endif %}
             </div>
 
+            <div class="card mt-4">
+                <div class="card-header">
+                    Your Selected Skills
+                </div>
+                <div class="card-body">
+                    <div id="selected-skills-container">
+                        <span class="placeholder-text">You haven't selected any skills yet.</span>
+                    </div>
+                </div>
+            </div>
             <button type="submit" class="btn-submit">Save Interests & Go to Dashboard</button>
         </form>
-    </div> {# Closes the main .container #}
+    </div>
 
-    {# --- BOTTLE CAP VOICE FEEDBACK INDICATOR --- #}
     <div id="voiceFeedback" class="voice-feedback" style="display: none;">
         <i class="fas fa-microphone"></i>
-        {# These are hidden via CSS but kept for JS reference #}
         <p id="voiceStatus"></p> 
         <p id="voiceResult"></p>
     </div>
-    {# ----------------------------------------------------------- #}
 
-    {# --- STRUCTURAL FIX: Footer positioned outside the container for proper flow --- #}
     <footer class="outer-footer-nav">
         <p><a href="{{ url_for('dashboard') }}" class="skip-link">Skip & Go to Dashboard</a></p>
     </footer>
-    {# ----------------------------------------------------------------------------- #}
 
-    {# --- JAVASCRIPT LINK (REQUIRED FOR SEARCH/VOICE) --- #}
     <script src="{{ url_for('static', filename='career_interests.js') }}"></script>
-    {# ---------------------------------------------------- #}
-</body>
+
+    <script>
+        const skillCheckboxes = document.querySelectorAll('input[name="skills"]');
+        const displayContainer = document.getElementById('selected-skills-container');
+        const placeholderText = '<span class="placeholder-text">You haven\'t selected any skills yet.</span>';
+
+        function updateSelectedSkills() {
+            displayContainer.innerHTML = '';
+            const selectedSkills = Array.from(skillCheckboxes).filter(checkbox => checkbox.checked);
+
+            if (selectedSkills.length > 0) {
+                selectedSkills.forEach(checkbox => {
+                    const pill = document.createElement('div');
+                    pill.className = 'skill-pill';
+                    pill.innerHTML = `
+                        <span>${checkbox.value}</span>
+                        <button type="button" class="cancel-btn" data-skill="${checkbox.value}">&times;</button>
+                    `;
+                    displayContainer.appendChild(pill);
+                });
+            } else {
+                displayContainer.innerHTML = placeholderText;
+            }
+            addCancelEventListeners();
+        }
+
+        function addCancelEventListeners() {
+            document.querySelectorAll('.cancel-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const skillToUncheck = event.target.dataset.skill;
+                    const checkbox = document.querySelector(`input[name="skills"][value="${skillToUncheck}"]`);
+                    if (checkbox) {
+                        checkbox.checked = false;
+                    }
+                    updateSelectedSkills();
+                });
+            });
+        }
+
+        skillCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateSelectedSkills);
+        });
+
+        document.addEventListener('DOMContentLoaded', updateSelectedSkills);
+    </script>
+    </body>
 </html>

@@ -11,16 +11,16 @@ body {
 /* --- Header and Navigation Styles --- */
 .main-header {
     background-color: #ffffff;
-    padding: 15px 40px;
+    padding: 30px 30px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
-.main-header h1 {
-    color: #4a148c; /* Deep Purple Heading */
-    font-size: 1.8em;
+.main-header h1{
+    color: #883314; /* Deep Purple Heading */
+    font-size: 1.5em;
     margin: 0;
 }
 
@@ -46,13 +46,15 @@ body {
 
 .top-nav-buttons a.button:hover {
     background-color: #0056b3;
+    padding: 4px 12px;
 }
 
 .top-nav-buttons a.button:last-child {
-    background-color: #dc3545; /* Red for Logout */
+    background-color: #436082; /* Red for Logout */
 }
 .top-nav-buttons a.button:last-child:hover {
-    background-color: #c82333;
+    background-color: #39546c;
+    font-size: 1em;
 }
 
 
@@ -91,7 +93,7 @@ body {
 }
 
 .profile-summary h2, .profile-summary h3 {
-    color: #4a148c;
+    color: #006895;
     font-size: 1.4em;
     padding-bottom: 5px;
     margin-top: 20px;
@@ -132,7 +134,7 @@ body {
     margin-top: 15px;
     padding: 8px 12px; 
     font-size: 0.9em; 
-    background-color: #91299d; /* Deep Purple */
+    background-color: #5b0576; /* Deep Purple */
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -163,7 +165,7 @@ body {
 
 .career-suggestions h3 {
     /* Style to make Recommended Jobs section stand out */
-    color: #0056b3;
+    color: #a13463;
     font-size: 1.6em;
     margin-top: 0;
     padding-bottom: 5px;
@@ -327,3 +329,16 @@ body {
 .applied-jobs-summary .download-link:hover {
     background-color: #0056b3;
 }
+
+
+    /* Specific styling for the new delete button */
+    .delete-btn {
+        background-color: #dc3545; /* Red */
+        border: none; /* Removes default button border */
+        font-family: inherit; /* Matches font of your other links */
+        font-size: 1em; /* Matches font size */
+        cursor: pointer;
+        border-radius: 5px;
+        color: rgb(229, 226, 226);
+        
+    }

@@ -12,10 +12,14 @@
         <h2>Admin Dashboard - Job Postings</h2>
 
         <nav class="main-nav">
-            <a href="{{ url_for('post_job') }}" class="btn-nav">Post New Job</a>
-            <a href="{{ url_for('logout') }}" class="btn-nav btn-logout">Logout</a>
-            
-        </nav>
+    <a href="{{ url_for('post_job') }}" class="btn-nav">Post New Job</a>
+    
+    <form action="{{ url_for('delete_account') }}" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete your account?');" style="display: inline;">
+        <button type="submit" class="btn-nav btn-delete">Delete Account</button>
+    </form>
+    
+    
+</nav>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}

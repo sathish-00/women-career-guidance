@@ -67,7 +67,7 @@ section p {
 
 .home-nav a {
     padding: 10px 15px;
-    background-color: #ff7f50; /* ✅ Individual background for each link */
+    background-color: #fe6a35; /* ✅ Individual background for each link */
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -75,7 +75,7 @@ section p {
 }
 
 .home-nav a:hover {
-    background-color: #ff5722; /* ✅ Changes color on hover */
+    background-color: #ff4b14; /* ✅ Changes color on hover */
 }
 
 

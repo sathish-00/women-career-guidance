@@ -303,9 +303,7 @@ def logout():
 def register():
     if request.method == "POST":
 
-        if 'terms_agree' not in request.form:
-            flash('You must agree to the Terms and Conditions to register.', 'error')
-            return redirect(url_for('register'))
+        
 
         
         # --- CAPTCHA Verification (Placeholder) ---
@@ -1162,15 +1160,12 @@ def career_options():
     all_jobs_query += " ORDER BY c.name ASC"
     jobs_raw = db.execute(all_jobs_query, params).fetchall()
     
-    todays_job_ids = {job['id'] for job in todays_jobs}
-    jobs = [job for job in jobs_raw if job['id'] not in todays_job_ids]
-    
     available_skills = {}
     
     return render_template(
         'career_options.html',
         todays_jobs=todays_jobs,
-        jobs=jobs,
+        jobs=jobs_raw,
         available_skills=available_skills,
         search_query=search_query
     )
@@ -1190,7 +1185,7 @@ def career_interests():
     ).fetchall()
     skills_set = set()
     for row in rows:
-        skills_in_row = [skill.strip() for skill in row['skills_required'].split(',')]
+        skills_in_row = [skill.strip().lower() for skill in row['skills_required'].split(',')]
         skills_set.update(skills_in_row)
     available_skills = sorted(skills_set)
 
@@ -1611,7 +1606,73 @@ def terms_and_conditions():
     """
     This route displays the separate Terms and Conditions page.
     """
-    return render_template('terms.html')
+    return render_template('term.html')
+
+from flask import flash, redirect, url_for
+from flask_login import current_user, logout_user
+
+@app.route('/delete_account', methods=['POST'])
+@login_required
+def delete_account():
+    db = get_db()
+    
+    try:
+        # Get the current user's username
+        username_to_delete = current_user.username
+        
+        # Log the user out BEFORE deleting their data
+        logout_user()
+        
+        # Execute the DELETE statement in the database
+        db.execute("DELETE FROM users WHERE username = ?", (username_to_delete,))
+        db.commit()
+        
+        flash("Your account has been permanently deleted.", "success")
+        return redirect(url_for('home')) # Redirect to the homepage
+
+    except Exception as e:
+        # Handle any potential errors
+        flash(f"An error occurred: {e}", "error")
+        return redirect(url_for('dashboard')) # Redirect back to their dashboard if it fails
+    
+# Add this new route to your Flask application
+@app.route('/admin/delete_user', methods=['POST'])
+@login_required # Make sure the user is logged in
+def admin_delete_user():
+    # SECURITY CHECK: Ensure the current user is an admin
+    if current_user.role != 'admin':
+        flash("You do not have permission to perform this action.", "error")
+        return redirect(url_for('dashboard')) # Or wherever you want to redirect non-admins
+
+    # Get the username to delete from the hidden form field
+    username_to_delete = request.form.get('username_to_delete')
+
+    if not username_to_delete:
+        flash("Invalid request. No user specified.", "error")
+        return redirect(url_for('admin_dashboard'))
+
+    # PREVENT ADMIN FROM DELETING THEMSELVES: This is a good safety measure
+    if username_to_delete == current_user.username:
+        flash("You cannot delete your own account from the admin panel.", "error")
+        return redirect(url_for('admin_dashboard'))
+
+    db = get_db()
+    try:
+        # Check if the user exists before trying to delete
+        user_exists = db.execute("SELECT 1 FROM users WHERE username = ?", (username_to_delete,)).fetchone()
+        
+        if user_exists:
+            db.execute("DELETE FROM users WHERE username = ?", (username_to_delete,))
+            db.commit()
+            flash(f"User '{username_to_delete}' has been successfully deleted.", "success")
+        else:
+            flash(f"User '{username_to_delete}' not found.", "error")
+            
+    except Exception as e:
+        flash(f"An error occurred: {e}", "error")
+        db.rollback()
+
+    return redirect(url_for('admin_dashboard')) # Redirect back to the admin dashboard
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):

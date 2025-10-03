@@ -10,14 +10,14 @@ body {
 .container {
     max-width: 900px; /* Slightly wider for better chat layout */
     margin: 40px auto;
-    padding: 40px;
+    padding: 30px;
     background-color: #e3e5e9;
     border-radius: 16px; /* Rounded corners for modern look */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Prominent shadow */
 }
 
 h1.guide-title {
-    color: #586399; /* Bright, attractive primary color */
+    color: #2c3e97; /* Bright, attractive primary color */
     text-align: center;
     font-size: 1.8em;
     font-weight: 500;
@@ -35,12 +35,12 @@ h1.guide-title {
 /* --- Chat Window and Messages --- */
 #chat-window {
     height: 400px;
-    border: 1px solid #c8d3e2;
+    border: 1px solid #34373c;
     border-radius: 10px;
     padding: 15px;
     overflow-y: auto;
     margin-bottom: 20px;
-    background-color: #f7f9fc; /* Off-white chat background */
+    background-color: #fefeff; /* Off-white chat background */
     /* Added Flex for better spacing control, but kept standard flow */
     display: flex;
     flex-direction: column;
@@ -89,7 +89,7 @@ h1.guide-title {
 /* --- Chat Input Area --- */
 .chat-input-area {
     display: flex;
-    gap: 10px;
+    gap: 5px;
 }
 
 #user-input {
@@ -108,20 +108,18 @@ h1.guide-title {
 }
 
 #send-button {
-    background-color: #2a5581;
+    background-color: #203c89;
     color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 25px;
+    border: 1px  #b6bccc;
+    padding: 15px ;
+    border-radius: 15px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
+    
+    
 }
 
-#send-button:hover {
-    background-color: #082a50;
-    transform: translateY(-1px);
-}
+
 
 /* --- Back Link --- */
 .back-link {
@@ -129,6 +127,6 @@ h1.guide-title {
     margin-top: 20px;
     text-align: center;
     color: #17191b;
-    text-decoration: none;
+    text-decoration: underline;
     font-weight: 600;
 }
