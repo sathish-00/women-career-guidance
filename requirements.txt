@@ -15,7 +15,6 @@ click==7.1.2
 colorama==0.4.5
 contextlib2==21.6.0
 contextvars==2.4
-dataclasses==0.8
 fastapi==0.83.0
 Flask==1.1.4
 Flask-Babel==2.0.0
