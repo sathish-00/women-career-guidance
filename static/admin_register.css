@@ -10,7 +10,7 @@ body {
 
 h2 {
     text-align: center;
-    color: #004080;
+    color: #1e528e;
     margin-bottom: 35px;
 }
 
@@ -65,7 +65,7 @@ input[type="file"] {
 }
 
 button[type="submit"] {
-    background-color: #007bff;
+    background-color: #2b5683;
     border: none;
     padding: 14px 0;
     width: 100%;
@@ -86,11 +86,28 @@ a {
     display: block;
     margin-top: 28px;
     text-align: center;
-    color: #007bff;
+    color: #ff8400;
     font-weight: 600;
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+/* --- Required Field Styling --- */
+
+/* Styles for all labels */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #222;
+}
+
+/* Styles for the red asterisk */
+.required-mark {
+    color: #dc3545; /* Standard error red */
+    margin-left: 5px; /* Adds a small gap from the label text */
+    font-weight: 700;
 }

@@ -10,6 +10,12 @@ body {
     padding: 0;
     box-sizing: border-box;
 }
+h4 {
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #72157c;
+    font-size: 1.1em;
+}
 
 .main-content {
     display: flex;
@@ -33,12 +39,12 @@ body {
 .suggestion-box {
     background-color: rgba(255, 255, 255, 0.96);
     border-radius: 14px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 25px rgba(48, 47, 47, 0.345);
     padding: 35px 30px;
     width: 100%;
     max-width: 380px;
-    height: auto;
-    color: #2c3e50;
+    height: 500px;
+    color: #3f474f;
     font-size: 1em;
     line-height: 1.6;
 }
@@ -238,6 +244,13 @@ button[type='submit']:hover {
     }
 }
 
+
+label.required::after {
+  content: " *"; /* The space before the star is important */
+  color: red;
+  font-weight: bold;
+}
+
 /* This part should be at the top or bottom of your file, outside of everything else */
 @keyframes pulse {
     0% {
@@ -263,4 +276,69 @@ button[type='submit']:hover {
 
 .register-links a:hover {
     text-decoration: underline;
+}
+
+/* --- Required Field Indicator --- */
+
+/*
+  This uses the ::after pseudo-element to add content
+  right after the label's original text. It's a clean way
+  to add the star without extra HTML.
+*/
+
+/* static/register.css (Add or verify these styles are present) */
+
+/* 1. Target all form controls including the new <select> */
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group select { /* <-- This targets the Security Question dropdown */
+    width: 100%;
+    padding: 10px 15px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; 
+    font-size: 16px;
+    transition: border-color 0.3s;
+    /* Reset background for <select> which often looks different */
+    background-color: #fff; 
+}
+
+/* 2. Style the dropdown specifically if needed (e.g., to remove system arrow) */
+/* (Optional: You can use -webkit-appearance: none; here if you want a custom arrow, but the above rules are usually enough to make it look clean.) */
+
+/* 3. Add focus styles for both the input (answer) and select (question) */
+.form-group select:focus,
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: #007bff; /* Highlight color on focus */
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* 4. Ensure labels for required fields are marked */
+.form-group label.required::after {
+    content: " *";
+    color: red;
+}
+.terms-container {
+  display: flex;
+  align-items: center; /* Vertically aligns the checkbox with the text */
+  margin-bottom: 15px; /* Adds some space below it */
+  font-size: 14px;
+}
+
+.terms-container input[type="checkbox"] {
+  margin-right: 10px; /* Adds space between the checkbox and the label */
+}
+
+.terms-container a {
+  color: #007bff; /* Makes the link color stand out */
+  text-decoration: none; /* Removes the underline */
+}
+
+.terms-container a:hover {
+  text-decoration: underline; /* Adds underline on hover for clarity */
 }

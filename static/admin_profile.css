@@ -1,32 +1,53 @@
-/* Admin Profile Page Styles */
+/* --- Global Body and Layout --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 700px;
-    margin: 40px auto;
-    background-color: #fafafa;
-    color: #333;
-    padding: 0 15px;
+    background-color: #f7fcfd;
+    color: #343a40;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Allows footer to stick to bottom */
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 800px; 
+    margin: 40px auto; /* Centers container vertically */
+    flex-grow: 1; /* Pushes footer down */
 }
 
 h2 {
+    color: #e43075; /* Deep Violet - Primary Heading Color */
     text-align: center;
-    color: #004080;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
+    font-size: 2em;
+    font-weight: 700;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #e0e0e0;
 }
 
-/* Flash messages */
-.flash {
-    padding: 12px 18px;
+/* --- Flash Messages --- */
+.flash-messages {
     margin-bottom: 20px;
-    font-weight: bold;
+}
+
+.flash {
+    padding: 12px 15px;
     border-radius: 6px;
-    max-width: 600px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .flash.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: #e0f6f3;
+    color: #155724; 
+    border: 1px solid #1ABC9C; 
 }
 
 .flash.error {
@@ -35,63 +56,142 @@ h2 {
     border: 1px solid #f5c6cb;
 }
 
-/* Form styles */
+/* --- Form Structure (Two-Column Grid) --- */
 form {
-    background: white;
-    padding: 30px 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 30px; 
+}
+
+/* Makes full-width elements span both columns */
+form > .form-group:nth-last-child(2), 
+form > button[type="submit"] {
+    grid-column: 1 / -1; 
+}
+
+.form-group {
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #222;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #5A3B7C; /* Deep Violet Label Color */
+    font-size: 0.95em;
 }
 
 input[type="text"],
 input[type="number"],
 textarea {
     width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px;
+    border: 1px solid #c8d0d9;
+    border-radius: 8px;
+    box-sizing: border-box;
     font-size: 1em;
-    font-family: inherit;
-    resize: vertical;
+    color: #343a40;
+    transition: border-color 0.3s;
 }
 
 textarea {
-    min-height: 80px;
+    min-height: 100px;
+    resize: vertical;
 }
 
+input:focus, textarea:focus {
+    border-color: #8053AD; 
+    box-shadow: 0 0 8px rgba(128, 83, 173, 0.3);
+    outline: none;
+}
+
+/* --- Buttons and Back Link --- */
 button[type="submit"] {
-    background-color: #0069d9;
+    background-color: #353486; 
+    color: white;
     border: none;
-    padding: 12px 25px;
-    color: #fff;
-    font-size: 1em;
-    font-weight: 600;
-    border-radius: 5px;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button[type="submit"]:hover {
-    background-color: #004a9f;
+    background-color: #324a75;
+    transform: translateY(-2px);
 }
 
-/* Back to home link */
-a {
-    display: inline-block;
+.back-link {
+    display: block;
     margin-top: 25px;
-    color: #007bff;
+    text-align: center;
+    color: #2e799e;
     text-decoration: none;
     font-weight: 600;
 }
 
-a:hover {
-    text-decoration: underline;
+/* --- Footer Styling --- */
+.site-footer {
+    background-color: #343a40; /* Dark gray footer */
+    color: white;
+    padding: 20px 0;
+    width: 100%;
+    margin-top: 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    text-align: left;
+}
+
+.footer-section h4 {
+    color: #398a8a;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.footer-link {
+    color: #ffffffcc;
+    text-decoration: none;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    /* Forces single column layout on small screens */
+    form {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    .container {
+        padding: 20px;
+        margin: 10px auto;
+    }
+    /* Ensure elements that were forced full-width stay full width */
+    form > div {
+        grid-column: auto;
+    }
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+}
+/* --- Styling for the Required Asterisk --- */
+.required-mark {
+    /* Standard red color for required/error states */
+    color: #dc3545; 
+    margin-left: 5px; /* Provides a small gap from the label text */
+    font-weight: 700;
 }

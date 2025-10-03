@@ -1,116 +1,239 @@
-/* apply.css */
+/* ==========================================================================
+   1. VARIABLES & GLOBAL STYLES
+   ========================================================================== */
+:root {
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --success-color: #198754;
+  --success-hover: #157347;
+  --danger-color: #dc3545;
+  --header-dark: #2d3748; /* Dark color for the new stylish header */
+  --bg-color: #f8f9fa;
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
+  --text-dark: #212529;
+  --text-light: #6c757d;
+  --font-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f7f9fc;
+    font-family: var(--font-sans-serif);
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    line-height: 1.6;
     margin: 0;
+}
+
+/* ==========================================================================
+   2. PAGE LAYOUT & CONTAINERS
+   ========================================================================== */
+.page-container {
+    max-width: 900px;
+    margin: 30px auto;
     padding: 20px;
-    color: #333;
-    text-align: center;
 }
 
+.job-details {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.07);
+    margin-bottom: 25px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 40px 0;
+}
+
+/* ==========================================================================
+   3. TYPOGRAPHY
+   ========================================================================== */
 h1 {
-    color: #afd84e;
-    margin-bottom: 20px;
     text-align: center;
-}
-h2 {
-    color: #789cbe;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-form {
-    max-width: 700px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 30px 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    color: rgba(132, 19, 140, 0.84); /* Your custom color */
+    margin-bottom: 25px;
 }
 
 label {
-    font-weight: 600;
     display: block;
-    margin-bottom: 6px;
-    margin-top: 15px;
-    color: #2c2e30;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
 }
 
+label.required::after {
+    content: " *";
+    color: var(--danger-color);
+}
+
+/* ==========================================================================
+   4. STYLISH TWO-TONE FORM CARD
+   ========================================================================== */
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(80, 97, 142); /* Your custom color */
+    color: var(--card-bg);
+    padding: 20px 30px;
+    border-radius: 12px 12px 0 0;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.form-header h3 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--card-bg);
+    text-align: center;
+}
+
+#fill-from-recent-btn {
+    background-color: transparent;
+    border: 2px solid var(--card-bg);
+    color: var(--card-bg);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+#fill-from-recent-btn:hover {
+    background-color: var(--card-bg);
+    color: var(--header-dark);
+}
+
+.form-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 12px 12px;
+    padding: 30px;
+    box-shadow: 0 4px 25px rgba(41, 115, 134, 0.403); /* Your custom shadow */
+    border-top: none;
+}
+
+/* ==========================================================================
+   5. FORM ELEMENTS
+   ========================================================================== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* --- UPDATED: Font size and weight increased for input fields --- */
 input[type="text"],
 input[type="date"],
 input[type="email"],
 input[type="tel"],
 input[type="number"],
-input[type="file"],
-select,
-textarea {
+textarea,
+select {
     width: 100%;
-    padding: 10px 14px;
-    border-radius: 5px;
-    border: 1px solid #ccd6dd;
-    font-size: 15px;
-    transition: border-color 0.3s ease;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #fdfdff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    
+    /* --- CHANGES ARE HERE --- */
+    font-size: 18px; /* Increased from 16px */
+    font-weight: 500;  /* Added to make text thicker */
+    color: var(--text-dark); /* Ensures text is dark and clear */
 }
 
-input[type="text"]:focus,
-input[type="date"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-input[type="number"]:focus,
-input[type="file"]:focus,
-select:focus,
-textarea:focus {
-    border-color: #2980b9;
+input:focus, textarea:focus, select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(46, 82, 124, 0.292); /* Your custom focus glow */
     outline: none;
 }
 
-textarea {
-    resize: vertical;
-    min-height: 80px;
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-color);
+    padding: 12px;
+    border-radius: 8px;
 }
+.checkbox-group input[type="checkbox"] { width: auto; margin-right: 12px; transform: scale(1.2); }
+.checkbox-group label { margin-bottom: 0; font-weight: normal; }
+.checkbox-group label.required::after { content: ""; }
 
-input[type="checkbox"] {
-    width: auto;
-    margin-right: 8px;
-    vertical-align: middle;
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 button[type="submit"] {
-    margin-top: 25px;
-    background-color: #2980b9;
-    color: white;
-    padding: 14px 25px;
+    background-color: var(--success-color);
+    color: var(--white);
+    padding: 12px 30px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-weight: 600;
+    transition: background-color 0.3s;
 }
 
 button[type="submit"]:hover {
-    background-color: #1e6091;
+    background-color: rgb(22, 106, 46); /* Your custom hover color */
 }
 
-a.button-cancel {
-    display: inline-block;
-    margin-left: 15px;
-    padding: 14px 25px;
-    background-color: #bdc3c7;
-    color: #2c3e50;
+.cancel-link {
+    color: var(--text-light);
     text-decoration: none;
-    border-radius: 6px;
     font-weight: 600;
-    transition: background-color 0.3s ease;
+}
+.cancel-link:hover { text-decoration: underline; }
+
+/* ==========================================================================
+   6. SPECIAL SECTIONS
+   ========================================================================== */
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    z-index: 1000;
+    transition: opacity 0.5s ease-in-out;
 }
 
-a.button-cancel:hover {
-    background-color: #95a5a6;
+.flash { padding: 15px; margin-bottom: 15px; border-radius: 8px; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.flash.success { background-color: #d1e7dd; color: #0f5132; }
+.flash.error { background-color: #f8d7da; color: #842029; }
+
+.resume-info {
+    font-size: 14px;
+    color: var(--text-light);
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
 }
 
-@media (max-width: 600px) {
-    form {
-        padding: 20px;
+/* ==========================================================================
+   7. RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 768px) {
+    .page-container {
+        padding: 10px;
+        margin: 10px auto;
+    }
+    
+    .form-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
     }
 }

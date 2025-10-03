@@ -2,97 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Admin Profile</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        form {
-            max-width: 600px;
-            margin: auto;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            box-sizing: border-box;
-        }
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .flash {
-            max-width: 600px;
-            margin: 10px auto;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .flash.success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .flash.error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit_admin_profile.css') }}">
 </head>
 <body>
-    <center><h2>Edit Admin Profile</h2></center>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
-    <form method="POST">
-        <label for="shop_name">Shop Name:</label>
-        <input type="text" id="shop_name" name="shop_name" value="{{ profile.shop_name or '' }}" required />
+    <div class="form-container">
+        <h2>Edit Admin Profile</h2>
 
-        <label for="total_labour_vacancy">Total Labour Vacancy:</label>
-        <input type="number" id="total_labour_vacancy" name="total_labour_vacancy" value="{{ profile.total_labour_vacancy or 0 }}" min="0" required />
+        <form method="POST">
+            <div class="form-group">
+                <label for="shop_name">Shop Name:</label>
+                <input type="text" id="shop_name" name="shop_name" value="{{ profile.shop_name or '' }}" required />
+            </div>
 
-        <label for="total_staff">Total Staff:</label>
-        <input type="number" id="total_staff" name="total_staff" value="{{ profile.total_staff or 0 }}" min="0" required />
+            <div class="form-group">
+                <label for="total_labour_vacancy">Total Labour Vacancy:</label>
+                <input type="number" id="total_labour_vacancy" name="total_labour_vacancy" value="{{ profile.total_labour_vacancy or 0 }}" min="0" required />
+            </div>
 
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" value="{{ profile.location or '' }}" />
+            <div class="form-group">
+                <label for="total_staff">Total Staff:</label>
+                <input type="number" id="total_staff" name="total_staff" value="{{ profile.total_staff or 0 }}" min="0" required />
+            </div>
 
-        <label for="hand_based_salary">Hand Based Salary:</label>
-        <input type="text" id="hand_based_salary" name="hand_based_salary" value="{{ profile.hand_based_salary or '' }}" />
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" value="{{ profile.location or '' }}" />
+            </div>
 
-        <label for="incentives">Incentives:</label>
-        <input type="text" id="incentives" name="incentives" value="{{ profile.incentives or '' }}" />
+            <div class="form-group">
+                <label for="hand_based_salary">Hand Based Salary:</label>
+                <input type="text" id="hand_based_salary" name="hand_based_salary" value="{{ profile.hand_based_salary or '' }}" />
+            </div>
 
-        <label for="branches">Branches:</label>
-        <input type="text" id="branches" name="branches" value="{{ profile.branches or '' }}" />
+            <div class="form-group">
+                <label for="incentives">Incentives:</label>
+                <input type="text" id="incentives" name="incentives" value="{{ profile.incentives or '' }}" />
+            </div>
 
-        <label for="contact_info">Contact Info:</label>
-        <input type="text" id="contact_info" name="contact_info" value="{{ profile.contact_info or '' }}" />
+            <div class="form-group">
+                <label for="branches">Branches:</label>
+                <input type="text" id="branches" name="branches" value="{{ profile.branches or '' }}" />
+            </div>
 
-        <label for="written_test">Written Test:</label>
-        <input type="text" id="written_test" name="written_test" value="{{ profile.written_test or '' }}" />
+            <div class="form-group">
+                <label for="contact_info">Contact Info:</label>
+                <input type="text" id="contact_info" name="contact_info" value="{{ profile.contact_info or '' }}" />
+            </div>
 
-        <button type="submit">Save Changes</button>
+            <div class="form-group">
+                <label for="written_test">Written Test:</label>
+                <input type="text" id="written_test" name="written_test" value="{{ profile.written_test or '' }}" />
+            </div>
+
+            
+            <div class="form-actions">
+            
+            <a href="{{ url_for('admin_dashboard') }}" class="back-button">Back to Dashboard</a>
+            <button type="submit" class="save-button">Save Changes</button>
+        </div>
     </form>
+    </div>
+    
+
 </body>
 </html>
