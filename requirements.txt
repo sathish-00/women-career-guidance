@@ -1,5 +1,6 @@
 setuptools
 wheel
+build
 absl-py==0.15.0
 anyio==3.6.2
 asgiref==3.4.1
