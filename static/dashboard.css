@@ -1,4 +1,4 @@
-/* static/dashboard.css - FINAL CARD-BASED LAYOUT WITH MOBILE FIXES */
+/* static/dashboard.css */
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -8,112 +8,85 @@ body {
     margin: 0;
 }
 
-/* --- Header and Navigation Styles --- */
-.main-header {
-    background-color: #ffffff;
-    padding: 30px 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+/* =================================== */
+/* ==   Cleaned-Up Header & Nav     == */
+/* =================================== */
+.menu-bar {
+    background-color: #045da5;
+    color: white;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    position: relative;
 }
-.main-header h1{
-    color: #883314; /* Deep Purple Heading */
-    font-size: 1.5em;
-    margin: 0;
+.menu-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
-
-/* FIX: Targets the <nav> element holding the Home/Logout buttons */
-.top-nav-buttons {
+.welcome-message {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.hamburger {
+    font-size: 24px;
+    cursor: pointer;
+    display: none;
+}
+.nav-links {
     display: flex;
     gap: 10px;
 }
-
-.top-nav-buttons a.button {
-    /* Ensures Home and Logout buttons flow correctly and are styled */
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    background-color: #007bff; /* Blue for Home/Nav */
-    color: white;
+.nav-links .nav-button {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
     font-weight: 600;
-    transition: background-color 0.2s;
-    /* Resetting position to fix mobile overlap */
-    position: static !important; 
-    float: none !important;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: white;
+    border: 1px solid transparent;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 1rem;
 }
-
-.top-nav-buttons a.button:hover {
-    background-color: #0056b3;
-    padding: 4px 12px;
+.nav-links .nav-button:hover {
+    background-color: rgba(57, 30, 30, 0.2);
 }
-
-.top-nav-buttons a.button:last-child {
-    background-color: #436082; /* Red for Logout */
-}
-.top-nav-buttons a.button:last-child:hover {
-    background-color: #39546c;
-    font-size: 1em;
-}
-
+.nav-links .home-btn {
+    background-color: #e77000; }
+.nav-links .delete-btn { background-color: #dc3545; }
+.nav-links .logout-btn { background-color: #042a53; }
 
 /* --- Main Layout Grid --- */
 .dashboard-layout {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 20px auto 0;
     display: grid;
-    /* Defines a sidebar (300px) and the main content area (rest of space) */
     grid-template-columns: 300px 1fr; 
     gap: 30px;
     padding: 0 20px;
 }
 
-/* ---------------------------------------------------- */
-/* --- FIX: MOBILE RESPONSIVENESS MEDIA QUERY --- */
-/* ---------------------------------------------------- */
-@media (max-width: 900px) {
-    .dashboard-layout {
-        /* On small screens, change to a single column (sidebar stacks on top of main content) */
-        grid-template-columns: 1fr; 
-        gap: 20px;
-    }
-}
-/* ---------------------------------------------------- */
-
-
 /* --- Sidebar (Profile and Applied Jobs) --- */
 .profile-summary {
-    /* Base Card Style for the entire sidebar ASIDE element */
     padding: 25px;
     border: 1px solid #e9ecef;
     border-radius: 10px;
     background-color: #ffffff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
-
-.profile-summary h2, .profile-summary h3 {
+.profile-summary h2 {
     color: #006895;
     font-size: 1.4em;
     padding-bottom: 5px;
-    margin-top: 20px;
+    margin-top: 0;
     margin-bottom: 10px;
 }
-
-/* --- Light/Dark Line Separator Feature --- */
-.section-separator {
-    height: 1px;
-    margin: 15px 0;
-    background: linear-gradient(to right, #ddd 0%, #aaa 50%, #ddd 100%);
-}
-
-/* --- Profile Details --- */
-.profile-details {
-    margin-bottom: 15px;
-}
-.profile-details p {
-    margin: 5px 0;
-}
+.profile-details { margin-bottom: 15px; }
+.profile-details p { margin: 5px 0; }
 .profile-pic-wrapper {
     text-align: center;
     margin-bottom: 15px;
@@ -125,46 +98,67 @@ body {
     object-fit: cover;
     border: 3px solid #007bff;
 }
-
-/* FIX: Corrected syntax and size for edit button */
 .edit-button {
     display: block;
-    
     text-align: center;
     margin-top: 15px;
     padding: 8px 12px; 
     font-size: 0.9em; 
-    background-color: #5b0576; /* Deep Purple */
+    background-color: #5b0576;
     color: white;
     text-decoration: none;
     border-radius: 8px;
     font-weight: 600;
 }
-.edit-button:hover {
-    background-color: #62446b;
-}
+.edit-button:hover { background-color: #62446b; }
 
 /* --- Applied Jobs Summary --- */
-.applied-jobs-summary ul {
-    list-style: none;
+.applied-jobs-summary {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f2f5;
+}
+.applied-jobs-summary h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #2c3e50;
+}
+.applied-jobs-summary ul.applied-jobs-list {
+    list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 .applied-jobs-summary li {
-    padding: 8px 0;
-    border-bottom: 1px dashed #eee;
-    font-size: 0.95em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
 }
-.applied-jobs-summary li:last-child {
-    border-bottom: none;
+.applied-jobs-summary .job-name {
+    font-weight: 600;
+    color: #343a40;
 }
+.download-link {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: background-color 0.3s;
+}
+.download-link:hover { background-color: #0056b3; }
 
 /* --- Main Content (Job Listings) --- */
-.main-content {
-    padding: 0;
-}
-
+.main-content { padding: 0; }
 .career-suggestions h3 {
-    /* Style to make Recommended Jobs section stand out */
     color: #a13463;
     font-size: 1.6em;
     margin-top: 0;
@@ -173,34 +167,29 @@ body {
     display: inline-block;
     margin-bottom: 25px;
 }
-
 .career-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
     gap: 20px;
 }
-
 .job-posting {
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    border-left: 5px solid #007bff; /* Accent color bar */
+    border-left: 5px solid #007bff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
-
 .job-name-heading {
     color: #0056b3;
     margin-top: 0;
     border-bottom: 1px solid #f0f0f0;
     padding-bottom: 10px;
 }
-
 .job-posting p {
     margin: 8px 0;
     font-size: 0.95em;
 }
-
 .status-badge {
     padding: 5px 10px;
     border-radius: 4px;
@@ -209,15 +198,8 @@ body {
     display: inline-block;
     margin-right: 10px;
 }
-.status-badge.vacant {
-    background-color: #38c172; /* Strong green */
-    color: white;
-}
-.status-badge.no-vacant {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
+.status-badge.vacant { background-color: #38c172; color: white; }
+.status-badge.no-vacant { background-color: #f8d7da; color: #721c24; }
 .apply-button {
     padding: 8px 15px;
     background-color: #ffc107;
@@ -240,105 +222,66 @@ body {
 .quick-link-card {
     display: block;
     padding: 20px;
-    background-color: #e6f7ff;
+    background-color: #c9ecfb;
     border-radius: 8px;
     text-decoration: none;
     color: #333;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: background-color 0.2s;
 }
-.quick-link-card:hover {
-    background-color: #cceeff;
-}
-.quick-link-card h4 {
-    color: #007bff;
-    margin-top: 0;
-}
+.quick-link-card:hover { background-color: #95d9f8; }
+.quick-link-card h4 { color: #007bff; margin-top: 0; }
 
-/* --- Flash Messages in Layout --- */
+/* --- Flash Messages & Modals --- */
 .flash-messages {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    position: fixed; top: 80px; right: 20px; z-index: 9999; width: 300px;
 }
-
-.download-link {
-    background-color: #007bff;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px; /* Pill shape */
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
-    white-space: nowrap;
-    transition: background-color 0.3s;
+.flash { padding: 10px; border-radius: 3px; border: 1px solid; margin-bottom: 1em; }
+.flash.success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+.flash.error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+.modal {
+    display: none; position: fixed; z-index: 1000; left: 0; top: 0; 
+    width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8);
+    align-items: center; justify-content: center;
 }
-
-.download-link:hover {
-    background-color: #0056b3;
+.modal-content {
+    background: white; padding: 20px; border-radius: 8px;
+    max-width: 400px; margin: 10% auto; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    text-align: center; position: relative;
 }
-
-/* --- Applied Jobs List Styling --- */
-.applied-jobs-summary {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 2px solid #f0f2f5;
+.modal-content button {
+    margin: 10px 5px; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;
 }
-
-.applied-jobs-summary h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 20px;
-    color: #2c3e50;
+.btn-confirm { background-color: #dc3545; color: white; }
+.btn-cancel { background-color: #6c757d; color: white; }
+.close-modal {
+    position: absolute; top: 10px; right: 15px; color: #aaa;
+    font-size: 28px; font-weight: bold; cursor: pointer;
 }
+.close-modal:hover { color: black; }
 
-.applied-jobs-summary ul.applied-jobs-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.applied-jobs-summary li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-}
-
-.applied-jobs-summary .job-name {
-    font-weight: 600;
-    color: #343a40;
-}
-
-.applied-jobs-summary .download-link {
-    background-color: #007bff;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
-    white-space: nowrap;
-    transition: background-color 0.3s;
-}
-
-.applied-jobs-summary .download-link:hover {
-    background-color: #0056b3;
-}
-
-
-    /* Specific styling for the new delete button */
-    .delete-btn {
-        background-color: #dc3545; /* Red */
-        border: none; /* Removes default button border */
-        font-family: inherit; /* Matches font of your other links */
-        font-size: 1em; /* Matches font size */
-        cursor: pointer;
-        border-radius: 5px;
-        color: rgb(229, 226, 226);
-        
+/* =================================== */
+/* ==    Responsive (Mobile) CSS    == */
+/* =================================== */
+@media (max-width: 900px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
     }
+}
+@media (max-width: 768px) {
+    .hamburger { display: block; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 20px;
+        width: 250px;
+        background-color: #022d45;
+        flex-direction: column;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        z-index: 1000;
+    }
+    .nav-links.show { display: flex; }
+}

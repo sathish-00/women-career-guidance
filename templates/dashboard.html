@@ -1,73 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}" />
-    
-    {# Add Font Awesome link for modern icons if needed #}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* This internal style block is necessary to remove the old, conflicting fixed positioning */
-        /* Modal styles remain here as they are unique */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.8);
-        }
-        .modal-content {
-            margin: 5% auto; 
-            display: block; 
-            max-width: 90%; 
-            max-height: 80%;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .close-modal {
-            position: fixed;
-            top: 20px;
-            right: 35px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1001;
-        }
-        /* Flash messages (simplified/internal styles) */
-        .flash-messages {
-            margin: 1em;
-            /* Ensure fixed positioning is only on this container, not on the buttons */
-            position: fixed; /* Keep flash messages fixed for visibility */
-            top: 100px; /* Push down below the fixed header if necessary */
-            right: 20px;
-            z-index: 9999;
-            width: 300px;
-        }
-        .flash.success {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 3px;
-            border: 1px solid #c3e6cb;
-            margin-bottom: 1em;
-        }
-        .flash.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 3px;
-            border: 1px solid #f5c6cb;
-            margin-bottom: 1em;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body>
 
@@ -81,71 +19,66 @@
     {% endif %}
 {% endwith %}
 
-<header class="main-header">
-    <h1>Welcome, {{ user.username }}!</h1>
-    
-    {# --- FIX: Integrated Home and Logout into a standard NAV container --- #}
-    <nav class="top-nav-buttons">
-    <a href="{{ url_for('home') }}" class="button home-btn">Home</a>
-    
-    <form action="{{ url_for('delete_account') }}" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete your account?');" style="display: inline;">
-        <button type="submit" class="button delete-btn">Delete Account</button>
-    </form>
-    
-    <a href="{{ url_for('logout') }}" class="button logout-btn">Logout</a>
-</nav>
-    {# ------------------------------------------------------------------ #}
+<header class="menu-bar">
+    <div class="menu-left">
+        <span class="hamburger" onclick="toggleMenu()">&#9776;</span>
+        <span class="welcome-message">Welcome, {{ user.username }}!</span>
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+        <a href="{{ url_for('home') }}" class="nav-button home-btn">Home</a>
+        <button id="deleteAccountBtn" class="nav-button delete-btn">Delete Account</button>
+        <a href="{{ url_for('logout') }}" class="nav-button logout-btn">Logout</a>
+    </nav>
 </header>
 
+<div id="confirmDeleteModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to permanently delete your account?</p>
+        <form id="deleteAccountForm" action="{{ url_for('delete_account') }}" method="POST">
+            <button type="submit" class="btn-confirm">Yes, Delete</button>
+            <button type="button" id="cancelDeleteBtn" class="btn-cancel">Cancel</button>
+        </form>
+    </div>
+</div>
+
 <div class="dashboard-layout">
-
     <aside class="profile-summary">
-    <h2>Your Profile</h2> {% if user %}
-        <div class="profile-details">
-            <p><strong>Username:</strong> <span>{{ user.username }}</span></p>
-            <p><strong>Age:</strong> <span>{{ user.age }}</span></p>
-            <p><strong>Skills:</strong> <span>{{ user.skills | default('None specified') }}</span></p>
-        </div>
+        <h2>Your Profile</h2>
+        {% if user %}
+            <div class="profile-details">
+                <p><strong>Username:</strong> <span>{{ user.username }}</span></p>
+                <p><strong>Age:</strong> <span>{{ user.age }}</span></p>
+                <p><strong>Skills:</strong> <span>{{ user.skills | default('None specified') }}</span></p>
+            </div>
+            <div class="profile-pic-wrapper">
+                {% if user.profile_pic %}
+                    <img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" alt="Profile Picture" class="profile-pic" id="profilePic" style="cursor: pointer;" title="Click to view full size" />
+                {% else %}
+                    <img src="{{ url_for('static', filename='default_profile.png') }}" alt="Default Profile Picture" class="profile-pic default" />
+                {% endif %}
+            </div>
+            <a href="{{ url_for('edit_profile') }}" class="button edit-button">Edit Profile</a>
+        {% else %}
+            <p>Profile information not available.</p>
+        {% endif %}
 
-        <div class="profile-pic-wrapper">
-            {% if user.profile_pic %}
-                <img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" 
-                    alt="Profile Picture" 
-                    class="profile-pic" 
-                    id="profilePic" 
-                    style="cursor: pointer;"
-                    title="Click to view full size" />
+        <section class="applied-jobs-summary">
+            <h2>Jobs You've Applied For</h2>
+            {% if applied_jobs %}
+                <ul class="applied-jobs-list">
+                    {% for job in applied_jobs %}
+                        <li>
+                            <span class="job-name">{{ job.job_name }}</span>
+                            <a href="{{ url_for('download_application', application_id=job.application_id) }}" class="download-link">Download PDF</a>
+                        </li>
+                    {% endfor %}
+                </ul>
             {% else %}
-                <img src="{{ url_for('static', filename='default_profile.png') }}" 
-                    alt="Default Profile Picture" 
-                    class="profile-pic default" />
+                <p>You have not applied for any jobs yet.</p>
             {% endif %}
-        </div>
-
-        <a href="{{ url_for('edit_profile') }}" class="button edit-button">Edit Profile</a>
-    {% else %}
-        <p>Profile information not available.</p>
-    {% endif %}
-
-    <section class="applied-jobs-summary">
-    <h2>Jobs You've Applied For</h2>
-    {% if applied_jobs %}
-        <ul class="applied-jobs-list">
-            {% for job in applied_jobs %}
-                <li>
-                    <span class="job-name">{{ job.job_name }}</span>
-
-                    <a href="{{ url_for('download_application', application_id=job.application_id) }}" class="download-link">
-                        Download PDF 
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>You have not applied for any jobs yet.</p>
-    {% endif %}
-</section>
-</aside>
+        </section>
+    </aside>
 
     <div id="picModal" class="modal">
         <span class="close-modal" id="closeModal">&times;</span>
@@ -160,13 +93,10 @@
                     {% for job in jobs %}
                         <div class="job-posting">
                             <h4 class="job-name-heading">Job Name : {{ job.name }}</h4>
-                            
                             <p><strong>Shop Name / Company Name :</strong> {{ job.shop_name or "N/A" }}</p>
                             <p><strong>Location:</strong> {{ job.location or "N/A" }}</p>
                             <p><strong>Contact Info:</strong> {{ job.contact_info or "N/A" }}</p>
                             <p><strong>Description:</strong> {{ job.description }}</p>
-
-                            
                             <div class="job-status">
                                 {% if job.is_vacant == 1 %}
                                     <span class="status-badge vacant">Vacancy Available</span>
@@ -182,8 +112,6 @@
                 {% endif %}
             </div>
         </section>
-    
-
 
         <section class="quick-links">
             <h3>Quick Links</h3>
@@ -192,7 +120,6 @@
                     <h4>Explore All Careers</h4>
                     <p>Browse a comprehensive list of career opportunities.</p>
                 </a>
-
                 <a href="{{ url_for('contact') }}" class="quick-link-card">
                     <h4>Contact Us</h4>
                     <p>Get in touch for personalized guidance.</p>
@@ -203,63 +130,69 @@
 </div>
 
 <script>
-    // Modal functionality for profile picture
-    var modal = document.getElementById('picModal');
-    var img = document.getElementById('profilePic');
-    var modalImg = document.getElementById('modalImage');
-    var closeBtn = document.getElementById('closeModal');
-
-    if(img){
-        img.onclick = function(){
-            modal.style.display = "block";
-            modalImg.src = this.src;
-        }
+    // --- Menu toggle for mobile ---
+    function toggleMenu() {
+        const nav = document.getElementById('navLinks');
+        nav.classList.toggle('show');
     }
 
-    closeBtn.onclick = function(){
-        modal.style.display = "none";
-    }
-
-    // Close modal if clicked outside the image
-    modal.onclick = function(event) {
-        if(event.target == modal){
-            modal.style.display = "none";
-        }
-    }
-
-    // Flash message auto-hide logic
+    // --- All Modal Logic in one place ---
     document.addEventListener('DOMContentLoaded', function() {
-        const flashMessagesContainer = document.getElementById('flash-messages');
-        
-        if (flashMessagesContainer) {
-            const displayDuration = 3000; 
-            const fadeDuration = 500; // Match the transition time
+        // Profile picture modal elements
+        const picModal = document.getElementById('picModal');
+        const profilePic = document.getElementById('profilePic');
+        const modalImage = document.getElementById('modalImage');
+        const closeModalBtn = document.getElementById('closeModal');
 
+        if (profilePic) {
+            profilePic.onclick = function() {
+                picModal.style.display = "flex"; // Use flex to center content
+                modalImage.src = this.src;
+            }
+        }
+        if (closeModalBtn) {
+            closeModalBtn.onclick = function() {
+                picModal.style.display = "none";
+            }
+        }
+
+        // Delete confirmation modal elements
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        
+        if (deleteAccountBtn) {
+            deleteAccountBtn.addEventListener('click', () => {
+                confirmDeleteModal.style.display = 'flex'; // Use flex to center
+            });
+        }
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', () => {
+                confirmDeleteModal.style.display = 'none';
+            });
+        }
+
+        // Close modals if user clicks outside the content
+        window.addEventListener('click', (event) => {
+            if (event.target === picModal) {
+                picModal.style.display = "none";
+            }
+            if (event.target === confirmDeleteModal) {
+                confirmDeleteModal.style.display = 'none';
+            }
+        });
+
+        // --- Flash message auto-hide ---
+        const flashMessagesContainer = document.getElementById('flash-messages');
+        if (flashMessagesContainer) {
             setTimeout(() => {
-                // 1. Start fade-out
+                flashMessagesContainer.style.transition = 'opacity 0.5s ease';
                 flashMessagesContainer.style.opacity = '0';
-                
-                // 2. Remove after fade is complete
                 setTimeout(() => {
                     flashMessagesContainer.remove();
-                }, fadeDuration);
-
-            }, displayDuration);
+                }, 500); // Wait for fade out to complete
+            }, 3000); // Message visible for 3 seconds
         }
-        
-        // This is the cleanup logic, not necessary for functional flash message removal
-        const successFlash = document.querySelector('.flash-section.flash-success'); 
-        if (successFlash) { 
-             const displayDuration = 3000;
-             const fadeDuration = 1000; 
-
-             setTimeout(() => {
-                 successFlash.style.opacity = '0';
-                 setTimeout(() => {
-                     successFlash.remove();
-                 }, fadeDuration);
-             }, displayDuration);
-         }
     });
 </script>
 

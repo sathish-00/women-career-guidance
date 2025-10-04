@@ -9,19 +9,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <center>
-   <div class="search-container">
-    <div class="search-wrapper">
-        <input type="text" id="liveSearchBar" placeholder="Filter these results by keyword..." onkeyup="liveFilterVideos()">
+    <div class="container">
         
-        <i class="fas fa-microphone voice-icon" id="micIcon" onclick="startVoiceSearch()"></i>
-        <i class="fas fa-search search-icon" onclick="liveFilterVideos()"></i>
-    </div>
-</div>
-</center>
-</div>
-        
-        <p class="subtitle">Showing results for: <strong>{{ search_query or 'All Active Job Skills' }}</strong></p>
+        <div class="filter-search-container">
+            <div class="search-wrapper">
+                <input type="text" id="liveSearchBar" placeholder="Filter these results by keyword..." onkeyup="liveFilterVideos()">
+                <i class="fas fa-microphone voice-icon" id="micIcon" onclick="startVoiceSearch()"></i>
+                <i class="fas fa-search search-icon" onclick="liveFilterVideos()"></i>
+            </div>
+        </div>
+
+        <p class="subtitle">Showing results for: <strong>{{ search_query or ('All Active Job Skills') }}</strong></p>
 
         <div class="video-grid">
             {% for video_item in videos %}
@@ -58,32 +56,111 @@
         <a href="{{ url_for('select_video_skills') }}" class="back-link">← Change Filter Skills</a>
     </div>
 
-    <script>
-        // CLIENT-SIDE FILTERING LOGIC
-        function liveFilterVideos() {
-            const searchBar = document.getElementById('liveSearchBar');
-            const query = searchBar.value.toLowerCase();
-            const videoCards = document.querySelectorAll('.video-card');
+   <div id="voiceFeedback" class="voice-feedback" style="display: none;">
+    <i class="fas fa-microphone"></i>
+    <p id="voiceStatus"></p> 
+    <p id="voiceResult"></p>
+</div>
 
-            videoCards.forEach(card => {
-                const title = card.querySelector('.video-title').textContent.toLowerCase();
-                const description = card.querySelector('.video-description').textContent.toLowerCase();
-                
-                if (title.includes(query) || description.includes(query)) {
-                    // Uses 'flex' from CSS to display the cards
-                    card.style.display = 'flex'; 
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchBar = document.getElementById('liveSearchBar');
-            searchBar.addEventListener('keyup', liveFilterVideos);
+<div id="voiceFeedback" class="voice-feedback" style="display: none;">
+    
+    <div id="particle-container"></div>
+
+    <i class="fas fa-microphone"></i>
+    <p id="voiceStatus"></p> 
+    <p id="voiceResult"></p>
+</div>
+
+   <script>
+    function liveFilterVideos() {
+        const searchBar = document.getElementById('liveSearchBar');
+        const query = searchBar.value.toLowerCase();
+        const videoCards = document.querySelectorAll('.video-card');
+
+        videoCards.forEach(card => {
+            const title = card.querySelector('.video-title').textContent.toLowerCase();
+            const description = card.querySelector('.video-description').textContent.toLowerCase();
+            
+            if (title.includes(query) || description.includes(query)) {
+                card.style.display = 'flex'; 
+            } else {
+                card.style.display = 'none';
+            }
         });
-    </script>
+    }
 
-    <script src="{{ url_for('static', filename='search.js') }}"></script>
-</body>
+     function createParticles() {
+        const container = document.getElementById('particle-container');
+        container.innerHTML = ''; // Clear old particles
+        const particleCount = 20; // Number of "sand" particles
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+
+            // Randomize size, position, and animation delay for a natural look
+            const size = Math.random() * 5 + 2; // Size between 2px and 7px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random delay makes the dancing look chaotic and natural
+            particle.style.animationDelay = `${Math.random() * 2}s`;
+
+            container.appendChild(particle);
+        }
+    }
+
+    
+    function startVoiceSearch() {
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+            const searchBar = document.getElementById('liveSearchBar');
+            
+            const voiceFeedback = document.getElementById('voiceFeedback');
+            const voiceStatus = document.getElementById('voiceStatus');
+            const voiceResult = document.getElementById('voiceResult');
+
+            recognition.lang = 'en-US';
+
+            recognition.onstart = function() {
+                voiceStatus.textContent = 'Listening...';
+                voiceResult.textContent = '';
+                voiceFeedback.style.display = 'flex';
+            };
+            recognition.onend = function() {
+                setTimeout(() => {
+                    voiceFeedback.style.display = 'none';
+                }, 1500);
+            };
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                searchBar.value = transcript;
+                voiceStatus.textContent = 'Result:';
+                voiceResult.textContent = `"${transcript}"`;
+                liveFilterVideos();
+            };
+            recognition.onerror = function(event) {
+                voiceStatus.textContent = 'Error';
+                voiceResult.textContent = 'Try again.';
+                console.error("Speech recognition error:", event.error);
+            };
+            
+            recognition.start();
+        } else {
+            alert('Sorry, your browser does not support voice search.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBar = document.getElementById('liveSearchBar');
+        if (searchBar) {
+            searchBar.addEventListener('keyup', liveFilterVideos);
+        }
+    });
+</script>
+
+    </body>
 </html>

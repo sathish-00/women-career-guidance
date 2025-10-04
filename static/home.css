@@ -1,77 +1,117 @@
+/* Reset & Base Layout */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
-    text-align: center;
-    margin: 0;
-    padding: 0
-
+  font-family: Arial, sans-serif;
+  background-image: url("https://images.yourstory.com/cs/4/8e7cc4102d6c11e9aa979329348d4c3e/HSNewspiece16022024FeatureImage-1708060882484.jpeg?mode=crop&crop=faces&ar=2%3A1&format=auto&w=1920&q=75");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: scroll; /* More mobile-friendly */
+  color: #333;
+  text-align: center;
 }
 
-section p {
-    text-align: right; /* Moves text to the right */
-    color: #ff6600; /* Optional: Adjust text color */
-    font-weight: bold; /* Makes text stand out */
-    padding-right: 20px; /* Adds spacing from the edge */
-}
-
-
-
-
-
+/* Header Block */
 .home-header {
-    background: #87CEEB; /* Sky Blue */
-    padding: 20px;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    text-align: center;
+  background: #87CEEB; /* Sky Blue */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin: 20px;
 }
 
 .home-header h2 {
-    color: #fff; /* White text */
-    font-weight: bold;
+  color: #fff;
+  font-weight: bold;
+  margin: 0;
 }
 
-
-
-
-.banner {
-    width: 100vw;  /* Full screen width */
-    height: 100vh; /* Full screen height */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: url("https://media.istockphoto.com/id/1309084086/photo/rural-women-using-phone-in-villlage.jpg?s=612x612&w=0&k=20&c=U-m5YS4jVAva2iErd10TAcOYWut2IZgu5P89ysOKR1s=") no-repeat center center fixed;
-    background-size: cover;  /* Ensures full-screen image display */
+/* Headings */
+h1, h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000;
+  margin: 20px 0 10px 0;
 }
 
+h3 {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin: 10px 0 20px 0;
+}
 
+/* Text Overlay */
+.text-overlay {
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  margin-bottom: 10px;
+  display: inline-block;
+}
 
+/* Paragraph Styling */
+section p {
+  text-align: right;
+  color: #ff6600;
+  font-weight: bold;
+  padding-right: 20px;
+}
 
+/* Navigation Buttons */
 .home-nav {
-    position: absolute;
-    bottom: 30px; /* ✅ Keeps it at the bottom */
-    left: 60px; /* ✅ Moves it slightly to the right */
-    display: flex;
-    flex-direction: row; /* ✅ Aligns links in a single row */
-    gap: 15px; /* ✅ Adds space between links */
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  z-index: 10;
 }
 
 .home-nav a {
-    padding: 10px 15px;
-    background-color: #fe6a35; /* ✅ Individual background for each link */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    display: inline-block; /* ✅ Ensures links are in a row */
+  background: #f05f06;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.2s;
 }
 
 .home-nav a:hover {
-    background-color: #ff4b14; /* ✅ Changes color on hover */
+  background: #fa7c22;
 }
 
+/* Responsive Background & Text Fixes */
+@media (max-width: 768px) {
+  body {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-attachment: scroll;
+  }
 
+  h1, h3 {
+    font-size: 1.5rem;
+    white-space: normal;
+  }
 
-
+  section p {
+    font-size: 14px;
+    padding-right: 10px;
+  }
+}
 

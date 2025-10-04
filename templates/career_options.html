@@ -31,17 +31,16 @@
                             <p class="job-meta">
                                 <strong>Location:</strong> 
                                 {% if job['location'] %}
-                                    <a href="https://www.google.com/maps/search/{{ job['location'] | urlencode }}" 
+                                    <a href="https://maps.google.com/?q={{ job['location'] | urlencode }}" 
                                        target="_blank"
                                        class="map-link">
-                                       {{ job['location'] }} <i class="fas fa-map-marker-alt"></i>
+                                        {{ job['location'] }} <i class="fas fa-map-marker-alt"></i>
                                     </a>
                                 {% else %}
                                     N/A
                                 {% endif %}
                                 | <strong>Vacancies:</strong> {{ job['total_labour_vacancy'] }}
                             </p>
-                           
                         </div>
                     {% endfor %}
                 {% else %}
@@ -52,7 +51,6 @@
 
         <div class="job-section">
             <h2 class="section-title all-jobs">All Available Jobs</h2>
-            
             <div class="row"> 
                 {% if jobs %}
                     {% for job in jobs %}
@@ -60,14 +58,13 @@
                             <div class="career-card h-100"> 
                                 <h3 class="card-title">{{ job.name }}</h3>
                                 <p class="card-description"><strong>Description:</strong> {{ job.description }}</p>
-                                
                                 <p class="job-meta">
                                     <strong>Location:</strong> 
                                     {% if job['location'] %}
-                                        <a href="https://www.google.com/maps/search/{{ job['location'] | urlencode }}" 
+                                        <a href="https://maps.google.com/?q={{ job['location'] | urlencode }}" 
                                            target="_blank"
                                            class="map-link">
-                                           {{ job['location'] }} <i class="fas fa-map-marker-alt"></i>
+                                            {{ job['location'] }} <i class="fas fa-map-marker-alt"></i>
                                         </a>
                                     {% else %}
                                         N/A
@@ -94,12 +91,15 @@
         <p class="back-to-home"><a href="/">Back to Home</a></p>
     </div>
 
-    <script>
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const voiceIcon = document.getElementById('voice-icon');
-        const searchInput = document.getElementById('career-search');
+    <div id="voiceFeedback" class="voice-feedback" style="display: none;">
+        <i class="fas fa-microphone"></i>
+        <p id="voiceStatus"></p> 
+        <p id="voiceResult"></p>
+    </div>
 
+    <script>
         function searchCareer() {
+            const searchInput = document.getElementById('career-search');
             const query = searchInput.value.trim();
             if (query) {
                 window.location.href = "{{ url_for('career_options') }}?query=" + encodeURIComponent(query);
@@ -107,31 +107,48 @@
         }
 
         function startVoiceSearch() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (SpeechRecognition) {
                 const recognition = new SpeechRecognition();
-                recognition.lang = 'en-US';
-                recognition.interimResults = false;
-                recognition.maxAlternatives = 1;
+                const searchInput = document.getElementById('career-search');
+                const voiceFeedback = document.getElementById('voiceFeedback');
+                const voiceStatus = document.getElementById('voiceStatus');
+                const voiceResult = document.getElementById('voiceResult');
 
-                recognition.start();
-                voiceIcon.classList.add('blinking');
+                recognition.lang = 'en-US';
+
+                recognition.onstart = function() {
+                    voiceStatus.textContent = 'Listening...';
+                    voiceResult.textContent = '';
+                    voiceFeedback.style.display = 'flex';
+                };
+
+                recognition.onend = function() {
+                    setTimeout(() => {
+                        voiceFeedback.style.display = 'none';
+                    }, 1500);
+                };
 
                 recognition.onresult = function(event) {
                     const speechResult = event.results[0][0].transcript;
                     searchInput.value = speechResult;
-                    searchCareer();
-                };
-
-                recognition.onend = function() {
-                    voiceIcon.classList.remove('blinking');
+                    voiceStatus.textContent = 'Result:';
+                    voiceResult.textContent = `"${speechResult}"`;
+                    
+                    // Call the original search function after a short delay
+                    setTimeout(searchCareer, 750);
                 };
 
                 recognition.onerror = function(event) {
+                    voiceStatus.textContent = 'Error';
+                    voiceResult.textContent = 'Try again.';
                     voiceIcon.classList.remove('blinking');
                     console.error('Speech recognition error:', event.error);
                 };
+                
+                recognition.start();
             } else {
-                alert('Web Speech API is not supported in this browser. Please try Chrome or Edge.');
+                alert('Web Speech API is not supported in this browser.');
             }
         }
     </script>

@@ -1,11 +1,12 @@
-/* General Page Styling and Layout */
+/* =================================== */
+/* ==   General Page & Typography   == */
+/* =================================== */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #eef1f5; /* Very light, soft background */
+    background-color: #eef1f5; /* Soft background */
     color: #333;
     padding: 20px 0;
     margin: 0;
-    min-height: 100vh;
 }
 
 .container {
@@ -15,7 +16,7 @@ body {
 }
 
 h1#videos-title {
-    color: #007bff; /* Primary brand color */
+    color: #007bff;
     text-align: center;
     font-size: 2.8em;
     font-weight: 700;
@@ -29,21 +30,13 @@ h1#videos-title {
     font-size: 1.1em;
 }
 
-.back-home-button {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #1a73e8;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-/* --- Search Bar Styles (Polished Look) --- */
+/* =================================== */
+/* ==     Search Bar & Filter       == */
+/* =================================== */
 .filter-search-container {
     display: flex;
     justify-content: center;
-    position: relative;
-    margin-bottom: 40px;
-    margin-top: 20px;
+    margin: 20px 0 40px;
 }
 
 .search-wrapper {
@@ -54,18 +47,19 @@ h1#videos-title {
 
 #liveSearchBar {
     width: 100%;
-    padding: 14px 75px 14px 20px; /* Space for icons */
+    padding: 14px 80px 14px 20px; /* Space for both icons */
     border: 1px solid #c5d0db;
     border-radius: 30px;
     font-size: 1em;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Soft inner shadow */
-    transition: border-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
     box-sizing: border-box;
 }
 
 #liveSearchBar:focus {
     border-color: #007bff;
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+    outline: none;
 }
 
 .search-wrapper .search-icon,
@@ -75,60 +69,52 @@ h1#videos-title {
     transform: translateY(-50%);
     font-size: 1.2em;
     color: #555;
-    z-index: 10;
+    cursor: pointer;
     transition: color 0.2s;
 }
 
-.search-wrapper .search-icon {
-    right: 18px; /* Final icon position */
-    cursor: pointer;
+.search-wrapper .search-icon { right: 20px; }
+.search-wrapper .voice-icon { right: 50px; }
+
+.voice-icon.is-listening {
+    color: #dc3545;
+    animation: pulse 1.5s infinite;
 }
 
-.search-wrapper .voice-icon {
-    right: 48px; /* Position to the left of search icon */
-    cursor: pointer;
-    color: #26292e;
-}
-
-/* --- Video Grid Layout --- */
+/* =================================== */
+/* ==      Video Grid & Cards       == */
+/* =================================== */
 .video-grid {
     display: grid;
-    /* Create responsive columns: min 260px wide */
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
     margin-bottom: 50px;
 }
 
-/* Individual Video Card Aesthetics */
 .video-card {
     background-color: #ffffff;
     border-radius: 12px;
     overflow: hidden;
-    /* Aesthetic shadow */
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    text-decoration: none;
-    color: inherit;
 }
 
 .video-card:hover {
-    transform: translateY(-8px); /* Lifts the card */
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Highlight Recommended Videos (Beautiful Focus) */
 .video-card.is-relevant {
-    border: 4px solid #a4b9d2; /* Vibrant border color */
-    box-shadow: 0 6px 20px rgba(13, 13, 15, 0.4);
+    border: 3px solid #79a1cd; /* Primary brand color for highlight */
 }
 
-/* Video Player */
 .video-embed {
     width: 100%;
     padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
     position: relative;
+    background-color: #000;
 }
 
 .video-embed iframe,
@@ -141,35 +127,33 @@ h1#videos-title {
     border: none;
 }
 
-/* Video Details */
 .video-info {
     padding: 15px 20px 20px;
-    flex-grow: 1;
+    flex-grow: 1; /* Ensures footer content aligns in flex column */
 }
 
 .video-title {
     color: #34495e;
     font-size: 1.2em;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 10px;
+    margin: 0 0 10px;
 }
 
 .video-description {
     font-size: 0.9em;
     color: #4b5c5e;
     margin-bottom: 10px;
+    line-height: 1.5;
 }
 
 .relevant-tag {
     display: inline-block;
-    background-color: #0fa869; /* Red/Orange gradient or solid color */
+    background-color: #0fa869;
     color: white;
     font-weight: bold;
     font-size: 0.75em;
     padding: 4px 10px;
     border-radius: 5px;
-    margin-top: 8px;
+    margin-top: auto; /* Pushes to the bottom if in a flex container */
     letter-spacing: 0.5px;
 }
 
@@ -177,11 +161,13 @@ h1#videos-title {
     text-align: center;
     font-style: italic;
     color: #888;
-    grid-column: 1 / -1;
+    grid-column: 1 / -1; /* Spans the full grid width */
     padding: 50px;
 }
 
-/* Back Link */
+/* =================================== */
+/* ==     Links & Miscellaneous     == */
+/* =================================== */
 .back-link {
     display: block;
     text-align: center;
@@ -192,16 +178,132 @@ h1#videos-title {
     font-size: 1.1em;
 }
 
-/* --- Responsive adjustments --- */
+.voice-feedback {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #07396b;
+    color: white;
+    border-radius: 50%;
+    width: 160px;
+    height: 160px;
+    display: none; /* Changed from flex to none */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(197, 151, 1, 0.511);
+    z-index: 1000;
+    animation: pop-up 0.3s ease-out;
+}
+
+#particle-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    
+    /* ADD THIS: Puts particles on a lower layer */
+    z-index: 1; 
+}
+
+.voice-feedback.show,
+.voice-feedback:not([style*="display: none"]) { /* Handles JS 'flex' */
+    display: flex;
+}
+
+/* Style for each individual "sand" particle */
+.particle {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: dance 2s infinite ease-in-out;
+}
+
+.voice-feedback i { font-size: 2.5em; }
+.voice-feedback p { margin: 5px 0 0 0; font-size: 1em; font-weight: bold; }
+
+@keyframes pulse {
+    0% { transform: translateY(-50%) scale(1); }
+    50% { transform: translateY(-50%) scale(1.1); }
+    100% { transform: translateY(-50%) scale(1); }
+}
+
+/* =================================== */
+/* ==      Responsive Design        == */
+/* =================================== */
 @media (max-width: 768px) {
     .container {
-        padding: 0 10px;
+        padding: 0 15px;
     }
     .video-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
     }
-    .search-wrapper {
-        max-width: 100%;
+    h1#videos-title {
+        font-size: 2.2em;
     }
+}
+
+/* Add this to the end of your CSS file */
+/* Defines the pop-up animation */
+@keyframes pop-up {
+    from {
+        transform: translateX(-50%) scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* =================================== */
+/* ==   Dancing Particles Effect    == */
+/* =================================== */
+
+/* Container to hold the particles, positioned over the bottle cap */
+#particle-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Keeps particles within the circle */
+}
+
+/* Style for each individual "sand" particle */
+.particle {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+    border-radius: 50%;
+    
+    /* The animation is applied here */
+    animation: dance 2s infinite ease-in-out;
+}
+
+/* Keyframes that define the "dancing" animation */
+@keyframes dance {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-20px) scale(0.5); /* Moves up and shrinks */
+        opacity: 0.2;
+    }
+}
+
+.subtitle {
+    text-align: center;
+    color: #343435; /* A muted, professional grey */
+    font-size: 1.1em;
+    margin-top: -20px; /* Pulls it closer to the search bar */
+    margin-bottom: 40px; /* Adds space above the video grid */
+}
+
+/* This styles the bolded skill name inside the subtitle */
+.subtitle strong {
+    color: #1636d4; /* Makes the skill name slightly darker */
 }
