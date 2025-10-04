@@ -42,7 +42,7 @@ section p {
     align-items: center;
     justify-content: center;
     text-align: center;
-   !-- background: url("https://media.istockphoto.com/id/1309084086/photo/rural-women-using-phone-in-villlage.jpg?s=612x612&w=0&k=20&c=U-m5YS4jVAva2iErd10TAcOYWut2IZgu5P89ysOKR1s=") no-repeat center center fixed;
+    background: url("https://media.istockphoto.com/id/1309084086/photo/rural-women-using-phone-in-villlage.jpg?s=612x612&w=0&k=20&c=U-m5YS4jVAva2iErd10TAcOYWut2IZgu5P89ysOKR1s=") no-repeat center center fixed;
     background-size: cover;  /* Ensures full-screen image display */
 }
 
