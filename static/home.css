@@ -8,13 +8,7 @@ body {
 
 
 }
-body {
-    background: url("https://images.yourstory.com/cs/4/8e7cc4102d6c11e9aa979329348d4c3e/HSNewspiece16022024FeatureImage-1708060882484.jpeg?mode=crop&crop=faces&ar=2%3A1&format=auto&w=1920&q=75") 
-                no-repeat center center fixed;
-    background-size: cover;
-    margin: 0;
-    padding: 0;
-}
+
 section p {
     text-align: right; /* Moves text to the right */
     color: #ff6600; /* Optional: Adjust text color */
