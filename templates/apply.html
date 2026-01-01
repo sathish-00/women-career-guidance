@@ -2,78 +2,185 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apply for {{ job.name }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='apply.css') }}" />
+
+    {% if recent_application %}
+    <script>
+        // This safely passes the application data from Flask to JavaScript
+        const recentApplicationData = {{ recent_application | tojson }};
+    </script>
+    {% endif %}
 </head>
 <body>
+    <div class="page-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" id="flash-container">
+                    {% for category, message in messages %}
+                        <p class="flash {{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <div class="flash-messages">
-      {% for category, message in messages %}
-        <p class="flash {{ category }}">{{ message }}</p>
-      {% endfor %}
+        <h1>Apply for Job: {{ job.name }}</h1>
+
+        <div class="job-details">
+            <p class="job-description">
+                <strong>Description:</strong> {{ job.description }}
+            </p>
+            <p class="job-skills">
+                <strong>Skills Required:</strong> {{ job.skills_required or 'Not specified' }}
+            </p>
+            <p class="job-location">
+                <strong>Location:</strong> {{ job.location or 'Not specified' }}
+            </p>
+        </div>
+
+        <hr />
+
+        <div class="form-container">
+            
+            <div class="form-header">
+                <center>
+                    <h3>Job Application</h3>
+                </center>
+                {% if recent_application %}
+                    <button type="button" id="fill-from-recent-btn">Use Last Application</button>
+                {% endif %}
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label for="first_name" class="required">First Name</label>
+                    <input type="text" id="first_name" name="first_name" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name" class="required">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="dob" class="required">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="address" class="required">Address</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="pincode" class="required">Pincode</label>
+                    <input type="text" id="pincode" name="pincode" pattern="\d{6}" title="6 digit pincode" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="applicant_email" class="required">Email Address</label>
+                    <input type="email" id="applicant_email" name="applicant_email" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="mobile" class="required">Mobile Number</label>
+                    <input type="tel" id="mobile" name="applicant_phone" pattern="\d{10}" title="10 digit mobile number" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="experience" class="required">Experience (years)</label>
+                    <input type="number" id="experience" name="experience" min="0" step="0.1" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="skills" class="required">Skills</label>
+                    <textarea id="skills" name="skills" rows="3" placeholder="List relevant skills" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferred_location" class="required">Preferred Location</label>
+                    <select id="preferred_location" name="preferred_location" required>
+                        <option value="" disabled selected>Select your preferred location</option>
+                        {% for loc in preferred_locations %}
+                            <option value="{{ loc }}">{{ loc }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="resume" class="required">Upload Resume</label>
+                    <div id="resume-info-placeholder"></div>
+                    <input type="file" id="resume" name="resume" accept=".pdf,application/pdf" 
+                           {% if not recent_application or not recent_application.resume_filename %}required{% endif %} />
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="terms_checkbox" name="terms" required />
+                    <label for="terms_checkbox" class="required">
+                        I agree to the <a href="{{ url_for('terms', job_id=job.id) }}" target="_blank">Terms and Conditions</a>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Submit Application</button>
+                    <a href="{{ url_for('dashboard') }}" class="cancel-link">Cancel</a>
+                </div>
+                
+            </form>
+        </div>
     </div>
-  {% endif %}
-{% endwith %}
-
-<h1>Apply for Job: {{ job.name }}</h1>
-
-<p><strong>Description:</strong> {{ job.description }}</p>
-<p><strong>Skills Required:</strong> {{ job.skills_required or 'Not specified' }}</p>
-<p><strong>Location:</strong> {{ job.location or 'Not specified' }}</p>
-
-<hr />
-
-<h2>Application Form</h2>
-
-<form method="POST" enctype="multipart/form-data">
-    <label for="first_name">First Name *</label><br />
-    <input type="text" id="first_name" name="first_name" required /><br /><br />
-
-    <label for="last_name">Last Name *</label><br />
-    <input type="text" id="last_name" name="last_name" required /><br /><br />
-
-    <label for="dob">Date of Birth *</label><br />
-    <input type="date" id="dob" name="dob" required /><br /><br />
-
-    <label for="address">Address *</label><br />
-    <textarea id="address" name="address" rows="3" required></textarea><br /><br />
-
-    <label for="pincode">Pincode *</label><br />
-    <input type="text" id="pincode" name="pincode" pattern="\d{6}" title="6 digit pincode" required /><br /><br />
-
-    <label for="applicant_email">Email Address *</label><br />
-    <input type="email" id="applicant_email" name="applicant_email" required /><br /><br />
     
-    <label for="mobile">Mobile Number *</label><br />
-    <input type="tel" id="mobile" name="applicant_phone" pattern="\d{10}" title="10 digit mobile number" required /><br /><br />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Logic for "Fill from Recent Application" button ---
+            const fillButton = document.getElementById('fill-from-recent-btn');
+            if (fillButton && typeof recentApplicationData !== 'undefined') {
+                fillButton.addEventListener('click', function() {
+                    try {
+                        document.getElementById('first_name').value = recentApplicationData.first_name || '';
+                        document.getElementById('last_name').value = recentApplicationData.last_name || '';
+                        document.getElementById('dob').value = recentApplicationData.dob || '';
+                        document.getElementById('address').value = recentApplicationData.address || '';
+                        document.getElementById('pincode').value = recentApplicationData.pincode || '';
+                        document.getElementById('applicant_email').value = recentApplicationData.applicant_email || '';
+                        document.getElementById('mobile').value = recentApplicationData.applicant_phone || ''; 
+                        document.getElementById('experience').value = recentApplicationData.experience || '';
+                        document.getElementById('skills').value = recentApplicationData.skills_applied || '';
+                        document.getElementById('preferred_location').value = recentApplicationData.preferred_location || '';
 
-    <label for="experience">Experience (years) *</label><br />
-    <input type="number" id="experience" name="experience" min="0" step="0.1" required /><br /><br />
+                        const resumePlaceholder = document.getElementById('resume-info-placeholder');
+                        if (recentApplicationData.resume_filename && resumePlaceholder) {
+                            resumePlaceholder.innerHTML = `
+                                <p class="resume-info">
+                                    Using previous resume: <strong>${recentApplicationData.resume_filename}</strong><br>
+                                    You can upload a new one to replace it.
+                                </p>
+                            `;
+                        }
+                        
+                        fillButton.textContent = 'Details Filled!';
+                        fillButton.disabled = true;
 
-    <label for="skills">Skills *</label><br />
-    <textarea id="skills" name="skills" rows="3" placeholder="List relevant skills" required></textarea><br /><br />
-
-    <label for="preferred_location">Preferred Location *</label><br />
-    <select id="preferred_location" name="preferred_location">
-        <option value="" disabled selected>Select your preferred location</option>
-        {% for loc in preferred_locations %}
-            <option value="{{ loc }}">{{ loc }}</option>
-        {% endfor %}
-    </select><br /><br />
-
-    <label for="resume">Upload Resume (PDF, max 2MB) *</label><br />
-    <input type="file" id="resume" name="resume" accept=".pdf,application/pdf" required /><br /><br />
-
-    <label>
-      <input type="checkbox" id="terms_checkbox" name="terms" required />
-      I agree to the <a href="{{ url_for('terms', job_id=job.id) }}" target="_blank">Terms and Conditions</a> *
-    </label><br /><br />
-
-    <button type="submit">Submit Application</button>
-    <a href="{{ url_for('dashboard') }}">Cancel</a>
-</form>
-
+                    } catch (e) {
+                        console.error("Error during form pre-fill:", e);
+                        alert("An error occurred while filling the form.");
+                    }
+                });
+            }
+            
+            // --- Logic for auto-hiding flash messages ---
+            const flashContainer = document.getElementById('flash-container'); 
+            if (flashContainer) {
+                setTimeout(() => {
+                    flashContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        flashContainer.remove();
+                    }, 500); // Must match CSS transition time
+                }, 3000); // 3-second delay
+            }
+        });
+    </script>
 </body>
 </html>

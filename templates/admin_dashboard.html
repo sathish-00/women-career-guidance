@@ -27,6 +27,32 @@
             {% endif %}
         {% endwith %}
 
+
+        <h3>Vacancy Status</h3>
+
+        {# --- FIX APPLIED: Changed 'status' to 'vacancy_status' and updated keys --- #}
+        <p>Total Vacancy Limit: <strong>{{ vacancy_status.limit }}</strong></p>
+        <p>Vacancies Already Posted: <strong>{{ vacancy_status.posted }}</strong></p>
+        <p>Remaining Available Slots: 
+            <strong 
+                {% if not vacancy_status.can_post %} 
+                    style="color: red;"
+                {% else %}
+                    style="color: green;" 
+                {% endif %}
+            >
+                {{ vacancy_status.remaining_post_capacity }}
+            </strong>
+        </p>
+
+        {% if not vacancy_status.can_post %}
+            <p class="flash-message error">System Limit Reached! Job posting is currently blocked.</p>
+        {% endif %}
+
+        <hr>
+
+  
+
         <section class="admin-profile-section">
             <h3>Admin Profile</h3>
             <a href="{{ url_for('edit_admin_profile') }}" class="btn-edit">Edit Profile</a>
@@ -83,7 +109,7 @@
                             <a href="{{ url_for('delete_job', job_id=job.id) }}" 
                                class="btn-delete"
                                onclick="return confirm('Are you sure you want to permanently delete the job: {{ job.name }}?');">
-                                Delete
+                                 Delete
                             </a>
                         </td>
                     </tr>

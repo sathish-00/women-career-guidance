@@ -14,7 +14,6 @@
           <strong>{{ job['name'] }}</strong>: {{ job['description'] }}<br />
           <em>Location:</em> {{ job['location'] or "N/A" }}, 
           <em>Vacancies:</em> {{ job['total_labour_vacancy'] }}<br />
-          <a href="{{ job['application_form_url'] or '#' }}">Apply Here</a>
         </li>
       {% endfor %}
       </ul>

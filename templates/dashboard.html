@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}" />
+    
+    {# Add Font Awesome link for modern icons if needed #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        /* Modal styles */
+        /* This internal style block is necessary to remove the old, conflicting fixed positioning */
+        /* Modal styles remain here as they are unique */
         .modal {
             display: none; 
             position: fixed; 
@@ -36,9 +41,15 @@
             cursor: pointer;
             z-index: 1001;
         }
-        /* Flash messages */
+        /* Flash messages (simplified/internal styles) */
         .flash-messages {
             margin: 1em;
+            /* Ensure fixed positioning is only on this container, not on the buttons */
+            position: fixed; /* Keep flash messages fixed for visibility */
+            top: 100px; /* Push down below the fixed header if necessary */
+            right: 20px;
+            z-index: 9999;
+            width: 300px;
         }
         .flash.success {
             background-color: #d4edda;
@@ -60,8 +71,6 @@
 </head>
 <body>
 
-<!-- Flash message display -->
-
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <div class="flash-messages" id="flash-messages">
@@ -74,61 +83,65 @@
 
 <header class="main-header">
     <h1>Welcome, {{ user.username }}!</h1>
-    <nav>
-        <a href="{{ url_for('home') }}" class="button">Home</a>
-        <a href="{{ url_for('logout') }}" class="button">Logout</a>
-       
-        
+    
+    {# --- FIX: Integrated Home and Logout into a standard NAV container --- #}
+    <nav class="top-nav-buttons">
+        <a href="{{ url_for('home') }}" class="button home-btn">Home</a>
+        <a href="{{ url_for('logout') }}" class="button logout-btn">Logout</a>
     </nav>
+    {# ------------------------------------------------------------------ #}
 </header>
 
 <div class="dashboard-layout">
 
-    
-
     <aside class="profile-summary">
-        <h3>Your Profile</h3>
-        {% if user %}
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Age:</strong> {{ user.age }}</p>
-            <p><strong>Skills:</strong> {{ user.skills | default('None specified') }}</p>
-      
+    <h2>Your Profile</h2> {% if user %}
+        <div class="profile-details">
+            <p><strong>Username:</strong> <span>{{ user.username }}</span></p>
+            <p><strong>Age:</strong> <span>{{ user.age }}</span></p>
+            <p><strong>Skills:</strong> <span>{{ user.skills | default('None specified') }}</span></p>
+        </div>
 
-            <div class="profile-pic-wrapper">
-                {% if user.profile_pic %}
-                    <img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" 
-                         alt="Profile Picture" 
-                         class="profile-pic" 
-                         id="profilePic" 
-                         style="cursor: pointer;"
-                         title="Click to view full size" />
-                {% else %}
-                    <img src="{{ url_for('static', filename='default_profile.png') }}" 
-                         alt="Default Profile Picture" 
-                         class="profile-pic default" />
-                {% endif %}
-            </div>
+        <div class="profile-pic-wrapper">
+            {% if user.profile_pic %}
+                <img src="{{ url_for('static', filename='profile_pics/' + user.profile_pic) }}" 
+                    alt="Profile Picture" 
+                    class="profile-pic" 
+                    id="profilePic" 
+                    style="cursor: pointer;"
+                    title="Click to view full size" />
+            {% else %}
+                <img src="{{ url_for('static', filename='default_profile.png') }}" 
+                    alt="Default Profile Picture" 
+                    class="profile-pic default" />
+            {% endif %}
+        </div>
 
-            <a href="{{ url_for('edit_profile') }}" class="button edit-button">Edit Profile</a>
-        {% else %}
-            <p>Profile information not available.</p>
-        {% endif %}
+        <a href="{{ url_for('edit_profile') }}" class="button edit-button">Edit Profile</a>
+    {% else %}
+        <p>Profile information not available.</p>
+    {% endif %}
+
     <section class="applied-jobs-summary">
-  <h3>Jobs You've Applied For</h3>
-  {% if applied_jobs %}
-    <ul>
-      {% for job in applied_jobs %}
-        <li>{{ job.name }} - Applied {{ job.application_count }} time{{ '' if job.application_count == 1 else 's' }}</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>You have not applied for any jobs yet.</p>
-  {% endif %}
+    <h2>Jobs You've Applied For</h2>
+    {% if applied_jobs %}
+        <ul class="applied-jobs-list">
+            {% for job in applied_jobs %}
+                <li>
+                    <span class="job-name">{{ job.job_name }}</span>
+
+                    <a href="{{ url_for('download_application', application_id=job.application_id) }}" class="download-link">
+                        Download PDF 
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have not applied for any jobs yet.</p>
+    {% endif %}
 </section>
+</aside>
 
-    </aside>
-
-    <!-- Modal for fullscreen profile picture -->
     <div id="picModal" class="modal">
         <span class="close-modal" id="closeModal">&times;</span>
         <img class="modal-content" id="modalImage" />
@@ -136,14 +149,14 @@
 
     <main class="main-content">
         <section class="career-suggestions">
-            <h3>Career Suggestions Based on Your Skills</h3>
+            <h3>Vacant Jobs Based on Your Skills</h3>
             <div class="career-cards-container">
                 {% if jobs %}
                     {% for job in jobs %}
                         <div class="job-posting">
-                            <h3>{{ job.name }}</h3>
+                            <h4 class="job-name-heading">Job Name : {{ job.name }}</h4>
                             
-                            <p><strong>Shop Name:</strong> {{ job.shop_name or "N/A" }}</p>
+                            <p><strong>Shop Name / Company Name :</strong> {{ job.shop_name or "N/A" }}</p>
                             <p><strong>Location:</strong> {{ job.location or "N/A" }}</p>
                             <p><strong>Contact Info:</strong> {{ job.contact_info or "N/A" }}</p>
                             <p><strong>Description:</strong> {{ job.description }}</p>
@@ -164,7 +177,7 @@
                 {% endif %}
             </div>
         </section>
-   
+    
 
 
         <section class="quick-links">
@@ -209,40 +222,39 @@
         }
     }
 
-     document.addEventListener('DOMContentLoaded', function() {
+    // Flash message auto-hide logic
+    document.addEventListener('DOMContentLoaded', function() {
         const flashMessagesContainer = document.getElementById('flash-messages');
         
         if (flashMessagesContainer) {
-            // Set the duration for display (3000 milliseconds = 3 seconds)
             const displayDuration = 3000; 
+            const fadeDuration = 500; // Match the transition time
 
             setTimeout(() => {
-                // Remove the element from the DOM
-                flashMessagesContainer.remove();
-            }, displayDuration);
-        }
-    });
-
-
-   document.addEventListener('DOMContentLoaded', function() {
-       // Target the success/confirmation message section
-       const flashMessagesContainer = document.querySelector('.flash-section.flash-success');
-
-       if (flashMessagesContainer) {
-            const displayDuration = 3000; // 3 seconds display time
-            const fadeDuration = 1000; // 1 second CSS fade effect
-
-            setTimeout(() => {
-                // 1. Start the CSS fade-out transition
-                flashMessagesContainer.style.opacity = '0'; 
-
-                // 2. Remove the element from the DOM after the fade is complete
+                // 1. Start fade-out
+                flashMessagesContainer.style.opacity = '0';
+                
+                // 2. Remove after fade is complete
                 setTimeout(() => {
                     flashMessagesContainer.remove();
                 }, fadeDuration);
 
             }, displayDuration);
         }
+        
+        // This is the cleanup logic, not necessary for functional flash message removal
+        const successFlash = document.querySelector('.flash-section.flash-success'); 
+        if (successFlash) { 
+             const displayDuration = 3000;
+             const fadeDuration = 1000; 
+
+             setTimeout(() => {
+                 successFlash.style.opacity = '0';
+                 setTimeout(() => {
+                     successFlash.remove();
+                 }, fadeDuration);
+             }, displayDuration);
+         }
     });
 </script>
 

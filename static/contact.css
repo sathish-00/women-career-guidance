@@ -1,214 +1,136 @@
-
-/* ==================================== */
-/* General & Typography */
-/* ==================================== */
+/* General Styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fdfdfe; /* Changed to a very light off-white color */
-    color: #343a40;
-    margin: 0;
-    padding: 0;
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #212529;
+  line-height: 1.6;
 }
 
-.container {
-    max-width: 960px;
-    margin: 50px auto 20px auto;
-    padding: 0 15px;
+/* Card Styling */
+.card {
+  border-radius: 10px;
+  border: none;
+  background-color: #ffffff;
 }
 
-/* ==================================== */
-/* Two-Column Layout */
-/* ==================================== */
-.contact-split-layout {
-    display: flex;
-    gap: 40px;
-    background-color: #f0f0f0;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    padding: 30px 40px;
-    flex-wrap: wrap;
-    justify-content: center;
+/* Headings */
+ h3 {
+  font-weight: 600;
+  color: #343a40;
 }
-
-/* ==================================== */
-/* Left Side: Contact Form */
-/* ==================================== */
-.contact-section {
-    flex: 1 1 500px;
-    padding: 20px;
-    overflow: hidden;
-}
-
-.contact-section .main-contact-heading {
-    color: #34495e;
+h2 {
     font-weight: 600;
-    text-align: center;
-    margin-bottom: 40px;
+    color: #5a3681;
 }
 
-/* ==================================== */
-/* Right Side: Image and Details */
-/* ==================================== */
-.contact-info-section {
-    flex: 1 1 300px;
-    text-align: center;
-    padding: 20px;
+/* Contact Info Box */
+.contact-info-box p {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  color: #495057;
 }
 
-.contact-info-section h3 {
-    color: #343a40;
-    font-weight: 600;
-    margin-bottom: 20px;
+/* Map Container */
+.map-container iframe {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
 }
 
-.contact-image-container {
-    width: 300px;
-    height: 300px;
-    overflow: hidden;
-    border-radius: 10px;
-    margin: 0 auto 20px;
+/* FAQ Heading */
+.faq-heading {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #384d6c;
 }
 
-.contact-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* Accordion Icons */
+.accordion-button i {
+  color: #0d6efd;
 }
 
-.contact-details p {
-    font-size: 1.1em;
-    font-weight: 500;
-    color: #6c757d;
+/* Accordion Button */
+.accordion-button {
+  font-weight: 500;
+  background-color: #f1f3f5;
+  border-radius: 0 !important;
 }
 
-.contact-details .fas {
-    color: #329549;
-    margin-right: 10px;
+/* Accordion Body */
+.accordion-body {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-top: none;
+  padding: 1rem;
 }
 
-/* New style for timings text */
-.contact-details p strong {
-    color: #343a40;
-}
-
-/* ==================================== */
-/* Form Elements */
-/* ==================================== */
-.form-label {
-    color: #495057;
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
+/* Form Controls */
 .form-control {
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    padding: 12px 15px;
-    transition: all 0.3s ease;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.75rem;
 }
 
-.form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
-    background-color: #fefefe;
-}
-
+/* Submit Button */
 .btn-primary {
-    background-color: #ADD8E6;
-    border-color: #ADD8E6;
-    color: #34495e;
-    padding: 10px 20px;
-    font-size: 0.95em;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: #1d4073;
+  border: none;
+  transition: background-color 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #87CEFA;
-    border-color: #87CEFA;
-    transform: translateY(-2px);
+  background-color: #39557e;
 }
 
-/* New Back to Home button style */
-.back-to-home-btn {
-    display: inline-block;
-    margin-bottom: 20px;
-    background-color: #f0f0f0;
-    border-color: #ddd;
-    color: #343a40;
+/* Footer Styling */
+.footer-section {
+  background-color: #3f798c;
+  color: white;
+  border-top: 4px solid #dddee0;
 }
 
-.back-to-home-btn:hover {
-    background-color: #e0e0e0;
-    border-color: #ccc;
+.footer-section .btn-light {
+  background-color: #ffffff;
+  color: #343a40;
+  border: none;
+  transition: background-color 0.3s ease;
 }
 
-/* ==================================== */
-/* Other elements and media queries */
-/* ==================================== */
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    color: #fff;
-    padding: 12px 25px;
-    font-weight: 500;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
+.footer-section .btn-light:hover {
+  background-color: #e9ecef;
+  color: #000;
 }
 
-.btn-secondary:hover {
-    background-color: #5a6268;
-    border-color: #545b62;
-}
-
-.flashes {
-    list-style: none;
-    padding: 0;
-}
-
+/* Flash Message Animation */
 .alert {
-    border-radius: 8px;
-    font-weight: 500;
+  transition: opacity 0.5s ease;
 }
 
-footer {
+/* Responsive Fixes */
+@media (max-width: 768px) {
+  .faq-heading {
+    font-size: 1.5rem;
+  }
+
+  .form-control {
+    font-size: 1rem;
+  }
+}
+
+.map-address a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.map-address a:hover {
+  text-decoration: underline;
+  color: #0a58ca;
+}
+h4 {
+    color: #a60d94;
+    font-weight: 600;
+    margin-bottom: 20px;
     text-align: center;
-    background-color: #eaf2f8;
-    color: #495057;
-    padding: 2px 0;
-    border-top: 1px solid #d0d7dd;
-    font-size: 0.9em;
-    overflow: hidden;
+    font-size: 1.8rem;
 }
 
-/* Adjusted spacing for the container inside the footer */
-footer .container {
-    margin: 5px auto 2px auto;
-}
-
-/* New style for animated text in the footer */
-.animate-text {
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin: 5px auto;
-    animation: linear-move 5s linear infinite;
-    display: inline-block;
-}
-
-@keyframes linear-move {
-    0% {
-        transform: translateX(-5%);
-        color: #9e8743;
-    }
-    50% {
-        transform: translateX(5%);
-        color: #7a4277;
-    }
-    100% {
-        transform: translateX(-5%);
-        color: #be9a2d;
-    }
-
-}

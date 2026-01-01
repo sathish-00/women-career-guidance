@@ -1,15 +1,15 @@
 /* --- General Page Styling --- */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f7f9;
+    background-color: #f4f4f4;
     color: #333;
+    margin: 0;
     padding: 20px;
-}
-
-h1 {
+}   
+h1{
     text-align: center;
-    color: #4a69bd;
-    margin-bottom: 30px;
+    color: #383872;
+    margin-bottom: 20px;
 }
 
 /* --- Table Styling --- */
@@ -105,4 +105,28 @@ p a:hover {
     table td:last-child {
         border-bottom: 0;
     }
+}
+
+#print-btn {
+    /* Spacing */
+    padding: 10px 20px;
+
+    /* Font */
+    color: #325f8e; /* Blue text */
+    font-size: 16px;
+    font-weight: bold;
+
+    /* Appearance */
+    background-color: transparent;
+    border: 2px solid #6b6b72; /* Blue border */
+    border-radius: 30px; /* Pill shape */
+
+    /* Interactivity */
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#print-btn:hover {
+    background-color: #37848c; /* Fills with color on hover */
+    color: #ffffff;
 }

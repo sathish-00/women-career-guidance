@@ -41,11 +41,7 @@
                                 {% endif %}
                                 | <strong>Vacancies:</strong> {{ job['total_labour_vacancy'] }}
                             </p>
-                            {% if job.application_form_url %}
-                                <a href="{{ job.application_form_url }}" class="apply-button" target="_blank">Apply Here 📝</a>
-                            {% else %}
-                                <a href="{{ url_for('apply', job_id=job.id) }}" class="apply-button">Apply Now 📝</a>
-                            {% endif %}
+                           
                         </div>
                     {% endfor %}
                 {% else %}

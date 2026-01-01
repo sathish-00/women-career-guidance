@@ -2,19 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filter Career Videos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='career_interests.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='select_video_skills.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
+        
+        {# Flash Messages (CSS will handle the positioning) #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" id="flash-container">
+                    {% for category, message in messages %}
+                        <p class="flash {{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <h1>Filter Videos by Job Demand</h1>
         <p>Select the skills you want to learn about based on current job openings:</p>
 
+        {# --- SEARCH AND VOICE CONTAINER (NEW FEATURE) --- #}
+        <div class="search-container-wrapper">
+            <input 
+                type="text" 
+                id="skillSearch" 
+                placeholder="Search or Speak skills to filter the list..." 
+                aria-label="Search skills" 
+                onkeyup="filterSkills()"
+            >
+            
+            <button type="button" id="voiceBtn" class="search-icon-btn youtube-style-btn" title="Speak to search">
+                <i class="fas fa-microphone"></i> 
+            </button>
+            
+            <button type="button" class="search-icon-btn youtube-style-btn" title="Search skills" onclick="filterSkills()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        {# ------------------------------------------------ #}
+
         <form method="POST" action="{{ url_for('display_filtered_videos') }}">
-            <div class="skills-list">
+            <div class="skills-list" id="skillsList">
                 {% if available_skills %}
                     {% for skill in available_skills %}
-                        <div class="skill-option">
+                        <div class="skill-option" data-skill-name="{{ skill | lower }}">
                             <label>
                                 <input type="checkbox" name="skill" value="{{ skill }}" />
                                 {{ skill }}
@@ -26,10 +60,28 @@
                 {% endif %}
             </div>
 
-            <button type="submit">Show Relevant Videos</button>
+            <p id="noSkillsFound" style="display: none; color: #dc3545; text-align: center; margin-top: 20px;">
+                No matching skills found.
+            </p>
+
+            {% if available_skills %}
+                <button type="submit">Show Relevant Videos</button>
+            {% endif %}
         </form>
 
-        <a href="{{ url_for('home') }}">Back to Home</a>
+        <a href="{{ url_for('home') }}" class="back-link">Back to Home</a>
     </div>
+
+    {# --- VOICE FEEDBACK INDICATOR (Bottle Cap Style) --- #}
+    <div id="voiceFeedback" class="voice-feedback" style="display: none;">
+        <i class="fas fa-microphone"></i>
+        <p id="voiceStatus"></p> 
+        <p id="voiceResult"></p>
+    </div>
+    {# ---------------------------------------------------- #}
+
+    <script src="{{ url_for('static', filename='career_videos_filter.js') }}"></script>
+    
+    {# Old script removed, logic moved to career_videos_filter.js #}
 </body>
 </html>

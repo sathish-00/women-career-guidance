@@ -1,134 +1,133 @@
-/* General Page Styling */
+/* --- Global Reset and Layout --- */
+
 body {
-    font-family: 'Poppins', sans-serif;
-    background: #e0f2f7; /* Light blue background for a different feel */
-    display: flex;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    /* Centers content vertically and stacks the card and button container */
+    display: flex; 
+    flex-direction: column; 
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: center; /* Centers horizontally */
+    min-height: 100vh; /* Ensures layout takes full viewport height */
     margin: 0;
-    color: #4a4a4a; /* Changed general text color */
+    padding: 20px; /* Add padding just in case of small screens */
+    box-sizing: border-box;
 }
 
-/* Centered Login Box */
+/* --- Login Card Container --- */
+
 .login-container {
-    width: 350px;
+    background-color: #fff;
     padding: 30px;
-    background: #ffffff; /* White background for the container */
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
-    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin-bottom: 20px; /* Space between the card and the button below */
 }
 
-/* Heading & Form Elements */
 h2 {
-    color: #0056b3; /* Darker blue for heading */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* --- Required Mark (Red Asterisk) --- */
+
+.required-label::after {
+    /* Inserts a space and the asterisk after the label text */
+    content: " *"; 
+    color: red; /* Sets the asterisk color to red */
     font-weight: bold;
-    margin-bottom: 25px;
-    font-size: 2.2em; /* Slightly larger heading */
+    margin-left: 2px;
 }
 
-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 18px; /* More space between form elements */
-}
+/* --- Form Elements --- */
 
-/* Labels */
 label {
-    font-size: 17px; /* Slightly larger font for labels */
-    font-weight: bold;
-    color: #007bff; /* Changed text color for labels to a brighter blue */
-    text-align: left; /* Align labels to the left */
-    margin-bottom: 5px; /* Add some space below labels */
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
 }
 
-/* Input Fields */
-input {
-    padding: 14px; /* More padding for inputs */
-    font-size: 17px; /* Larger font size for input text */
-    width: 100%;
-    border: 1px solid #c2e0f4; /* Lighter, subtle border */
-    border-radius: 8px;
-    box-sizing: border-box;
-    color: #333333; /* Input text color */
-}
-
-/* Password Input Fix (Keep as is, or remove if not specifically needed for password) */
+input[type="text"],
 input[type="password"] {
-    padding: 14px;
-    font-size: 17px;
     width: 100%;
-    border: 1px solid #c2e0f4;
-    border-radius: 8px;
-    margin-top: 0; /* Align with general input margin if gap is used */
-    box-sizing: border-box;
-    color: #333333;
+    padding: 10px;
+    margin-bottom: 15px; /* Space below the input field */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
 }
 
-/* Input Focus Effect */
-input:focus {
-    background: #eaf6fa; /* Very light blue background on focus */
-    outline: none;
-    border-color: #007bff; /* Bright blue border on focus */
-    box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.4); /* Brighter shadow */
-}
+/* --- Flash Messages --- */
 
-/* Buttons */
-button {
-    padding: 15px; /* More padding for buttons */
-    font-size: 19px; /* Larger font for button text */
-    background: #007bff; /* Main button color */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-    margin-top: 15px; /* Add some space above the button */
-}
-
-button:hover {
-    background: #0056b3; /* Darker blue on hover */
-    transform: translateY(-2px); /* Slight lift effect on hover */
-}
-
-/* Signup Link */
-.signup-link {
-    margin-top: 20px; /* More space above the link */
-    font-size: 15px; /* Slightly larger font for link text */
-    color: #666; /* Changed general link text color */
-}
-
-.signup-link a {
-    color: #28a745; /* Changed link color to green */
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.signup-link a:hover {
-    text-decoration: underline;
-    color: #218838; /* Darker green on hover */
-}
-
-/* Optional: Flash Messages Styling (if you have them on login page) */
 .flash-message {
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     border-radius: 4px;
-    font-weight: bold;
     text-align: center;
-    opacity: 0.9;
 }
 
-.flash-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.flash-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
+.error {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
     border: 1px solid #f5c6cb;
+}
+
+/* --- Buttons and Links --- */
+
+button[type="submit"] {
+    width: 100%; 
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin-bottom: 15px; /* Space above signup link */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 5px;
+}
+
+/* --- Home Button Styles (Outside the Card) --- */
+
+.home-button-container {
+    /* Ensures the container width matches the login card for alignment */
+    width: 300px; 
+    text-align: center;
+}
+
+.home-button {
+    /* Styles the anchor tag to look like a full-width button */
+    display: block; /* Makes it take up the full width of its container */
+    padding: 10px 15px;
+    background-color: #4CAF50; /* Distinct green color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.home-button:hover {
+    background-color: #45a049;
+}
+
+/* static/register.css (Add or verify this rule exists) */
+
+.form-group label.required::after {
+    /* Adds a red asterisk (*) or star (★) after the label text */
+    content: "*"; /* Unicode for a solid star, you could also use '*' */
+    color: red;
+    padding-left: 5px;
 }
