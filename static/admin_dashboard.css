@@ -22,7 +22,7 @@ body {
 }
 
 h2 {
-    color: #1a73e8;
+    color: #2c56a4;
     text-align: center;
     margin-bottom: 30px;
     border-bottom: 1px solid #e0e0e0;
@@ -30,7 +30,7 @@ h2 {
 }
 
 h3 {
-    color: #4a69bd;
+    color: #9e345c;
     margin-top: 25px;
     margin-bottom: 15px;
     font-size: 1.4em;
@@ -193,7 +193,7 @@ h3 {
 footer {
     background-color: #34495e;
     color: white;
-    padding: 15px 0;
+    padding: 20px 0;
     text-align: center;
     margin-top: 20px;
 }
@@ -258,3 +258,21 @@ footer {
         padding: 15px;
     }
 }
+
+
+    
+    .btn-logout {
+        background-color: #6c757d; /* Example gray */
+    }
+
+    /* New style for the delete button */
+    .btn-delete {
+        background-color: #dc3545; /* Red */
+        border: none;
+        font-family: inherit;
+        font-size: inherit;
+        cursor: pointer;
+    }
+    .btn-delete:hover {
+        background-color: #c82333; /* Darker red on hover */
+    }
