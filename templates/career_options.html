@@ -7,19 +7,26 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
+    
 </head>
 <body>
     <div class="container">
         <h1 class="page-title">Career Options</h1>
 
         <div class="search-container">
-            <div class="search-input-wrapper">
-                <input type="text" id="career-search" placeholder="Type or speak to search...">
-                <i class="fa-solid fa-magnifying-glass search-icon" id="search-icon" onclick="searchCareer()"></i>
-                <i class="fa-solid fa-microphone voice-icon" id="voice-icon" onclick="startVoiceSearch()"></i>
+            <div class="search-wrapper-youtube">
+                <div class="search-box">
+                    <input type="text" id="career-search" placeholder="Search..." autocomplete="off">
+                    <button class="search-btn" onclick="searchCareer()" title="Search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+        
+                <button class="mic-btn-youtube" onclick="openVoiceModal()" title="Search with your voice">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
             </div>
         </div>
-
         <div class="job-section">
             <h2 class="section-title today">Today's Jobs</h2>
             <div class="job-list">
@@ -41,7 +48,6 @@
                                 {% endif %}
                                 | <strong>Vacancies:</strong> {{ job['total_labour_vacancy'] }}
                             </p>
-                           
                         </div>
                     {% endfor %}
                 {% else %}
@@ -94,10 +100,69 @@
         <p class="back-to-home"><a href="/">Back to Home</a></p>
     </div>
 
+    <div id="voice-overlay" class="voice-overlay">
+        <div class="voice-modal">
+            <span class="close-voice" onclick="closeVoiceSearch()">&times;</span>
+            <h2>Listening...</h2>
+            <div class="mic-container">
+                <div id="listening-mic" class="listening-mic">
+                    <i class="fa-solid fa-microphone"></i>
+                </div>
+                <div class="circle-ripple"></div>
+                <div class="circle-ripple delay1"></div>
+                <div class="circle-ripple delay2"></div>
+            </div>
+            <p id="voice-status">Speak now</p>
+        </div>
+    </div>
+
     <script>
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const voiceIcon = document.getElementById('voice-icon');
+        // ==========================================
+        //  1. TEAMS-STYLE SOUND GENERATOR
+        // ==========================================
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            if (type === 'open') {
+                // "Da-Ding!" (Teams/Office Chime)
+                playTone(400, 'sine', 0, 0.1); 
+                playTone(600, 'sine', 0.1, 0.3); 
+            } 
+            else if (type === 'close') {
+                // "Bum." (Soft closing thud)
+                playTone(200, 'triangle', 0, 0.15);
+            }
+        }
+
+        function playTone(freq, type, startTime, duration) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+
+            // Smooth Envelope
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime + startTime);
+            gainNode.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + startTime + 0.05);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + startTime + duration);
+
+            oscillator.start(audioCtx.currentTime + startTime);
+            oscillator.stop(audioCtx.currentTime + startTime + duration);
+        }
+
+        // ==========================================
+        //  2. SEARCH LOGIC
+        // ==========================================
         const searchInput = document.getElementById('career-search');
+        const voiceOverlay = document.getElementById('voice-overlay');
+        const voiceStatus = document.getElementById('voice-status');
 
         function searchCareer() {
             const query = searchInput.value.trim();
@@ -106,7 +171,40 @@
             }
         }
 
-        function startVoiceSearch() {
+        // Allow pressing Enter to search
+        searchInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                searchCareer();
+            }
+        });
+
+        // ==========================================
+        //  3. VOICE POPUP LOGIC
+        // ==========================================
+        function openVoiceModal() {
+            playSound('open'); // <--- PLAYS "DA-DING!"
+            voiceOverlay.style.display = 'flex';
+            voiceStatus.innerText = "Listening...";
+            startVoiceRecognitionLogic();
+        }
+
+        function closeVoiceSearch() {
+            if (voiceOverlay.style.display === 'flex') {
+                playSound('close'); // <--- PLAYS "BUM"
+            }
+            voiceOverlay.style.display = 'none';
+        }
+
+        // Close if clicked outside
+        window.onclick = function(event) {
+            if (event.target == voiceOverlay) {
+                closeVoiceSearch();
+            }
+        };
+
+        function startVoiceRecognitionLogic() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
             if (SpeechRecognition) {
                 const recognition = new SpeechRecognition();
                 recognition.lang = 'en-US';
@@ -114,24 +212,28 @@
                 recognition.maxAlternatives = 1;
 
                 recognition.start();
-                voiceIcon.classList.add('blinking');
 
                 recognition.onresult = function(event) {
                     const speechResult = event.results[0][0].transcript;
+                    
+                    // Update UI to show what was heard
+                    voiceStatus.innerText = `"${speechResult}"`;
                     searchInput.value = speechResult;
-                    searchCareer();
-                };
 
-                recognition.onend = function() {
-                    voiceIcon.classList.remove('blinking');
+                    // Wait 1 second so user sees the text, then search
+                    setTimeout(() => {
+                        closeVoiceSearch();
+                        searchCareer();
+                    }, 1000);
                 };
 
                 recognition.onerror = function(event) {
-                    voiceIcon.classList.remove('blinking');
-                    console.error('Speech recognition error:', event.error);
+                    voiceStatus.innerText = "Didn't catch that. Try again.";
                 };
+                
             } else {
                 alert('Web Speech API is not supported in this browser. Please try Chrome or Edge.');
+                closeVoiceSearch();
             }
         }
     </script>

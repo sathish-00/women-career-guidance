@@ -1,102 +1,126 @@
-/* General Page Styling */
+/* =========================================
+   1. GENERAL PAGE STYLING
+   ========================================= */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7f9;
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f9f9f9;
     color: #333;
     line-height: 1.6;
     margin: 0;
     padding: 0;
 }
 
-h1 {
+h1.page-title {
     text-align: center;
-    color: #a1741a;
+    color: #2c3e50;
     margin-top: 40px;
     margin-bottom: 30px;
-    font-size: 40px;
-    font-weight: 500;
+    font-size: 36px;
+    font-weight: 700;
 }
 
-/* Search Bar and Voice Assistant */
+/* =========================================
+   2. YOUTUBE-STYLE SEARCH BAR
+   ========================================= */
 .search-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 40px;
-    position: relative;
-}
-
-.search-input-wrapper {
-    position: relative;
-    width: 400px;
-    max-width: 90%;
-}
-
-#career-search {
+    margin-bottom: 50px;
     width: 100%;
-    height: 40px;
-    font-size: 18px;
-    padding: 8px 80px 8px 15px;
-    border-radius: 10px;
-    border: 2px solid #434548;
+}
+
+.search-wrapper-youtube {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between search bar and mic */
+    width: 100%;
+    max-width: 700px;
+}
+
+/* The Search Box (Input + Magnifying Glass) */
+.search-box {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 40px; /* Pill shape */
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s;
+}
+
+.search-box:focus-within {
+    box-shadow: 0 1px 6px rgba(0,0,0,0.2);
+    border-color: #1c62b9;
+}
+
+/* The Input Field */
+.search-box input {
+    flex: 1;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
     outline: none;
-    transition: all 0.3s ease;
 }
 
-#career-search:focus {
-    border-color: #3b3c3e;
-    box-shadow: 0 0 8px rgba(167, 188, 212, 0.2);
-}
-
-#search-icon, #voice-icon {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px;
+/* The Search Button (Magnifying Glass) */
+.search-btn {
+    background-color: #f8f8f8;
+    border: none;
+    border-left: 1px solid #ccc;
+    padding: 10px 24px;
     cursor: pointer;
-    transition: color 0.2s;
+    color: #555;
+    font-size: 16px;
+    transition: background-color 0.2s;
 }
 
-/* Base Color: Subtle, semi-transparent black */
-#search-icon {
-    right: 35px;
-    color: rgba(0, 0, 0, 0.5); 
+.search-btn:hover {
+    background-color: #f0f0f0;
+    color: #333;
 }
 
-#search-icon:hover {
-    color: rgba(0, 0, 0, 0.8); /* Darker on hover */
+/* The Separate Round Microphone Button */
+.mic-btn-youtube {
+    width: 45px;
+    height: 45px;
+    min-width: 45px; /* Prevent squishing */
+    border-radius: 50%;
+    border: none;
+    background-color: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #030303;
+    font-size: 18px;
+    transition: background-color 0.2s;
 }
 
-/* Voice Icon: Now matches the base and hover colors of the Search Icon */
-#voice-icon {
-    right: 5px;
-    color: rgba(0, 0, 0, 0.5); 
+.mic-btn-youtube:hover {
+    background-color: #d9d9d9; 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
-#voice-icon:hover {
-    color: rgba(0, 0, 0, 0.8);
-}
-.blinking {
-    animation: blink 1s infinite;
+.mic-btn-youtube:active {
+    background-color: #cccccc;
 }
 
-@keyframes blink {
-    0% { background-color: transparent; }
-    50% { background-color: #e6f2ff; }
-    100% { background-color: transparent; }
-}
-
-/* --- Job Section Styling --- */
+/* =========================================
+   3. JOB SECTION STYLING
+   ========================================= */
 .job-section {
     margin-bottom: 40px;
 }
 
 .section-title {
-    text-align: center;
-    font-size: 1.8em;
-    color: #333;
+    font-size: 1.5rem;
+    color: #444;
     border-bottom: 2px solid #ddd;
     padding-bottom: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 /* Today's Jobs List */
@@ -106,64 +130,51 @@ h1 {
     gap: 15px;
 }
 
-/* ANIMATION: Staggered Fade-in for Today's Jobs */
+/* Job Card (Today's Jobs) */
 .job-card { 
-    background: #e9f5ff;
+    background: #ffffff;
     border-left: 5px solid #4a69bd;
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     
-    animation: fadeIn 0.4s ease-out both; 
+    /* Animation */
+    animation: fadeIn 0.5s ease-out both; 
     opacity: 0;
+}
+
+.job-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
 }
 
 .job-list > .job-card:nth-child(1) { animation-delay: 0.1s; }
 .job-list > .job-card:nth-child(2) { animation-delay: 0.2s; }
 .job-list > .job-card:nth-child(3) { animation-delay: 0.3s; }
-.job-list > .job-card:nth-child(4) { animation-delay: 0.4s; }
-
-
-.job-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
 
 .job-title {
-    color: #4a69bd;
+    color: #2c3e50;
     margin-top: 0;
-    font-size: 1.2em;
+    font-size: 1.3em;
+    font-weight: 600;
 }
 
 .job-description {
-    font-size: 0.9em;
-    color: #555;
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 10px;
 }
 
 .job-meta {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #777;
-    margin: 10px 0;
+    margin-top: 10px;
 }
 
-.apply-button {
-    display: inline-block;
-    background-color: #4a69bd;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
-}
-
-.apply-button:hover {
-    background-color: #3b5093;
-}
-
-
-/* Career Cards Grid */
+/* =========================================
+   4. CAREER CARDS GRID (All Jobs)
+   ========================================= */
 .career-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -174,212 +185,246 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
-    margin-bottom: 40px;
-    align-items: stretch;
 }
 
-/* ANIMATION: Applied to Career Card */
+/* Career Card Styling */
 .career-card {
     background-color: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     padding: 25px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: transform 0.3s, box-shadow 0.3s;
 
+    /* Animation */
     animation: slideInFromLeft 0.6s ease-out both; 
     opacity: 0;
 }
 
 .career-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* FIXED: Staggered Animation Delay for smooth entry */
-.career-grid > .career-card:nth-child(1) { animation-delay: 0.1s; }
-.career-grid > .career-card:nth-child(2) { animation-delay: 0.25s; }
-.career-grid > .career-card:nth-child(3) { animation-delay: 0.4s; }
-.career-grid > .career-card:nth-child(4) { animation-delay: 0.55s; }
-.career-grid > .career-card:nth-child(5) { animation-delay: 0.7s; }
-.career-grid > .career-card:nth-child(6) { animation-delay: 0.85s; }
+.career-grid > .col-lg-4:nth-child(1) .career-card { animation-delay: 0.1s; }
+.career-grid > .col-lg-4:nth-child(2) .career-card { animation-delay: 0.2s; }
+.career-grid > .col-lg-4:nth-child(3) .career-card { animation-delay: 0.3s; }
+.career-grid > .col-lg-4:nth-child(4) .career-card { animation-delay: 0.4s; }
 
-
-.career-card h2 {
+.card-title {
     color: #007BFF;
-    font-size: 22px;
+    font-size: 20px;
     margin-top: 0;
-    margin-bottom: 10px;
+    font-weight: 700;
 }
-/* ... (rest of career-card styles) ... */
 
-/* Skills as badges in career card */
+.card-description {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* Skills Badges */
 .skills-list {
     display: flex;
     flex-wrap: wrap;
-    margin-top: -10px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    gap: 5px;
 }
+
 .skill-item {
     background-color: #e6f2ff;
-    border-radius: 5px;
-    padding: 3px 8px;
-    margin: 5px 5px 0 0;
+    color: #0056b3;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Learn More Link */
+.career-link {
+    display: inline-block;
+    color: #ffffff;
+    background-color: #007bff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
     font-size: 14px;
-    white-space: nowrap;
-}
-.skill-link {
-    color: #0056b3;
-    text-decoration: none;
-    font-weight: normal;
-    font-style: italic;
-    margin-left: 5px;
-}
-.skill-link:hover {
-    text-decoration: underline;
-}
-
-/* Back-to-home link styling */
-.back-to-home {
     text-align: center;
-    margin-top: 20px;
+    margin-top: auto;
+    transition: background-color 0.2s;
 }
-.back-to-home a {
-    color: #007BFF;
+
+.career-link:hover {
+    background-color: #0056b3;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    transition: color 0.2s;
-}
-.back-to-home a:hover {
-    color: #0056b3;
-    text-decoration: underline;
+    color: white;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .career-container {
-        padding: 0 5px;
-    }
-    .career-grid {
-        grid-template-columns: 1fr;
-    }
-    h1 {
-        font-size: 1.5em;
-    }
-}
-
-/* --- ANIMATION KEYFRAMES --- */
-/* Keyframes for the main career cards to slide in */
-@keyframes slideInFromLeft {
-    0% {
-        transform: translateX(-100px); 
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* New Keyframes for Today's Jobs to fade in */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-.no-jobs {
-    /* Retained original styles */
-    text-align: center;
-    font-style: italic;
-    color: #7f8c8d;
-    font-size: 1.1em;
-    padding: 10px;
-    white-space: nowrap; 
-    
-    /* Animation applied to the no-jobs message */
-    animation: slideInFromLeft 1.2s ease-out both; 
-}
-
-
-/* --- FINAL FIX FOR VOICE ICON COLOR OVERRIDE --- */
-/* This rule ensures the requested dark color takes precedence */
-.search-input-wrapper #voice-icon.fa-solid {
-    color: #5b5d5e !important; 
-}
-
-.search-input-wrapper #voice-icon.fa-solid:hover {
-    color: #1a252f !important;
-}
-/* --- Styling for the Clickable Location Link (.map-link) --- */
-
+/* =========================================
+   5. MAP LINKS & ICONS
+   ========================================= */
 .job-meta .map-link {
-    /* Base style to make the text look clickable */
-    color: #3f897a; /* Professional Teal color */
-    font-weight: 700;
+    color: #2a9d8f; 
+    font-weight: 600;
     text-decoration: none;
-    padding: 0 5px; /* Slight padding to separate it from the pipe '|' */
     transition: color 0.2s ease;
 }
 
 .job-meta .map-link:hover {
-    color: #159a80; /* Darker teal on hover */
+    color: #21867a;
     text-decoration: underline;
 }
 
-/* --- Styling for the Map Pin Icon --- */
 .job-meta .fa-map-marker-alt {
-    color: #f44336; /* Bright Red/Orange for the pin icon */
+    color: #e74c3c;
     margin-left: 4px;
-    font-size: 1em; /* Ensures the icon size matches the text size */
 }
 
-
-/* =================================== */
-/* ==   Voice Assistant "Bottle Cap"  == */
-/* =================================== */
-
-.voice-feedback {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background-color: #31669b; /* Dark blue/grey */
-    color: white;
-    display: none; 
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px rgba(146, 105, 4, 0.664);
-    animation: pop-up 0.3s ease-out;
-}
-.voice-feedback i {
-    font-size: 2.5em;
-}
-.voice-feedback p {
-    margin: 5px 0 0 0;
-    font-size: 1em;
-    font-weight: bold;
+/* =========================================
+   6. ANIMATIONS & EXTRAS
+   ========================================= */
+.back-to-home {
     text-align: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
 }
 
-@keyframes pop-up {
-    from {
-        transform: translateX(-50%) scale(0.5);
-        opacity: 0;
+.back-to-home a {
+    color: #666;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.back-to-home a:hover {
+    color: #007BFF;
+    text-decoration: underline;
+}
+
+.no-jobs {
+    text-align: center;
+    font-style: italic;
+    color: #7f8c8d;
+    padding: 20px;
+    width: 100%;
+}
+
+@keyframes slideInFromLeft {
+    0% { transform: translateX(-30px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   7. VOICE SEARCH OVERLAY (POPUP)
+   ========================================= */
+.voice-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark background */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.voice-modal {
+    position: relative;
+    text-align: center;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+.voice-modal h2 {
+    font-size: 24px;
+    margin-bottom: 40px;
+    font-weight: 300;
+    opacity: 0.9;
+}
+
+.voice-modal p {
+    margin-top: 30px;
+    color: #ccc;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+/* Close Button (X) */
+.close-voice {
+    position: absolute;
+    top: -50px;
+    right: -50px; /* Positioned outside the center area */
+    font-size: 40px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-voice:hover {
+    color: white;
+}
+
+/* Microphone Container */
+.mic-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* The Big Red Microphone */
+.listening-mic {
+    width: 70px;
+    height: 70px;
+    background-color: #ff0000; /* YouTube Red */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: white;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* Sound Wave / Ripple Animation */
+.circle-ripple {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    animation: ripple 1.5s linear infinite;
+}
+
+.delay1 { animation-delay: 0.5s; }
+.delay2 { animation-delay: 1s; }
+
+/* Keyframes for the Ripple Effect */
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+        border-width: 3px;
     }
-    to {
-        transform: translateX(-50%) scale(1);
-        opacity: 1;
+    100% {
+        transform: scale(2.2); /* Expands outward */
+        opacity: 0;
+        border-width: 0px;
     }
 }

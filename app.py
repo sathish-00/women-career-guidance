@@ -41,8 +41,8 @@ app = Flask(__name__, static_folder="static")
 app.config['SECRET_KEY'] = 'ab8ff1c3a4662502b0c67289d6317703c493208dfc78ab1d'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['VIDEO_UPLOAD_FOLDER'] = VIDEO_UPLOAD_FOLDER
-app.config['RECAPTCHA_SITE_KEY'] = '6LdoFdkrAAAAALeNBLUV_gK59KDusy3jR3uRxJLC'
-app.config['RECAPTCHA_SECRET_KEY'] = '6LdoFdkrAAAAAFnLLaGiiKo95rn1xzmyq3tPDkoI'
+app.config['RECAPTCHA_SITE_KEY'] = '6LdaQFssAAAAAHuCgUkGHWEzLdOKJEAoBvRPh3zA'
+app.config['RECAPTCHA_SECRET_KEY'] = '6LdaQFssAAAAAHm-VHJVuW2jUxEecah2PGdpcrRP'
 
 # --- RECAPTCHA CONFIGURATION (Using your provided keys) ---
 # Your Site Key (Public key for the HTML widget)
@@ -52,7 +52,7 @@ app.config['RECAPTCHA_SECRET_KEY'] = '6LdoFdkrAAAAAFnLLaGiiKo95rn1xzmyq3tPDkoI'
 
 
 # Load API Key variables securely from .env file
-YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY', 'AIzaSyC8hIIBnhqDhjIBZHoKGfLZP6_V0cDAefQ')
+YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY', 'AIzaSyCzSJKRq0U4IThrxFAz2BTvur_o1h21S7k')
 
 
 # --- 3. FLASK-LOGIN SETUP ---
@@ -1617,6 +1617,42 @@ def terms_and_conditions():
     This route displays the separate Terms and Conditions page.
     """
     return render_template('terms.html')
+@app.route('/delete_account', methods=['POST'])
+@login_required
+def delete_account():
+    db = get_db()
+    try:
+        username = current_user.username
+        role = current_user.role
+
+        # 1. If Admin: Delete their profile specific data
+        if role == 'admin':
+            # Optional: Delete all jobs posted by this admin? 
+            # If yes, uncomment the next line:
+            # db.execute("DELETE FROM career_options WHERE posted_by = ?", (username,))
+            
+            db.execute("DELETE FROM admin_profiles WHERE username = ?", (username,))
+
+        # 2. If Job Seeker: Delete their applications
+        elif role == 'job_seeker':
+            # We delete applications first to maintain database integrity
+            db.execute("DELETE FROM applications WHERE user_id = ?", (current_user.id,))
+
+        # 3. Finally, delete the User record
+        # We use the unique ID (username+role) logic or just username+role columns
+        db.execute("DELETE FROM users WHERE username = ? AND role = ?", (username, role))
+        
+        db.commit()
+
+        # 4. Log out and redirect
+        logout_user()
+        flash("Your account has been permanently deleted.", "success")
+        return redirect(url_for('home'))
+
+    except Exception as e:
+        db.rollback()
+        flash(f"Error deleting account: {e}", "error")
+        return redirect(url_for('admin_dashboard'))
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):

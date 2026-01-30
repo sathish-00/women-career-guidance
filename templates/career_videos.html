@@ -12,10 +12,16 @@
     <div class="container">
         
         <div class="filter-search-container">
-            <div class="search-wrapper">
-                <input type="text" id="liveSearchBar" placeholder="Filter these results by keyword..." onkeyup="liveFilterVideos()">
-                <i class="fas fa-microphone voice-icon" id="micIcon" onclick="startVoiceSearch()"></i>
-                <i class="fas fa-search search-icon" onclick="liveFilterVideos()"></i>
+            <div class="search-wrapper-youtube">
+                <div class="search-box">
+                    <input type="text" id="liveSearchBar" placeholder="Filter videos by keyword..." onkeyup="liveFilterVideos()">
+                    <button class="search-btn" onclick="liveFilterVideos()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <button class="mic-btn-youtube" onclick="openVoiceModal()">
+                    <i class="fas fa-microphone"></i>
+                </button>
             </div>
         </div>
 
@@ -56,22 +62,60 @@
         <a href="{{ url_for('select_video_skills') }}" class="back-link">← Change Filter Skills</a>
     </div>
 
-   <div id="voiceFeedback" class="voice-feedback" style="display: none;">
-    <i class="fas fa-microphone"></i>
-    <p id="voiceStatus"></p> 
-    <p id="voiceResult"></p>
-</div>
-
-<div id="voiceFeedback" class="voice-feedback" style="display: none;">
-    
-    <div id="particle-container"></div>
-
-    <i class="fas fa-microphone"></i>
-    <p id="voiceStatus"></p> 
-    <p id="voiceResult"></p>
-</div>
+    <div id="voice-overlay" class="voice-overlay">
+        <div class="voice-modal">
+            <span class="close-voice" onclick="closeVoiceSearch()">×</span>
+            <h2>Listening...</h2>
+            <div class="mic-container">
+                <div id="listening-mic" class="listening-mic">
+                    <i class="fa-solid fa-microphone"></i>
+                </div>
+                <div class="circle-ripple"></div>
+                <div class="circle-ripple delay1"></div>
+                <div class="circle-ripple delay2"></div>
+            </div>
+            <p id="voice-status">Say a keyword...</p>
+        </div>
+    </div>
 
    <script>
+    // ==========================================
+    //  1. TEAMS SOUND EFFECT GENERATOR
+    // ==========================================
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        if (type === 'open') {
+            // "Da-Ding!"
+            playTone(400, 'sine', 0, 0.1); 
+            playTone(600, 'sine', 0.1, 0.3); 
+        } else if (type === 'close') {
+            // "Bum."
+            playTone(200, 'triangle', 0, 0.15);
+        }
+    }
+
+    function playTone(freq, type, startTime, duration) {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+        
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime + startTime);
+        gainNode.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + startTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + startTime + duration);
+        
+        oscillator.start(audioCtx.currentTime + startTime);
+        oscillator.stop(audioCtx.currentTime + startTime + duration);
+    }
+
+    // ==========================================
+    //  2. LIVE VIDEO FILTERING LOGIC
+    // ==========================================
     function liveFilterVideos() {
         const searchBar = document.getElementById('liveSearchBar');
         const query = searchBar.value.toLowerCase();
@@ -89,78 +133,69 @@
         });
     }
 
-     function createParticles() {
-        const container = document.getElementById('particle-container');
-        container.innerHTML = ''; // Clear old particles
-        const particleCount = 20; // Number of "sand" particles
+    // ==========================================
+    //  3. VOICE OVERLAY LOGIC
+    // ==========================================
+    const voiceOverlay = document.getElementById('voice-overlay');
+    const voiceStatus = document.getElementById('voice-status');
+    const searchBar = document.getElementById('liveSearchBar');
 
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-
-            // Randomize size, position, and animation delay for a natural look
-            const size = Math.random() * 5 + 2; // Size between 2px and 7px
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            
-            // Random delay makes the dancing look chaotic and natural
-            particle.style.animationDelay = `${Math.random() * 2}s`;
-
-            container.appendChild(particle);
-        }
+    function openVoiceModal() {
+        playSound('open'); 
+        voiceOverlay.style.display = 'flex';
+        voiceStatus.innerText = "Listening...";
+        startVoiceRecognition();
     }
 
-    
-    function startVoiceSearch() {
+    function closeVoiceSearch() {
+        if (voiceOverlay.style.display === 'flex') {
+            playSound('close'); 
+        }
+        voiceOverlay.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == voiceOverlay) {
+            closeVoiceSearch();
+        }
+    };
+
+    function startVoiceRecognition() {
         if ('webkitSpeechRecognition' in window) {
             const recognition = new webkitSpeechRecognition();
-            const searchBar = document.getElementById('liveSearchBar');
-            
-            const voiceFeedback = document.getElementById('voiceFeedback');
-            const voiceStatus = document.getElementById('voiceStatus');
-            const voiceResult = document.getElementById('voiceResult');
-
             recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
 
-            recognition.onstart = function() {
-                voiceStatus.textContent = 'Listening...';
-                voiceResult.textContent = '';
-                voiceFeedback.style.display = 'flex';
-            };
-            recognition.onend = function() {
-                setTimeout(() => {
-                    voiceFeedback.style.display = 'none';
-                }, 1500);
-            };
+            recognition.start();
+
             recognition.onresult = function(event) {
                 const transcript = event.results[0][0].transcript;
+                
+                voiceStatus.innerText = `"${transcript}"`;
                 searchBar.value = transcript;
-                voiceStatus.textContent = 'Result:';
-                voiceResult.textContent = `"${transcript}"`;
                 liveFilterVideos();
+
+                setTimeout(() => {
+                    closeVoiceSearch();
+                }, 1000);
             };
+
             recognition.onerror = function(event) {
-                voiceStatus.textContent = 'Error';
-                voiceResult.textContent = 'Try again.';
-                console.error("Speech recognition error:", event.error);
+                voiceStatus.innerText = "Try again.";
             };
-            
-            recognition.start();
         } else {
             alert('Sorry, your browser does not support voice search.');
+            closeVoiceSearch();
         }
     }
 
+    // Initialize listener
     document.addEventListener('DOMContentLoaded', function() {
-        const searchBar = document.getElementById('liveSearchBar');
         if (searchBar) {
             searchBar.addEventListener('keyup', liveFilterVideos);
         }
     });
-</script>
-
-    </body>
+   </script>
+</body>
 </html>
