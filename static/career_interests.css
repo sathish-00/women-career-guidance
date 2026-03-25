@@ -289,3 +289,178 @@ h3 {
     background-color: #f0f8ff; 
     text-decoration: none;
 }
+/* ============================================================== */
+/* MODERN FLOATING CHATBOT DESIGN (2026)              */
+/* ============================================================== */
+
+/* 1. The Main Container - Floats in bottom right */
+.chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    max-height: 500px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #e0e0e0;
+}
+
+/* Minimized State (Toggle Class) */
+.chat-container.minimized {
+    height: 50px;
+    width: 250px;
+}
+
+/* 2. Header - Professional Gradient */
+.chat-header {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.chat-header i {
+    margin-right: 8px;
+}
+
+#close-chat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* 3. The Chat Box - Scrollable Area */
+.chat-box {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 4. Individual Messages */
+.message {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+/* AI Messages (Left) */
+.ai-message {
+    align-self: flex-start;
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #eee;
+    border-bottom-left-radius: 2px;
+}
+
+/* User Messages (Right) */
+.user-message {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+/* 5. Input Area - Pinned to bottom */
+.chat-input-area {
+    padding: 10px;
+    display: flex;
+    background: white;
+    border-top: 1px solid #eee;
+}
+
+.chat-input-area input {
+    flex: 1;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
+}
+
+.chat-input-area input:focus {
+    border-color: #6e8efb;
+}
+
+.chat-input-area button {
+    background: #6e8efb;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-left: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.chat-input-area button:hover {
+    background: #a777e3;
+    transform: scale(1.1);
+}
+
+/* Scrollbar Styling */
+.chat-box::-webkit-scrollbar {
+    width: 5px;
+}
+.chat-box::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+/* --- AI THINKING ANIMATION (Bouncing Dots) --- */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 12px 16px;
+    background: #f0f2f5;
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: bounce 1.3s linear infinite;
+}
+
+/* Three different colors for a beautiful look */
+.typing-dot:nth-child(1) { background-color: #6e8efb; animation-delay: 0s; }
+.typing-dot:nth-child(2) { background-color: #a777e3; animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { background-color: #4facfe; animation-delay: 0.3s; }
+
+@keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+}
+.chat-header {
+    cursor: move; /* Shows the 'four-arrow' icon so users know they can drag it */
+    user-select: none; /* Prevents highlighting text while dragging */
+}
+
+.chat-container {
+    /* Change fixed to absolute if you want it to scroll with the page, 
+       but keep 'fixed' if you want it to stay on screen while moving it. */
+    position: fixed; 
+}

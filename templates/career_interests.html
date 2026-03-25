@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        
+          
         <h2 id="register-heading">Personalize Your Dashboard</h2>
         
         {# Flash Messages #}
@@ -114,5 +114,108 @@
     {# --- JAVASCRIPT LINK (REQUIRED FOR SEARCH/VOICE) --- #}
     <script src="{{ url_for('static', filename='career_interests.js') }}"></script>
     {# ---------------------------------------------------- #}
+
+
+    {# ============================================================== #}
+    {#                 NEW GEMINI AI CHATBOT MODULE                   #}
+    {# ============================================================== #}
+    
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; width: 320px; border: 2px solid #4CAF50; border-radius: 10px; background: white; z-index: 9999; box-shadow: 0px 4px 15px rgba(0,0,0,0.2);">
+        
+        <div style="background: #4CAF50; color: white; padding: 12px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
+            <span><i class="fas fa-robot"></i> Career Assistant</span>
+            <button onclick="toggleChat()" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">
+                <i class="fas fa-chevron-down" id="chat-toggle-icon"></i>
+            </button>
+        </div>
+        
+        <div id="chat-body" style="display: block;">
+            <div id="chat-box" style="height: 300px; overflow-y: auto; padding: 15px; font-size: 14px; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px;">
+                <p style="background: #e8f5e9; padding: 10px; border-radius: 8px; margin: 0; align-self: flex-start; max-width: 85%;">
+                    <b>AI:</b> Hello! Ask me about resume tips, interview prep, or specific career skills.
+                </p>
+            </div>
+            
+            <div style="display: flex; border-top: 1px solid #ddd;">
+                <input type="text" id="ai-user-input" placeholder="Ask a question..." style="flex: 1; padding: 12px; border: none; outline: none; border-radius: 0 0 0 8px;">
+                <button onclick="sendChatMessage()" style="background: #4CAF50; color: white; border: none; padding: 12px 15px; cursor: pointer; border-radius: 0 0 8px 0;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle minimize/maximize chat
+        function toggleChat() {
+            let chatBody = document.getElementById("chat-body");
+            let icon = document.getElementById("chat-toggle-icon");
+            if (chatBody.style.display === "none") {
+                chatBody.style.display = "block";
+                icon.classList.replace("fa-chevron-up", "fa-chevron-down");
+            } else {
+                chatBody.style.display = "none";
+                icon.classList.replace("fa-chevron-down", "fa-chevron-up");
+            }
+        }
+
+        // Send message to Flask backend
+        function sendChatMessage() {
+            let inputField = document.getElementById("ai-user-input");
+            let chatBox = document.getElementById("chat-box");
+            let message = inputField.value.trim();
+
+            if (message === "") return;
+
+            // 1. Show the user's message
+            chatBox.innerHTML += `
+                <p style="background: #4CAF50; color: white; padding: 10px; border-radius: 8px; margin: 0; align-self: flex-end; max-width: 85%;">
+                    <b>You:</b> ${message}
+                </p>`;
+            inputField.value = ""; 
+            chatBox.scrollTop = chatBox.scrollHeight; 
+
+            // 2. Show a temporary "typing..." message
+            let typingIndicator = `
+                <p id="typing" style="color: gray; padding: 10px; margin: 0; font-style: italic;">
+                    AI is typing...
+                </p>`;
+            chatBox.innerHTML += typingIndicator;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // 3. Send the message to Flask via the updated unique API route
+            fetch('/ai_bot_api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove the "typing..." message
+                document.getElementById("typing").remove();
+                
+                // Show the actual AI response
+                chatBox.innerHTML += `
+                    <p style="background: #e8f5e9; padding: 10px; border-radius: 8px; margin: 0; align-self: flex-start; max-width: 85%;">
+                        <b>AI:</b> ${data.reply}
+                    </p>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                document.getElementById("typing").remove();
+                chatBox.innerHTML += `
+                    <p style="color: red; padding: 10px; margin: 0;">
+                        <b>System:</b> Connection error. Please try again.
+                    </p>`;
+            });
+        }
+
+        // Allow pressing "Enter" to send
+        document.getElementById("ai-user-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") sendChatMessage();
+        });
+    </script>
+    {# ============================================================== #}
+
 </body>
 </html>

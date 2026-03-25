@@ -9,6 +9,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import date, datetime
 from functools import wraps
+from dotenv import load_dotenv
+import google.generativeai as genai
+from flask import request, jsonify
 
 import requests # <-- ADD THIS IMPORT
 
@@ -28,7 +31,7 @@ from add_row_column import migrate_add_role_column, migrate_add_career_columns
 from security_migrations import migrate_add_security_columns 
 # ...       
 
-
+load_dotenv("app.env")
 # --- GLOBAL CONSTANTS ---
 UPLOAD_FOLDER = 'static/profile_pics'
 VIDEO_UPLOAD_FOLDER = 'static/career_videos'
@@ -73,6 +76,60 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
     db.row_factory = sqlite3.Row
     return db
+
+@app.route('/fix_db')
+def fix_db():
+    db = get_db()
+    # List of columns that are currently missing causing the IndexError
+    new_columns = [
+        "ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'pending'",
+        "ALTER TABLE users ADD COLUMN shop_name TEXT",
+        "ALTER TABLE users ADD COLUMN voter_id TEXT",
+        "ALTER TABLE users ADD COLUMN verification_doc TEXT"
+    ]
+    
+    for sql in new_columns:
+        try:
+            db.execute(sql)
+            db.commit()
+        except sqlite3.OperationalError:
+            # This column already exists, so we skip it
+            continue
+            
+    return "Database updated! Try logging in now."
+
+import os
+import time
+from werkzeug.utils import secure_filename
+
+# 1. Force absolute path to your static/uploads folder
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
+
+# 2. Ensure folder exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+
+import os
+from werkzeug.utils import secure_filename
+
+# 1. Define the Upload Folder
+app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
+
+# 2. Define Allowed Extensions
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# 3. Create the folder automatically if it's missing
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -197,6 +254,26 @@ def init_db():
         db.commit()
 
 
+def init_subscription_db():
+    import sqlite3
+    # Use the same database name you use for your users
+    conn = sqlite3.connect('database.db') 
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS user_subscriptions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            subscription_json TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+    """)
+    conn.commit()
+    conn.close()
+
+# Call it immediately so the table is ready before the first user registers
+init_subscription_db()
+
+
 # --- New Vacancy Status Function ---
 def get_vacancy_status(username):
     """Calculates total, posted, and remaining vacancies for a given admin."""
@@ -251,6 +328,30 @@ def verify_recaptcha(response_token):
 # --------------------------------------------------------------------
 
 
+@app.route('/force_update_db')
+def force_update_db():
+    db = get_db()
+    # These are the 4 missing columns causing the error
+    missing_columns = [
+        "ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'pending'",
+        "ALTER TABLE users ADD COLUMN shop_name TEXT",
+        "ALTER TABLE users ADD COLUMN voter_id TEXT",
+        "ALTER TABLE users ADD COLUMN verification_doc TEXT"
+    ]
+    
+    results = []
+    for sql in missing_columns:
+        try:
+            db.execute(sql)
+            db.commit()
+            results.append(f"✅ Success: {sql}")
+        except Exception as e:
+            results.append(f"❌ Already exists or Error: {e}")
+            
+    return "<br>".join(results) + "<br><br><b>Done! Try registering or logging in now.</b>"
+
+
+
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -265,7 +366,19 @@ def login():
         user = db.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
 
         if user and check_password_hash(user['password'], password):
-            # Pass user details (including role) to the Flask-Login User object
+            
+            # --- UPDATED: ADMIN VERIFICATION CHECK ---
+            if user['role'] == 'admin':
+                if user['status'] == 'pending':
+                    # Send them to the "Waiting Room" template
+                    return render_template('pending_verification.html', shop_name=user['shop_name'])
+                
+                if user['status'] == 'rejected':
+                    flash('Your account verification was declined. Please contact support.', 'error')
+                    return render_template('login.html')
+            # -----------------------------------------
+
+            # Log the user in
             login_user(User(
                 username=user['username'], 
                 age=user['age'], 
@@ -274,14 +387,22 @@ def login():
                 role=user['role']
             ))
 
-            user_role = user['role']
-
-            if user_role == 'admin':
+            # Redirect logic after successful login
+            if user['role'] == 'admin':
+                # Check if they have finished their profile (e.g., location check)
+                # We assume admin_profiles table holds the "Remained Sections"
+                profile = db.execute('SELECT location FROM admin_profiles WHERE username = ?', (username,)).fetchone()
+                
+                if not profile or not profile['location']:
+                    flash('Account verified! Please complete the remaining sections of your profile.', 'success')
+                    return redirect(url_for('edit_admin_profile'))
+                
                 return redirect(url_for('admin_dashboard'))
             else:
                 return redirect(url_for('dashboard'))
         else:
             flash('Invalid username or password', 'error')
+            
     return render_template('login.html')
 
 @app.route('/logout')
@@ -429,74 +550,56 @@ def register_admin():
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
         age_raw = request.form.get("age", "").strip()
-        profile_pic_file = request.files.get('profile_pic')
+        
+        # --- NEW FIELDS ---
+        shop_name = request.form.get("shop_name", "").strip()
+        voter_id = request.form.get("voter_id", "").strip()
+        verification_file = request.files.get('verification_doc')
         role = "admin"
+        status = "pending" # Initial status
 
         errors = []
-        if not username:
-            errors.append("Username is required.")
-        if not password or not confirm_password:
-            errors.append("Password and confirmation are required.")
-        elif password != confirm_password:
+        # Existing validations...
+        if not (username and password and shop_name and voter_id):
+            errors.append("All fields including Shop Name and Voter ID are required.")
+        if password != confirm_password:
             errors.append("Passwords do not match.")
-        try:
-            age = int(age_raw)
-            if age <= 21:
-                errors.append("Admins must be older than 21.")
-        except ValueError:
-            errors.append("Valid age is required.")
-
-        profile_pic_filename = None
-        if profile_pic_file and profile_pic_file.filename != '':
-            if allowed_file(profile_pic_file.filename):
-                filename = secure_filename(profile_pic_file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                try:
-                    profile_pic_file.save(file_path)
-                    profile_pic_filename = filename
-                except Exception as e:
-                    errors.append(f"Failed to save profile picture: {e}")
+        
+        # Save Verification Document
+        verification_filename = None
+        if verification_file and verification_file.filename != '':
+            if allowed_file(verification_file.filename):
+                filename = secure_filename(f"proof_{username}_{verification_file.filename}")
+                verification_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                verification_filename = filename
             else:
-                errors.append("Profile picture must be an image file (png, jpg, jpeg, gif).")
+                errors.append("Proof must be an image or PDF.")
 
         if errors:
-            for e in errors:
-                flash(e, "error")
+            for e in errors: flash(e, "error")
             return render_template("register_admin.html")
 
         hashed_password = generate_password_hash(password)
         db = get_db()
         
-        existing = db.execute("SELECT 1 FROM users WHERE username = ? AND role = ?", (username, role)).fetchone()
-        if existing:
-            flash("Username already exists!", "error")
-            return render_template("register_admin.html")
-
         try:
-            db.execute("INSERT INTO users (username, password, age, profile_pic, role) VALUES (?, ?, ?, ?, ?)",
-                       (username, hashed_password, age, profile_pic_filename, role))
-            db.execute("INSERT INTO admin_profiles (username, total_labour_vacancy) VALUES (?, ?)", 
-                       (username, 10)) 
-            
+            # Insert with status='pending' and the verification details
+            db.execute("""
+                INSERT INTO users (username, password, age, role, status, shop_name, voter_id, verification_doc) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (username, hashed_password, int(age_raw), role, status, shop_name, voter_id, verification_filename))
             
             db.commit()
             
-            user_obj = User.get(f"{username}:{role}")
-            login_user(user_obj)
+            # DO NOT login_user here. Redirect to the "Wait" page instead.
+            flash("Registration submitted! Please wait for developer verification.", "info")
+            return render_template("pending_verification.html", shop_name=shop_name)
             
-            flash("Admin account created successfully, please complete your profile.", "success")
-            return redirect(url_for("admin_profile"))
-            
-        except sqlite3.IntegrityError:
-            db.rollback()
-            flash("Username already exists! Please choose another one.", "error")
-            return render_template("register_admin.html")
         except Exception as e:
             db.rollback()
             flash(f"An error occurred: {e}", "error")
             return render_template("register_admin.html")
 
-    flash("Fill out this form to create a new admin account.", "admin")
     return render_template("register_admin.html")
 
 @app.route("/admin_profile", methods=["GET", "POST"])
@@ -505,25 +608,31 @@ def admin_profile():
     db = get_db()
     
     if request.method == "POST":
-        shop_name = request.form.get("shop_name", "").strip()
-        total_labour_vacancy = request.form.get("total_labour_vacancy", 0, type=int) 
-        total_staff = request.form.get("total_staff", 0, type=int)
-        location = request.form.get("location", "").strip()
-        hand_based_salary = request.form.get("hand_based_salary", "").strip()
-        incentives = request.form.get("incentives", "").strip()
-        branches = request.form.get("branches", "").strip()
-        contact_info = request.form.get("contact_info", "").strip()
-        written_test = request.form.get("written_test", "").strip()
+        # Capture the "Remained Sections"
+        data = (
+            request.form.get("shop_name", "").strip(),
+            request.form.get("total_labour_vacancy", 0, type=int),
+            request.form.get("total_staff", 0, type=int),
+            request.form.get("location", "").strip(),
+            request.form.get("hand_based_salary", "").strip(),
+            request.form.get("incentives", "").strip(),
+            request.form.get("branches", "").strip(),
+            request.form.get("contact_info", "").strip(),
+            request.form.get("written_test", "").strip(),
+            current_user.username
+        )
 
         try:
-            db.execute(
-                '''INSERT OR REPLACE INTO admin_profiles
-                   (username, shop_name, total_labour_vacancy, total_staff, location, hand_based_salary, incentives, branches, contact_info, written_test)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                (current_user.username, shop_name, total_labour_vacancy, total_staff, location, hand_based_salary, incentives, branches, contact_info, written_test)
-            )
+            # Use UPDATE instead of INSERT OR REPLACE to preserve the username link
+            db.execute('''
+                UPDATE admin_profiles
+                SET shop_name = ?, total_labour_vacancy = ?, total_staff = ?, 
+                    location = ?, hand_based_salary = ?, incentives = ?, 
+                    branches = ?, contact_info = ?, written_test = ?
+                WHERE username = ?''', data)
             db.commit()
-            flash("Admin profile updated successfully.", "success")
+            
+            flash("Profile completed! You can now start posting jobs.", "success")
             return redirect(url_for('admin_dashboard'))
         except Exception as e:
             db.rollback()
@@ -531,9 +640,16 @@ def admin_profile():
             return render_template("admin_profile.html", profile=request.form)
 
     else:
+        # Fetch data to pre-fill the form
         profile = db.execute('SELECT * FROM admin_profiles WHERE username = ?', (current_user.username,)).fetchone()
+        
+        # Fallback: if profile doesn't exist yet, create an empty one
+        if not profile:
+            # Optionally pull the shop_name from the 'users' table since they just registered it
+            user_info = db.execute('SELECT shop_name FROM users WHERE username = ?', (current_user.username,)).fetchone()
+            profile = {'shop_name': user_info['shop_name'] if user_info else ""}
+            
         return render_template("admin_profile.html", profile=profile)
-
 
 @app.route("/admin_dashboard")
 @admin_required
@@ -1141,42 +1257,46 @@ def edit_profile():
 def career_options():
     db = get_db()
     search_query = request.args.get('query', '').strip().lower()
-    today = date.today().isoformat()
     
+    # Use string matching for safety
+    today = datetime.now().strftime('%Y-%m-%d')
+    
+    # 1. Today's Jobs (Strict date check)
     todays_jobs_query = """
         SELECT c.*, ap.shop_name, ap.location, ap.contact_info
         FROM career_options c
         LEFT JOIN admin_profiles ap ON c.posted_by = ap.username
-        WHERE c.is_vacant = 1 AND DATE(c.posted_date) = ?
+        WHERE c.is_vacant = 1 AND c.posted_date LIKE ?
         ORDER BY c.name ASC
     """
-    todays_jobs = db.execute(todays_jobs_query, (today,)).fetchall()
+    # Use %today% to match even if there is a timestamp
+    todays_jobs = db.execute(todays_jobs_query, (f"{today}%",)).fetchall()
     
+    # 2. All Available Jobs (NO date check - should show yesterday's jobs!)
     all_jobs_query = """
         SELECT c.*, ap.shop_name, ap.location, ap.contact_info
         FROM career_options c
         LEFT JOIN admin_profiles ap ON c.posted_by = ap.username
         WHERE c.is_vacant = 1
     """
+    
     params = []
     if search_query:
         all_jobs_query += " AND (LOWER(c.name) LIKE ? OR LOWER(c.skills_required) LIKE ? OR LOWER(c.description) LIKE ?)"
         like_pattern = f"%{search_query}%"
         params.extend([like_pattern, like_pattern, like_pattern])
 
-    all_jobs_query += " ORDER BY c.name ASC"
+    all_jobs_query += " ORDER BY c.posted_date DESC" # Sort by newest first
     jobs_raw = db.execute(all_jobs_query, params).fetchall()
     
+    # Filter out today's jobs from the "All" list to avoid duplicates
     todays_job_ids = {job['id'] for job in todays_jobs}
     jobs = [job for job in jobs_raw if job['id'] not in todays_job_ids]
-    
-    available_skills = {}
     
     return render_template(
         'career_options.html',
         todays_jobs=todays_jobs,
         jobs=jobs,
-        available_skills=available_skills,
         search_query=search_query
     )
 
@@ -1653,6 +1773,223 @@ def delete_account():
         db.rollback()
         flash(f"Error deleting account: {e}", "error")
         return redirect(url_for('admin_dashboard'))
+    
+#neeww
+# ==============================================================
+#                 NEW GEMINI AI CHATBOT MODULE                   
+# ==============================================================
+# ==============================================================
+#                 NEW GEMINI AI CHATBOT MODULE                   
+# ==============================================================
+# ==============================================================
+#                 NEW GEMINI AI CHATBOT MODULE (2026)            
+# ==============================================================
+import os
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+from flask import request, jsonify
+
+# 1. Load your specific environment file
+load_dotenv("app.env")
+
+# 2. Initialize the Client
+# March 2026 Note: We pass the key directly to ensure Flask finds it
+api_key_val = "AIzaSyACZraA-G_0KlUhTrk7tx1VWhBmQAUoEug"
+
+if api_key_val:
+    print(f"✅ Gemini API Key found (Starts with: {api_key_val[:5]}...)")
+else:
+    print("❌ ERROR: GEMINI_API_KEY is missing from app.env!")
+
+client = genai.Client(api_key=api_key_val)
+
+# 3. System Instructions (The "Personality" of your bot)
+system_prompt = """
+You are a helpful Career Assistant for women. 
+Help users with resumes, skill building, and job searching. 
+Do not mention specific jobs unless the user asks first. 
+Keep your advice simple, friendly, and empowering.
+"""
+
+# 4. The Route that your HTML talks to
+@app.route("/ai_bot_api", methods=["POST"])
+def ai_chatbot_response():
+    user_message = request.json.get("message")
+    
+    if not user_message:
+        return jsonify({"reply": "Please type a message."})
+    
+    try:
+        # Using gemini-2.0-flash-lite as it's the most stable free-tier model in 2026
+        response = client.models.generate_content(
+            model="gemini-3-flash-preview",  # Updated to a more advanced model available in 2026
+            contents=user_message,
+            config=types.GenerateContentConfig(
+                system_instruction=system_prompt,
+                temperature=0.7
+            )
+        )
+        
+        # Return the AI text to the frontend
+        return jsonify({"reply": response.text})
+        
+    except Exception as e:
+        # Print the exact error in your terminal for debugging
+        print(f"❌ Chatbot Error: {str(e)}")
+        
+        # Helpful error messages for common issues
+        if "429" in str(e):
+            return jsonify({"reply": "I'm a bit busy right now (Quota exceeded). Please try again in a minute!"})
+        elif "API_KEY_INVALID" in str(e):
+            return jsonify({"reply": "System Error: The API key is not being recognized. Check app.env."})
+        
+        return jsonify({"reply": "I'm having trouble thinking right now. Please try again later!"})
+
+
+@app.route('/save-subscription', methods=['POST'])
+@login_required
+def save_subscription():
+    data = request.get_json()
+    subscription_json = data.get('subscription')
+    
+    # Save this token to the user's record in the database
+    # This allows us to know exactly which device belongs to which user
+    db.execute("INSERT INTO user_subscriptions (user_id, subscription_json) VALUES (?, ?)", 
+               (current_user.id, JSON.stringify(subscription_json)))
+    db.commit()
+    
+    return {"status": "success", "message": "You will now receive job alerts!"}
+
+
+@app.route("/dev_approve/<username>")
+def dev_approve(username):
+    db = get_db()
+    db.execute("UPDATE users SET status = 'verified' WHERE username = ?", (username,))
+    db.commit()
+    return f"Admin {username} has been verified! They can now log in."
+@app.route("/super_admin/verify_shops")
+def super_admin_verify():
+    # Only allow access if you entered the Master Password at /dev/dashboard
+    if not session.get('dev_unlocked'):
+        return redirect(url_for('dev_dashboard'))
+        
+    db = get_db()
+    pending_admins = db.execute("SELECT * FROM users WHERE role = 'admin' AND status = 'pending'").fetchall()
+    return render_template("super_admin_verify.html", admins=pending_admins)
+@app.route("/super_admin/approve/<int:user_id>")
+def approve_admin(user_id):
+    if not session.get('dev_unlocked'):
+        return redirect(url_for('dev_dashboard'))
+
+    db = get_db()
+    db.execute("UPDATE users SET status = 'verified' WHERE rowid = ?", (user_id,))
+    db.commit()
+    
+    flash("Admin Approved!", "success")
+    # REDIRECT BACK TO INTERNAL DASHBOARD
+    return redirect(url_for('internal_dashboard'))
+
+@app.route("/super_admin/reject/<int:user_id>")
+def reject_admin(user_id):
+    if not session.get('dev_unlocked'):
+        return redirect(url_for('dev_dashboard'))
+
+    db = get_db()
+    db.execute("UPDATE users SET status = 'rejected' WHERE rowid = ?", (user_id,))
+    db.commit()
+    
+    flash("Admin Rejected.", "error")
+    # REDIRECT BACK TO INTERNAL DASHBOARD
+    return redirect(url_for('internal_dashboard'))
+
+@app.route('/fix_my_db')
+def fix_my_db():
+    db = get_db()
+    # These are the columns your code expects but the table is missing
+    columns_to_add = [
+        "ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'pending'",
+        "ALTER TABLE users ADD COLUMN shop_name TEXT",
+        "ALTER TABLE users ADD COLUMN voter_id TEXT",
+        "ALTER TABLE users ADD COLUMN verification_doc TEXT"
+    ]
+    
+    logs = []
+    for sql in columns_to_add:
+        try:
+            db.execute(sql)
+            db.commit()
+            logs.append(f"Successfully added: {sql}")
+        except Exception as e:
+            logs.append(f"Skipped/Error: {e}")
+            
+    return "<br>".join(logs) + "<br><b>Database is now ready! Try registering again.</b>"
+
+from flask import request, session, render_template_string, redirect, url_for
+
+@app.route('/dev/dashboard', methods=['GET', 'POST'])
+def dev_dashboard():
+    MASTER_PASSWORD = "my_secret_2026" 
+    
+    if session.get('dev_unlocked'):
+        return redirect(url_for('internal_dashboard')) # <--- CHANGE THIS REDIRECT
+
+    if request.method == 'POST':
+        if request.form.get('password') == MASTER_PASSWORD:
+            session['dev_unlocked'] = True
+            return redirect(url_for('internal_dashboard')) # <--- AND THIS ONE
+        else:
+            return render_template_string(PASS_FORM, error="Invalid Password!")
+
+    return render_template_string(PASS_FORM, error=None)
+
+# Simple HTML gate
+PASS_FORM = '''
+<div style="text-align: center; margin-top: 100px; font-family: Arial;">
+    <h2>Admin Verification Portal</h2>
+    {% if error %}<p style="color: red;">{{ error }}</p>{% endif %}
+    <form method="POST">
+        <input type="password" name="password" placeholder="Master Password" required style="padding: 10px;">
+        <button type="submit" style="padding: 10px; background: #333; color: white; border: none; cursor: pointer;">Enter</button>
+    </form>
+</div>
+'''
+
+
+@app.route('/internal/dashboard')
+def internal_dashboard():
+    # 1. SECURITY: Only let you in if the Master Password was entered
+    if not session.get('dev_unlocked'):
+        flash("Please login with Master Password first.", "error")
+        return redirect(url_for('dev_dashboard'))
+    
+    db = get_db()
+    
+    # 2. GET PENDING ADMINS (Your "To-Do" List)
+    pending_admins = db.execute(
+        "SELECT rowid AS id, username, shop_name, voter_id, verification_doc FROM users WHERE role = 'admin' AND status = 'pending'"
+    ).fetchall()
+    
+    # 3. GET VERIFIED ADMINS (Your "Directory")
+    active_admins = db.execute(
+        "SELECT rowid AS id, username, shop_name, voter_id FROM users WHERE role = 'admin' AND status = 'verified'"
+    ).fetchall()
+    
+    # 4. SEND TO NEW TEMPLATE
+    return render_template('internal_dashboard.html', 
+                           pending=pending_admins, 
+                           active=active_admins)
+
+
+
+@app.route('/dev/logout')
+def logout_dev():
+    # Remove the developer key from the session
+    session.pop('dev_unlocked', None)
+    flash("Developer Dashboard Locked.", "info")
+    return redirect(url_for('home'))
+
+
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):

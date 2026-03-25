@@ -10,29 +10,14 @@ html, body {
 
 body {
   font-family: Arial, sans-serif;
+  /* Using the image you provided */
   background-image: url("https://images.yourstory.com/cs/4/8e7cc4102d6c11e9aa979329348d4c3e/HSNewspiece16022024FeatureImage-1708060882484.jpeg?mode=crop&crop=faces&ar=2%3A1&format=auto&w=1920&q=75");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  background-attachment: scroll; /* More mobile-friendly */
+  background-attachment: scroll;
   color: #333;
   text-align: center;
-}
-
-/* Header Block */
-.home-header {
-  background: #87CEEB; /* Sky Blue */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  margin: 20px;
-}
-
-.home-header h2 {
-  color: #fff;
-  font-weight: bold;
-  margin: 0;
 }
 
 /* Headings */
@@ -42,7 +27,7 @@ h1, h3 {
   text-overflow: ellipsis;
   font-size: 2rem;
   font-weight: bold;
-  color: #000;
+  color: #000; /* Black text for visibility */
   margin: 20px 0 10px 0;
 }
 
@@ -52,66 +37,177 @@ h3 {
   margin: 10px 0 20px 0;
 }
 
-/* Text Overlay */
+/* Text Overlay Wrapper */
 .text-overlay {
   background: none;
   border: none;
   padding: 0;
-  border-radius: 0;
-  margin-bottom: 10px;
   display: inline-block;
 }
 
-/* Paragraph Styling */
-section p {
-  text-align: right;
-  color: #ff6600;
-  font-weight: bold;
-  padding-right: 20px;
-}
-
-/* Navigation Buttons */
+/* NAVIGATION BUTTONS (Bottom Left) */
 .home-nav {
   position: fixed;
   bottom: 30px;
   left: 30px;
   display: flex;
   flex-direction: row;
-  gap: 15px;
+  gap: 15px; /* Space between buttons */
   z-index: 10;
+  flex-wrap: wrap; /* Allows buttons to stack on small screens */
 }
 
+/* Unified Button Style for ALL buttons (including Marketplace) */
 .home-nav a {
-  background: #f05f06;
+  background: #f05f06; /* Standard Orange */
   color: #fff;
   padding: 10px 18px;
   border-radius: 6px;
   text-decoration: none;
   font-weight: bold;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .home-nav a:hover {
   background: #fa7c22;
+  transform: translateY(-2px); /* Slight lift effect */
 }
 
-/* Responsive Background & Text Fixes */
+/* Responsive Design */
 @media (max-width: 768px) {
   body {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: top center;
-    background-attachment: scroll;
+    background-size: cover;
+    background-position: center;
   }
 
   h1, h3 {
     font-size: 1.5rem;
-    white-space: normal;
+    white-space: normal; /* Allow text to wrap on mobile */
   }
 
-  section p {
-    font-size: 14px;
-    padding-right: 10px;
+  /* Center buttons on mobile */
+  .home-nav {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    justify-content: center;
+    margin-top: 50px;
+    padding-bottom: 30px;
   }
+}
+#assistant-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.assistant-btn {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #e84393, #6c5ce7);
+    color: white;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    font-size: 24px;
+    transition: transform 0.3s ease;
+}
+
+.assistant-btn:hover {
+    transform: scale(1.1) rotate(10deg);
+}
+
+#assistant-chat-bubble {
+    background: white;
+    padding: 15px;
+    border-radius: 15px 15px 0 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    margin-bottom: 10px;
+    max-width: 200px;
+    font-size: 14px;
+    border: 1px solid #eee;
+}
+
+.hidden {
+    display: none;
+}
+.mic-btn {
+    background-color: #6c5ce7;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.speaker-btn {
+    background-color: #e84393;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.hidden { display: none; }
+
+#assistant-thinking {
+    display: flex;
+    gap: 5px;
+    padding: 10px;
+    justify-content: flex-start;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #e84393;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+
+.hidden { display: none !important; }
+
+/* Hide the top Google Translate banner */
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
+
+body {
+    top: 0px !important; 
+}
+
+/* Hide the Google logo and extra text in the dropdown */
+.goog-logo-link {
+    display: none !important;
+}
+
+.goog-te-gadget {
+    color: transparent !important;
+    font-size: 0px !important;
+}
+
+/* Optional: Make the dropdown look cleaner */
+.goog-te-combo {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #e84393;
+    background-color: white;
+    color: #333;
 }
 

@@ -3,12 +3,73 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Register</title>
+    <title>Register - Women's Career Guidance</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     {# --- GOOGLE RECAPTCHA SCRIPT --- #}
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <style>
+        /* Modern Toggle Switch Styling */
+        .notifications-settings {
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #fef1f5; 
+            border-radius: 12px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .notifications-settings h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            color: #d81b60;
+            margin-bottom: 15px;
+        }
+
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(216, 27, 96, 0.1);
+        }
+
+        .toggle-row:last-child { border-bottom: none; }
+
+        .toggle-label { font-weight: 500; color: #333; }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px; width: 16px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: #d81b60; }
+        input:checked + .slider:before { transform: translateX(22px); }
+    </style>
 </head>
 <body>
     <center>
@@ -20,8 +81,8 @@
             <h3>Registration Tips:</h3>
             <ul>
                 <li>Use a unique username that you can remember easily.</li>
-                <li>Choose a strong password with 8+ characters including letters and numbers.</li>
-                <li>Enter your correct age for personalized career recommendations.</li>
+                <li>Choose a strong password with 8+ characters.</li>
+                <li>Enter your correct age for personalized recommendations.</li>
                 <li>Uploading a profile picture helps personalize your profile.</li>
                 <li>If you face issues, contact support via the contact page.</li>
             </ul>
@@ -46,44 +107,23 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="username" class="required">Username:</label>
-                        <input type="text" id="username" name="username" required placeholder="Enter your desired username" />
+                        <input type="text" id="username" name="username" required placeholder="Enter your username" />
                     </div>
                     
                     <div class="form-group">
                         <label for="password" class="required">Password:</label>
                         <div class="password-input-wrapper">
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                required
-                                minlength="8"
-                                oninput="validatePassword()"
-                                placeholder="At least 8 characters"
-                            />
+                            <input type="password" id="password" name="password" required minlength="8" oninput="validatePassword()" placeholder="At least 8 characters" />
                             <span id="togglePassword" class="password-toggle" title="Show/Hide Password">👁️</span>
                         </div>
-                        <span id="passwordError" class="error-message"></span>
-                        <p class="password-strength-text">Password strength: <span id="strengthLabel">Weak</span></p>
-                        <div id="strengthMeter" class="strength-meter">
-                            <div id="strengthBar" class="strength-bar"></div>
-                        </div>
+                        <p class="password-strength-text">Strength: <span id="strengthLabel">Weak</span></p>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="age" class="required">Age:</label>
-                        <input
-                            type="number"
-                            id="age"
-                            name="age"
-                            required
-                            min="0"
-                            oninput="validateAge()"
-                            placeholder="Enter your age"
-                        />
-                        <span id="ageError" class="error-message"></span>
+                        <input type="number" id="age" name="age" required min="0" placeholder="Your age" />
                     </div>
                     <div class="form-group">
                         <label for="profile_pic" class="required">Profile Picture:</label>
@@ -96,30 +136,44 @@
                         <label for="security_question" class="required">Security Question:</label>
                         <select id="security_question" name="security_question" required>
                             <option value="">-- Select a question --</option>
-                            <option value="What was your first car's model?">What was your first car's model?</option>
-                            <option value="What is the name of your childhood best friend?">What is the name of your childhood best friend?</option>
                             <option value="What city were you born in?">What city were you born in?</option>
+                            <option value="What was your first car's model?">What was your first car's model?</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="security_answer" class="required">Security Answer:</label>
-                        <input 
-                            type="text" 
-                            id="security_answer" 
-                            name="security_answer" 
-                            required 
-                            placeholder="Enter the secret answer"
-                        />
+                        <input type="text" id="security_answer" name="security_answer" required placeholder="Your answer" />
+                    </div>
+                </div>
+
+                <div class="notifications-settings">
+                    <h3>Notification Preferences</h3>
+                    
+                    <div class="toggle-row">
+                        <span class="toggle-label">New Job Alerts</span>
+                        <label class="switch">
+                            <input type="checkbox" name="notify_jobs" id="notify_jobs" class="auth-notify">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <span class="toggle-label">Career Guidance Articles</span>
+                        <label class="switch">
+                            <input type="checkbox" name="notify_news" id="notify_news" class="auth-notify">
+                            <span class="slider round"></span>
+                        </label>
                     </div>
                 </div>
 
                 <div class="form-check mb-3" style="margin-top: 15px;">
                     <label class="form-check-label">
                         <input type="checkbox" name="terms_agree" required> 
-                        I agree to the <a href="{{ url_for('terms_and_conditions') }}" target="_blank" rel="noopener">Terms and Conditions</a>
-                        <span class="required-mark" style="color:red">*</span>
+                        I agree to the <a href="{{ url_for('terms_and_conditions') }}" target="_blank">Terms and Conditions</a>
+                        <span style="color:red">*</span>
                     </label>
                 </div>
+
                 <div class="form-group">
                     <div class="g-recaptcha" data-sitekey="{{ config['RECAPTCHA_SITE_KEY'] }}"></div>
                 </div>
@@ -153,19 +207,35 @@
     <script src="{{ url_for('static', filename='register.js') }}"></script>
     
     <script>
+        // Toggle Password Visibility
         const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-    
+        const passwordField = document.querySelector('#password');
         if (togglePassword) {
-            togglePassword.addEventListener('click', function (e) {
-                // toggle the type attribute
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-                
-                // toggle the eye icon (optional, simplistic)
-                this.textContent = type === 'password' ? '' : ''; 
+            togglePassword.addEventListener('click', function () {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
             });
         }
+
+        // Auto-request Notification Permission on Toggle
+        document.querySelectorAll('.auth-notify').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                if (this.checked) {
+                    if (!("Notification" in window)) {
+                        alert("This browser does not support notifications.");
+                        this.checked = false;
+                        return;
+                    }
+
+                    Notification.requestPermission().then(permission => {
+                        if (permission !== "granted") {
+                            alert("Please enable notifications in your browser settings to receive alerts.");
+                            this.checked = false;
+                        }
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>

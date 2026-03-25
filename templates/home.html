@@ -1,32 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Home - Career Guidance</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
-<script src="static/script.js"></script> <!-- ✅ Link JS -->
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="{{ url_for('static', filename='home.js') }}"></script>
 </head>
 <body>
-<h1>
-<div class="text-overlay">
-    Rural Women's Career Guidance
-</div>
-</h1>
-<h3>
-<div class="text-overlay">
-    <strong>Empowering women with career opportunities</strong> <!-- ✅ Ensures bold styling -->
-</div>
-</h3>
-
-    <nav class="home-nav">
-    <a href="{{ url_for('login') }}">Login</a>
-    <a href="{{ url_for('register') }}">Register</a>
-    <a href="{{ url_for('career_options') }}">Career Options</a>
-    <a href="{{ url_for('select_video_skills') }}">Career Videos</a>
-    <a href="{{ url_for('contact') }}">Contact Us</a>
-</nav>
 
     
+
+    <div class="hero-section">
+        <h1><div class="text-overlay">Rural Women's Career Guidance</div></h1>
+        <h3><div class="text-overlay"><strong>Empowering women with career opportunities</strong></div></h3>
+    </div>
+
+    <nav class="home-nav">
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+        <a href="{{ url_for('career_options') }}">Career Options</a>
+        <a href="{{ url_for('select_video_skills') }}">Career Videos</a>
+        <a href="{{ url_for('contact') }}">Contact Us</a>
+        <a href="https://your-marketplace-url.com" target="_blank">Marketplace</a>
+    </nav>
+
+    <div id="assistant-container">
+        <div id="assistant-chat-bubble" class="hidden">
+            <p id="assistant-text">Namaste! I am your Assistant. Click the mic to speak to me.</p>
+            
+            <div id="user-speech-output" style="color: #6c5ce7; font-weight: bold; margin-bottom: 10px; font-size: 0.9em;"></div>
+            
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="startListening()" class="mic-btn" title="Start Listening">
+                    <i class="fa fa-microphone"></i>
+                </button>
+                
+                <button onclick="speakText('assistant-text')" class="speaker-btn">
+                    <i class="fa fa-volume-up"></i>
+                </button>
+            </div>
+        </div>
+        
+        <button class="assistant-btn" onclick="toggleAssistant()">
+            <i class="fa-solid fa-headset"></i>
+        </button>
+    </div>
+
+    <div id="user-speech-output" style="color: #6c5ce7; font-weight: bold; margin-top: 10px; border-left: 3px solid #6c5ce7; padding-left: 10px; min-height: 20px;">
+    </div>
+
+
+    <div id="assistant-chat-bubble" class="hidden">
+    <div class="assistant-header">👩‍💼 Career Assistant</div>
+    <p id="assistant-text">Waiting for you...</p>
+    
+    <div id="assistant-thinking" class="hidden">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,te,hi', // English, Telugu, Hindi
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <div id="user-speech-output"></div>
+</div>
 </body>
 </html>

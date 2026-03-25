@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sandeep's Control Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #2c3e50; --main-bg: #f4f7f6; --accent: #3498db; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; background: var(--main-bg); }
+        
+        /* Sidebar Styling */
+        .sidebar { width: 260px; height: 100vh; background: var(--sidebar-bg); color: white; padding: 20px; position: fixed; }
+        .sidebar h2 { border-bottom: 2px solid #34495e; padding-bottom: 10px; font-size: 1.2rem; }
+        .nav-item { padding: 12px; display: block; color: #bdc3c7; text-decoration: none; transition: 0.3s; }
+        .nav-item:hover { background: #34495e; color: white; border-radius: 5px; }
+        .nav-item.active { color: white; background: var(--accent); border-radius: 5px; }
+
+        /* Main Content Styling */
+        .content { margin-left: 280px; padding: 30px; width: 100%; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { text-align: left; background: #f8f9fa; padding: 12px; border-bottom: 2px solid #dee2e6; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .pending { background: #fff3cd; color: #856404; }
+        .verified { background: #d4edda; color: #155724; }
+        
+        .btn-action { text-decoration: none; font-weight: bold; padding: 5px 10px; border-radius: 4px; }
+        .approve { color: #27ae60; }
+        .reject { color: #e74c3c; }
+        .no-doc { color: #95a5a6; font-style: italic; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2><i class="fa-solid fa-code"></i> Developer Portal</h2>
+        <nav>
+            <a href="#" class="nav-item active"><i class="fa fa-gauge"></i> Dashboard</a>
+            <a href="{{ url_for('home') }}" class="nav-item"><i class="fa fa-home"></i> Public Site</a>
+            <hr style="border: 0.5px solid #34495e; margin: 20px 0;">
+            <a href="{{ url_for('logout_dev') }}" class="nav-item" style="color: #e74c3c;"><i class="fa fa-power-off"></i> Lock Panel</a>
+        </nav>
+    </div>
+
+    <div class="content">
+        <h1>Internal Control Center</h1>
+
+        <div class="card">
+            <h3><i class="fa-solid fa-clock"></i> Pending Requests ({{ pending|length }})</h3>
+            {% if pending %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Shop Details</th>
+                        <th>Voter ID</th>
+                        <th>Proof Document</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admin in pending %}
+                    <tr>
+                        <td>
+                            <strong>{{ admin.shop_name }}</strong><br>
+                            <small>Username: {{ admin.username }}</small>
+                        </td>
+                        <td>{{ admin.voter_id }}</td>
+                        <td>
+                            {% if admin.verification_doc %}
+                                <a href="{{ url_for('static', filename='uploads/' ~ admin.verification_doc) }}" target="_blank" style="color: var(--accent); text-decoration: none;">
+                                    <i class="fa fa-file-image"></i> View Document
+                                </a>
+                            {% else %}
+                                <span class="no-doc">No Document Uploaded</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('approve_admin', user_id=admin.id) }}" class="btn-action approve">Approve</a> | 
+                            <a href="{{ url_for('reject_admin', user_id=admin.id) }}" class="btn-action reject" onclick="return confirm('Are you sure you want to reject this shop?')">Reject</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p style="color: #7f8c8d;">Everything is up to date. No pending registrations.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h3><i class="fa-solid fa-circle-check"></i> Active Shop Directory</h3>
+            {% if active %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Shop Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admin in active %}
+                    <tr>
+                        <td>{{ admin.username }}</td>
+                        <td>{{ admin.shop_name }}</td>
+                        <td><span class="status-badge verified">Verified</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p style="color: #7f8c8d;">No verified shops found in the database.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

@@ -3,238 +3,397 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Options</title>
+    <title>Career Opportunities</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='career.css') }}">
     
+    <style>
+        body { background-color: #f9f9f9; font-family: 'Roboto', Arial, sans-serif; color: #0f0f0f; margin: 0; }
+
+        /* =========================================
+           1. GLASSMORPHISM SIDEBAR STYLES (LEFT)
+           ========================================= */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); opacity: 0; visibility: hidden;
+            transition: 0.4s ease; z-index: 999;
+        }
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        .curved-sidebar {
+            position: fixed; top: 0; left: -320px; width: 280px; height: 100vh;
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-top-right-radius: 50px; border-bottom-right-radius: 50px;
+            border-right: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 10px 0 25px rgba(0,0,0,0.1); z-index: 1000;
+            transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 30px 20px; display: flex; flex-direction: column;
+        }
+        .curved-sidebar.active { left: 0; }
+
+        .close-btn {
+            align-self: flex-end; background: none; border: none; font-size: 24px;
+            cursor: pointer; color: #333; margin-bottom: 20px;
+        }
+        
+        .sidebar-links { list-style: none; padding: 0; margin: 0; }
+        .sidebar-links li { margin-bottom: 15px; }
+        .sidebar-links a {
+            text-decoration: none; color: #333; font-size: 1.1rem;
+            font-weight: 600; display: flex; align-items: center; gap: 15px;
+            padding: 12px; border-radius: 12px; transition: 0.2s;
+        }
+        .sidebar-links a:hover {
+            background: rgba(0, 0, 0, 0.05); color: #065fd4; transform: translateX(5px);
+        }
+
+        /* =========================================
+           2. YOUTUBE SEARCH BAR STYLES
+           ========================================= */
+        .header-wrapper {
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px 15px 30px; gap: 10px;
+        }
+
+        .menu-btn-yt {
+            width: 40px; height: 40px; background-color: #fff;
+            border: 1px solid #ccc; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 18px; color: #0f0f0f; cursor: pointer; transition: 0.2s;
+        }
+        .menu-btn-yt:hover { background-color: #f0f0f0; }
+
+        .search-container-yt { display: flex; width: 100%; max-width: 600px; height: 40px; position: relative; }
+
+        .search-input-yt {
+            flex: 1; border: 1px solid #ccc; border-radius: 40px;
+            padding: 0 45px 0 20px; font-size: 16px; outline: none;
+            box-shadow: inset 0 1px 2px #eee; transition: border 0.2s, box-shadow 0.2s;
+        }
+        .search-input-yt:focus {
+            border: 1px solid #1c62b9;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 0 8px rgba(28, 98, 185, 0.3);
+        }
+
+        .clear-search-x {
+            position: absolute; right: 15px; top: 50%;
+            transform: translateY(-50%); font-size: 18px;
+            color: #606060; cursor: pointer; display: none;
+        }
+
+        .mic-btn-yt {
+            width: 40px; height: 40px; background-color: #f8f8f8;
+            border: none; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 18px; color: #0f0f0f; cursor: pointer; transition: background 0.2s;
+        }
+        .mic-btn-yt:hover { background-color: #e5e5e5; }
+
+        /* =========================================
+           3. JOB CARDS & LAYOUT STYLES
+           ========================================= */
+        .main-page-title { text-align: center; font-size: 2rem; font-weight: 500; margin: 20px 0 10px; }
+        .section-header { margin: 0 25px 15px; border-bottom: 2.5px solid #000; padding-bottom: 8px; }
+        .section-title { font-size: 1.2rem; font-weight: 600; text-transform: uppercase; }
+        
+        .horizontal-scroll { 
+            display: flex; overflow-x: auto; gap: 20px; 
+            padding: 10px 25px 40px 25px; scrollbar-width: none; 
+        }
+        .horizontal-scroll::-webkit-scrollbar { display: none; }
+
+        .career-card {
+            flex: 0 0 330px; background: #fff; border-radius: 12px; padding: 22px;
+            border: 1px solid #e0e0e0; height: 320px; 
+            display: flex; flex-direction: column; justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .career-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .card-hidden { display: none !important; }
+
+        .job-title-blue { color: #065fd4; font-weight: 700; font-size: 1.2rem; margin-bottom: 8px; }
+        .info-field { margin-bottom: 8px; }
+        .field-label { font-size: 10px; font-weight: 800; color: #70757a; text-transform: uppercase; display: block; }
+        .field-value { font-size: 13.5px; font-weight: 500; color: #0f0f0f; }
+
+        .skills-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .skill-badge {
+            background-color: #f0f0f0; color: #555; padding: 3px 10px;
+            border-radius: 12px; font-size: 11px; font-weight: 600; border: 1px solid #ddd;
+        }
+        
+        .loc-red { color: #cc0000; font-weight: 700; }
+        .stat-hiring { color: #008000; font-weight: 700; }
+        .stat-closed { color: #d93025; font-weight: 700; }
+
+        .btn-action {
+            background-color: #d81b60; color: #fff !important; padding: 7px 18px;
+            border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none !important;
+        }
+
+        /* 🟢 NEW: CLEAN ITALIC EMPTY STATE */
+        .empty-italic-text {
+            width: 100%; text-align: center; padding: 40px 20px;
+            font-style: italic; color: #70757a; font-size: 1.1rem;
+        }
+
+        /* =========================================
+           4. RIGHT SIDE VOICE ASSISTANT (WATERMARK)
+           ========================================= */
+        .voice-bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); opacity: 0; visibility: hidden;
+            transition: 0.4s ease; z-index: 10001;
+        }
+        .voice-bg-overlay.active { opacity: 1; visibility: visible; }
+
+        .voice-sidebar-right {
+            position: fixed; top: 0; right: -350px; width: 320px; height: 100vh;
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-top-left-radius: 50px; border-bottom-left-radius: 50px;
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: -10px 0 25px rgba(0,0,0,0.1); z-index: 10002;
+            transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 30px 20px; text-align: center; overflow: hidden;
+        }
+        .voice-sidebar-right.active { right: 0; }
+
+        .close-voice-btn {
+            position: absolute; top: 20px; left: 25px; background: none; border: none; 
+            font-size: 28px; cursor: pointer; color: #606060; transition: color 0.2s; z-index: 2;
+        }
+        .close-voice-btn:hover { color: #0f0f0f; }
+
+        .watermark-avatar {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 350px; height: 350px; fill: #d81b60; opacity: 0.05; 
+            z-index: -1; pointer-events: none;
+            animation: watermark-breath 3.5s infinite ease-in-out;
+        }
+        @keyframes watermark-breath {
+            0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.03; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.08; }
+            100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.03; }
+        }
+
+        .yt-red-mic {
+            width: 68px; height: 68px; background-color: #d81b60; color: white;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 28px; animation: yt-pulse 1.5s infinite ease-in-out;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; z-index: 2;
+        }
+        @keyframes yt-pulse {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(216, 27, 96, 0.5); }
+            50% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(216, 27, 96, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(216, 27, 96, 0); }
+        }
+
+        .listening-text {
+            font-size: 20px; font-weight: 500; color: #0f0f0f;
+            letter-spacing: 0.5px; z-index: 2;
+        }
+        .listening-dots { animation: blink 1.5s infinite both; }
+        .listening-dots:nth-child(2) { animation-delay: 0.2s; }
+        .listening-dots:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes blink { 0%, 20% { opacity: 0; } 50% { opacity: 1; } }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="page-title">Career Options</h1>
 
-        <div class="search-container">
-            <div class="search-wrapper-youtube">
-                <div class="search-box">
-                    <input type="text" id="career-search" placeholder="Search..." autocomplete="off">
-                    <button class="search-btn" onclick="searchCareer()" title="Search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </div>
-        
-                <button class="mic-btn-youtube" onclick="openVoiceModal()" title="Search with your voice">
-                    <i class="fa-solid fa-microphone"></i>
-                </button>
+    <div class="overlay" id="bgOverlay" onclick="toggleSidebar()"></div>
+    <div class="curved-sidebar" id="mySidebar">
+        <button class="close-btn" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></button>
+        <h3 style="margin-top: 0; color: #d81b60; font-weight: bold; margin-bottom: 20px;">Women's Career Guide</h3>
+        <ul class="sidebar-links">
+            <li><a href="/"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="#"><i class="fa-solid fa-briefcase"></i> Browse Jobs</a></li>
+            <li><a href="#"><i class="fa-solid fa-user-graduate"></i> Mentorship</a></li>
+            <li><a href="#"><i class="fa-solid fa-bookmark"></i> Saved Careers</a></li>
+            <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+    </div>
+
+    <div class="container-fluid">
+        <h1 class="main-page-title">Career Opportunities</h1>
+
+        <div class="header-wrapper">
+            <button class="menu-btn-yt" onclick="toggleSidebar()" title="Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="search-container-yt">
+                <input type="text" id="live-search" class="search-input-yt" placeholder="Search jobs, skills, or locations..." onkeyup="filterJobs()">
+                <span id="clear-btn" class="clear-search-x" onclick="clearLiveSearch()">&times;</span>
             </div>
+
+            <button class="mic-btn-yt" onclick="openVoiceModal()" title="Voice Search">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
         </div>
+
         <div class="job-section">
-            <h2 class="section-title today">Today's Jobs</h2>
-            <div class="job-list">
+            <div class="section-header"><h2 class="section-title">Today's Jobs</h2></div>
+            <div class="horizontal-scroll" id="today-scroll">
                 {% if todays_jobs %}
                     {% for job in todays_jobs %}
-                        <div class="job-card">
-                            <h3 class="job-title">{{ job['name'] }}</h3>
-                            <p class="job-description">{{ job['description'] }}</p>
-                            <p class="job-meta">
-                                <strong>Location:</strong> 
-                                {% if job['location'] %}
-                                    <a href="https://www.google.com/maps/search/{{ job['location'] | urlencode }}" 
-                                       target="_blank"
-                                       class="map-link">
-                                       {{ job['location'] }} <i class="fas fa-map-marker-alt"></i>
-                                    </a>
-                                {% else %}
-                                    N/A
-                                {% endif %}
-                                | <strong>Vacancies:</strong> {{ job['total_labour_vacancy'] }}
-                            </p>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="no-jobs">No jobs posted today.</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="job-section">
-            <h2 class="section-title all-jobs">All Available Jobs</h2>
-            
-            <div class="row"> 
-                {% if jobs %}
-                    {% for job in jobs %}
-                        <div class="col-lg-4 col-md-6 col-12 mb-4">
-                            <div class="career-card h-100"> 
-                                <h3 class="card-title">{{ job.name }}</h3>
-                                <p class="card-description"><strong>Description:</strong> {{ job.description }}</p>
-                                
-                                <p class="job-meta">
-                                    <strong>Location:</strong> 
-                                    {% if job['location'] %}
-                                        <a href="https://www.google.com/maps/search/{{ job['location'] | urlencode }}" 
-                                           target="_blank"
-                                           class="map-link">
-                                           {{ job['location'] }} <i class="fas fa-map-marker-alt"></i>
-                                        </a>
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </p>
-                                <p class="skills-list"><strong>Skills Required:</strong>
-                                    {% for skill in job.skills_required.split(',') %}
-                                        {% if skill.strip() %}
-                                            <span class="skill-item">{{ skill.strip() }}</span>
-                                        {% endif %}
-                                    {% endfor %}
-                                </p>
-                                <a href="{{ url_for('career_guidance', job_name=job.name) }}" class="career-link">Learn More about this career</a>
+                        <div class="career-card" data-title="{{ job['name'] | lower }}">
+                            <div>
+                                <h3 class="job-title-blue">{{ job['name'] }}</h3>
+                                <div class="info-field">
+                                    <span class="field-label">Required Skills</span>
+                                    <div class="skills-container">
+                                        {% for skill in job['skills_required'].split(',') %}
+                                            <span class="skill-badge">{{ skill.strip() }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="info-field mt-2">
+                                    <span class="field-label">Description</span>
+                                    <span class="field-value">{{ job['description'] | truncate(50) }}</span>
+                                </div>
                             </div>
+
+                            <div class="row no-gutters align-items-end">
+                                <div class="col-6">
+                                    <span class="field-label">Location</span>
+                                    <span class="field-value loc-red">{{ job['location'] or 'Hyderabad' }}</span>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span class="field-label">Status</span>
+                                    <span class="field-value {% if job['total_labour_vacancy']|int > 0 %}stat-hiring{% else %}stat-closed{% endif %}">
+                                        {% if job['total_labour_vacancy']|int > 0 %}Hiring{% else %}Closed{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('career_guidance', job_name=job.name) }}" class="btn-action mt-2 w-100">View Info</a>
                         </div>
                     {% endfor %}
                 {% else %}
-                    <div class="col-12">
-                        <p class="no-jobs">No career options found. Try searching for something else.</p>
+                    <div class="empty-italic-text">
+                        No jobs posted today. Check back tomorrow!
                     </div>
                 {% endif %}
             </div>
         </div>
-        <p class="back-to-home"><a href="/">Back to Home</a></p>
+
+        <div class="job-section">
+            <div class="section-header"><h2 class="section-title">All Available Jobs</h2></div>
+            <div class="horizontal-scroll" id="all-scroll">
+                {% if jobs %}
+                    {% for job in jobs %}
+                        <div class="career-card" data-title="{{ job.name | lower }}">
+                            <div>
+                                <h3 class="job-title-blue">{{ job.name }}</h3>
+                                <div class="info-field">
+                                    <span class="field-label">Skills</span>
+                                    <div class="skills-container">
+                                        {% for skill in job.skills_required.split(',')[:3] %}
+                                            <span class="skill-badge">{{ skill.strip() }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="info-field mt-2">
+                                    <span class="field-label">Detail</span>
+                                    <span class="field-value">{{ job.description | truncate(55) }}</span>
+                                </div>
+                            </div>
+
+                            <div class="row no-gutters align-items-end">
+                                <div class="col-6">
+                                    <span class="field-label">Place</span>
+                                    <span class="field-value loc-red">{{ job.location or 'Local' }}</span>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span class="field-label">Status</span>
+                                    <span class="field-value stat-hiring">Hiring</span>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('career_guidance', job_name=job.name) }}" class="btn-action mt-2 w-100">Take AI Assistant</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-italic-text">
+                        No jobs available right now. Please check back later.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
-    <div id="voice-overlay" class="voice-overlay">
-        <div class="voice-modal">
-            <span class="close-voice" onclick="closeVoiceSearch()">&times;</span>
-            <h2>Listening...</h2>
-            <div class="mic-container">
-                <div id="listening-mic" class="listening-mic">
-                    <i class="fa-solid fa-microphone"></i>
-                </div>
-                <div class="circle-ripple"></div>
-                <div class="circle-ripple delay1"></div>
-                <div class="circle-ripple delay2"></div>
-            </div>
-            <p id="voice-status">Speak now</p>
+    <div class="voice-bg-overlay" id="voiceBgOverlay" onclick="closeVoiceSearch()"></div>
+    <div class="voice-sidebar-right" id="voiceSidebar">
+        <button class="close-voice-btn" onclick="closeVoiceSearch()">&times;</button>
+        
+        <svg class="watermark-avatar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <path d="M32 38c7.7 0 14-6.3 14-14s-6.3-14-14-14-14 6.3-14 14 6.3 14 14 14zm0-24c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10z"/>
+            <path d="M48 34c-1.1 0-2 .9-2 2v6c0 6.6-5.4 12-12 12s-12-5.4-12-12v-6c0-1.1-.9-2-2-2s-2 .9-2 2v6c0 8.8 7.2 16 16 16s16-7.2 16-16v-6c0-1.1-.9-2-2-2z"/>
+            <path d="M48 42h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4c1.1 0 2-.9 2-2s-.9-2-2-2z"/>
+            <path d="M32 42c-10.6 0-20 6.8-23.3 16.8-.3.9.2 1.9 1.1 2.2.9.3 1.9-.2 2.2-1.1C14.7 51.5 22.8 46 32 46s17.3 5.5 20.1 13.9c.3.9 1.2 1.4 2.1 1.1.9-.3 1.4-1.2 1.1-2.1C52 48.8 42.6 42 32 42z"/>
+        </svg>
+
+        <div class="yt-red-mic">
+            <i class="fa-solid fa-microphone"></i>
+        </div>
+
+        <div id="voice-status" class="listening-text">
+            Listening<span class="listening-dots">.</span><span class="listening-dots">.</span><span class="listening-dots">.</span>
         </div>
     </div>
 
     <script>
-        // ==========================================
-        //  1. TEAMS-STYLE SOUND GENERATOR
-        // ==========================================
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSound(type) {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            if (type === 'open') {
-                // "Da-Ding!" (Teams/Office Chime)
-                playTone(400, 'sine', 0, 0.1); 
-                playTone(600, 'sine', 0.1, 0.3); 
-            } 
-            else if (type === 'close') {
-                // "Bum." (Soft closing thud)
-                playTone(200, 'triangle', 0, 0.15);
-            }
+        function toggleSidebar() {
+            document.getElementById('mySidebar').classList.toggle('active');
+            document.getElementById('bgOverlay').classList.toggle('active');
         }
 
-        function playTone(freq, type, startTime, duration) {
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
+        function filterJobs() {
+            const input = document.getElementById('live-search');
+            const filter = input.value.toLowerCase();
+            const clearBtn = document.getElementById('clear-btn');
+            
+            clearBtn.style.display = filter.length > 0 ? 'block' : 'none';
 
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
-            oscillator.type = type;
-            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
-
-            // Smooth Envelope
-            gainNode.gain.setValueAtTime(0, audioCtx.currentTime + startTime);
-            gainNode.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + startTime + 0.05);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + startTime + duration);
-
-            oscillator.start(audioCtx.currentTime + startTime);
-            oscillator.stop(audioCtx.currentTime + startTime + duration);
+            const cards = document.getElementsByClassName('career-card');
+            Array.from(cards).forEach(card => {
+                const title = card.getAttribute('data-title');
+                card.classList.toggle('card-hidden', !title.includes(filter));
+            });
         }
 
-        // ==========================================
-        //  2. SEARCH LOGIC
-        // ==========================================
-        const searchInput = document.getElementById('career-search');
-        const voiceOverlay = document.getElementById('voice-overlay');
-        const voiceStatus = document.getElementById('voice-status');
-
-        function searchCareer() {
-            const query = searchInput.value.trim();
-            if (query) {
-                window.location.href = "{{ url_for('career_options') }}?query=" + encodeURIComponent(query);
-            }
+        function clearLiveSearch() {
+            document.getElementById('live-search').value = '';
+            filterJobs();
         }
 
-        // Allow pressing Enter to search
-        searchInput.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                searchCareer();
-            }
-        });
-
-        // ==========================================
-        //  3. VOICE POPUP LOGIC
-        // ==========================================
         function openVoiceModal() {
-            playSound('open'); // <--- PLAYS "DA-DING!"
-            voiceOverlay.style.display = 'flex';
-            voiceStatus.innerText = "Listening...";
-            startVoiceRecognitionLogic();
-        }
+            const sidebar = document.getElementById('voiceSidebar');
+            const overlay = document.getElementById('voiceBgOverlay');
+            
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
 
-        function closeVoiceSearch() {
-            if (voiceOverlay.style.display === 'flex') {
-                playSound('close'); // <--- PLAYS "BUM"
-            }
-            voiceOverlay.style.display = 'none';
-        }
-
-        // Close if clicked outside
-        window.onclick = function(event) {
-            if (event.target == voiceOverlay) {
-                closeVoiceSearch();
-            }
-        };
-
-        function startVoiceRecognitionLogic() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
             if (SpeechRecognition) {
-                const recognition = new SpeechRecognition();
-                recognition.lang = 'en-US';
-                recognition.interimResults = false;
-                recognition.maxAlternatives = 1;
-
-                recognition.start();
-
-                recognition.onresult = function(event) {
-                    const speechResult = event.results[0][0].transcript;
-                    
-                    // Update UI to show what was heard
-                    voiceStatus.innerText = `"${speechResult}"`;
-                    searchInput.value = speechResult;
-
-                    // Wait 1 second so user sees the text, then search
-                    setTimeout(() => {
-                        closeVoiceSearch();
-                        searchCareer();
-                    }, 1000);
+                const rec = new SpeechRecognition();
+                rec.onresult = (e) => {
+                    document.getElementById('live-search').value = e.results[0][0].transcript;
+                    closeVoiceSearch();
+                    filterJobs();
                 };
-
-                recognition.onerror = function(event) {
-                    voiceStatus.innerText = "Didn't catch that. Try again.";
-                };
-                
+                rec.start();
             } else {
-                alert('Web Speech API is not supported in this browser. Please try Chrome or Edge.');
+                alert("Voice search is not supported in this browser.");
                 closeVoiceSearch();
             }
+        }
+
+        function closeVoiceSearch() { 
+            document.getElementById('voiceSidebar').classList.remove('active');
+            document.getElementById('voiceBgOverlay').classList.remove('active');
         }
     </script>
 </body>

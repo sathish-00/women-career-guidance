@@ -1,42 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Registration</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='admin_register.css') }}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Registration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_register.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
+    <style>
+        .verification-header { margin-top: 20px; padding-top: 10px; border-top: 2px solid #eee; color: #333; font-size: 1.1rem; }
+        .help-text { font-size: 0.85rem; color: #666; margin-bottom: 15px; }
+        .required-mark { color: red; }
+        
+        /* New Status Styles */
+        #scan-status { margin: 10px 0; font-weight: bold; font-size: 0.9rem; }
+        .scanning { color: #3498db; }
+        .valid { color: #27ae60; }
+        .invalid { color: #e74c3c; border: 1px solid #e74c3c; padding: 10px; border-radius: 5px; background: #fdf2f2; }
+        .hidden { display: none; }
+    </style>
 </head>
-<body>
-  <h2>Register as Admin</h2>
+<>
+    <div class="registration-container">
+        <h2><i class="fa-solid fa-user-tie"></i> Register as Admin</h2>
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <p class="flash {{ category }}">{{ message }}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="flash {{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-  <form method="POST" enctype="multipart/form-data">
-    <label for="username">Username:<span class="required-mark">*</span></label>
-    <input type="text" id="username" name="username" required /><br/>
+        <form method="POST" enctype="multipart/form-data" id="adminForm">
+            <label for="username">Username:<span class="required-mark">*</span></label>
+            <input type="text" id="username" name="username" required /><br/>
 
-    <label for="password">Password:<span class="required-mark">*</span></label>
-    <input type="password" id="password" name="password" required minlength="8" /><br/>
+            <label for="password">Password:<span class="required-mark">*</span></label>
+            <input type="password" id="password" name="password" required minlength="8" /><br/>
 
-    <label for="confirm_password">Confirm Password:<span class="required-mark">*</span></label>
-    <input type="password" id="confirm_password" name="confirm_password" required minlength="8" /><br/>
+            <label for="confirm_password">Confirm Password:<span class="required-mark">*</span></label>
+            <input type="password" id="confirm_password" name="confirm_password" required minlength="8" /><br/>
 
-    <label for="age">Age (must be over 21):<span class="required-mark">*</span></label>
-    <input type="number" id="age" name="age" min="22" required /><br/>
+            <label for="age">Age (must be over 21):<span class="required-mark">*</span></label>
+            <input type="number" id="age" name="age" min="22" required /><br/>
 
-    <label for="profile_pic">Profile Picture (optional):</label>
-    <input type="file" id="profile_pic" name="profile_pic" accept="image/*" /><br/>
+            <div class="verification-header">
+                <h3><i class="fa-solid fa-id-card"></i> Identity & Shop Verification</h3>
+            </div>
+            <p class="help-text">Our AI will scan your document to verify it is an original Voter ID card.</p>
 
-    <button type="submit">Register</button>
-</form>
+            <label for="shop_name">Shop Name:<span class="required-mark">*</span></label>
+            <input type="text" id="shop_name" name="shop_name" placeholder="e.g. Hyderabad Tailoring Center" required /><br/>
 
-  <a href="{{ url_for('home') }}">Back to Home</a>
+            <label for="voter_id">Voter ID Number:<span class="required-mark">*</span></label>
+            <input type="text" id="voter_id" name="voter_id" placeholder="Enter your Voter ID" required /><br/>
+
+            <label for="verification_doc">Verification Proof (Voter ID Card):<span class="required-mark">*</span></label>
+            <input type="file" id="verification_doc" name="verification_doc" accept="image/*" required onchange="scanDocument(this)" />
+            
+            <div id="scan-container" class="hidden" style="margin-top: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
+    <div id="scan-status">Preparing AI Engine...</div>
+    
+    <div id="progress-wrapper" style="width: 100%; background: #eee; height: 10px; border-radius: 10px; margin-top: 8px; overflow: hidden;">
+        <div id="progress-bar" style="width: 0%; background: linear-gradient(90deg, #3498db, #2ecc71); height: 100%; transition: width 0.3s ease;"></div>
+    </div>
+</div>
+
+<p id="voter-error" class="invalid hidden" style="margin-top: 10px;">
+    <i class="fas fa-exclamation-triangle"></i> <strong>Invalid Document!</strong> Please upload a clear photo of your physical Voter ID card. Mobile screen photos or random images are not allowed.
+</p>
+
+            <br/><br/>
+            <label for="profile_pic">Profile Picture (optional):</label>
+            <input type="file" id="profile_pic" name="profile_pic" accept="image/*" /><br/>
+
+            <button type="submit" id="submitBtn" class="btn-register" disabled>Save & Submit for Verification</button>
+        </form>
+
+        <div class="footer-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house"></i> Back to Home</a>
+        </div>
+    </div>
+<script
+    function scanDocument(input) {
+    const file = input.files[0];
+    const container = document.getElementById('scan-container');
+    const status = document.getElementById('scan-status');
+    const bar = document.getElementById('progress-bar');
+    const errorMsg = document.getElementById('voter-error');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (!file) return;
+
+    // 1. Setup UI for "Processing Mode"
+    container.classList.remove('hidden');
+    errorMsg.classList.add('hidden');
+    status.className = "scanning";
+    status.innerHTML = "Initializing AI Engine...";
+    bar.style.width = "0%";
+    submitBtn.disabled = true;
+
+    // 2. Start OCR with Logger
+    Tesseract.recognize(
+        file,
+        'eng',
+        { 
+            logger: m => {
+                if (m.status === 'recognizing text') {
+                    // Update progress bar based on 0.0 to 1.0 scale
+                    let percentage = Math.floor(m.progress * 100);
+                    bar.style.width = percentage + "%";
+                    status.innerText = "Scanning Document: " + percentage + "% Complete";
+                } else {
+                    status.innerText = m.status + "...";
+                }
+            }
+        }
+    ).then(({ data: { text } }) => {
+        const scannedText = text.toUpperCase();
+        console.log("Extracted Text:", scannedText);
+
+        // 3. Validation Logic
+        const keywords = ["ELECTION", "COMMISSION", "INDIA", "VOTER", "ELECTOR", "CARD"];
+        const isValid = keywords.some(word => scannedText.includes(word));
+
+        if (isValid) {
+            status.innerHTML = '<span style="color: #27ae60;"><i class="fas fa-check-circle"></i> ID Verified Successfully!</span>';
+            bar.style.background = "#27ae60";
+            submitBtn.disabled = false;
+        } else {
+            container.classList.add('hidden');
+            errorMsg.classList.remove('hidden');
+            input.value = ""; // Force them to pick a new file
+            submitBtn.disabled = true;
+        }
+    }).catch(err => {
+        status.innerText = "Error scanning image. Please use a clearer photo.";
+        console.error(err);
+    });
+}
+</script>
 </body>
 </html>

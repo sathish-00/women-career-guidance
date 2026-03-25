@@ -3,93 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Career Guide: {{ job.name }}</title>
+    <title>AI Career Guide: {{ job.name.capitalize() }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='guidance_style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='career_interests.css') }}">
+    
+    <style>
+        /* Speech Recognition Styles */
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 5px 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        #user-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 10px;
+        }
+
+        #chat-mic-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #000; /* Solid black mic */
+            padding: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        /* Pulsing red animation when listening */
+        .listening-active {
+            color: #d93025 !important;
+            animation: mic-pulse 1.5s infinite;
+        }
+
+        @keyframes mic-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="guide-title">AI Career Guide: {{ job.name.capitalize() }}</h1>
-        <p class="summary-intro">This interactive assistant provides real-time guidance based on your questions about the skills required for **{{ job.name }}**.</p>
+        <h1 class="guide-title">{{ job.name.capitalize() }}</h1>
         
-        <div id="chat-window">
-            <div class="message ai-message">
-                <span class="user-label">AI Guide:</span>
-                Hello! I am your AI Career Assistant. Ask me anything about the skills required for **{{ job.name }}** or how to crack the interview.
+        <div class="job-info-card shadow-sm p-4 mb-4 bg-white rounded">
+            <h3><i class="fa-solid fa-briefcase text-primary"></i> About this Role</h3>
+            <p>{{ job.description }}</p>
+            <hr>
+            <h5><i class="fa-solid fa-lightbulb text-warning"></i> Skills You Need:</h5>
+            <div class="skills-container mt-2">
+                {% for skill in job.skills_required.split(',') %}
+                    <span class="badge badge-pill badge-info p-2 m-1">{{ skill.strip() }}</span>
+                {% endfor %}
             </div>
-            </div>
-
-        <div class="chat-input-area">
-            <input type="text" id="user-input" placeholder="Ask a question about this career...">
-            <button id="send-button">Send</button>
         </div>
-<br>
-        <a href="{{ url_for('career_options') }}" class="back-link">← Back to  Career Options</a>
+
+        <p class="summary-intro text-center">Need more details? Our AI Assistant is ready to help you prepare for this career!</p>
+        
+        <br>
+        <a href="{{ url_for('career_options') }}" class="back-link">← Back to Career Options</a>
     </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const chatWindow = document.getElementById('chat-window');
-    const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-
-    function displayMessage(sender, message, isLink = false, url = null) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}-message`;
-        
-        if (isLink) {
-            messageDiv.innerHTML = `<span class="user-label">AI Guide:</span> ${message} <br><a href="${url}" target="_blank" class="chat-link">Click here to search Google</a>`;
-        } else {
-            messageDiv.innerHTML = `<span class="user-label">${sender === 'user' ? 'You' : 'AI Guide'}:</span> ${message}`;
-        }
-
-        chatWindow.appendChild(messageDiv);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    async function sendMessage() {
-        const message = userInput.value.trim();
-        if (message === "") return;
-
-        displayMessage('user', message);
-        userInput.value = '';
-
-        try {
-            const response = await fetch('{{ url_for("chat") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message: message })
-            });
+    <div id="chat-container" class="chat-container">
+        <div class="chat-header" onclick="toggleChat()">
+           <span><i class="fa-solid fa-robot"></i> AI Assistant</span>
+            <button id="close-chat">_</button>
+        </div>
+        <div id="chat-box" class="chat-box">
+            <div class="message ai-message">
+                Hello! I'm your mentor for **{{ job.name }}**. 
+                Ask me about interview questions, where to learn these skills, or what a typical workday looks like!
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Ask about {{ job.name }}...">
             
-            const data = await response.json();
+            <button id="chat-mic-btn" type="button" title="Voice Input">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
 
-            // --- CRITICAL FIX: Handle structured JSON response ---
-            if (data.action === 'link') {
-                displayMessage('ai', data.message, true, data.url);
-            } else if (data.action === 'message') {
-                displayMessage('ai', data.response);
-            } else {
-                 // Fallback for any unknown structure or direct text responses
-                 displayMessage('ai', data.response || 'Unknown response format.');
+            <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='career_interests.js') }}"></script>
+    <script>
+        // Handle Enter key for sending messages
+        document.getElementById('user-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
-            // --- End of Fix ---
+        });
 
-        } catch (error) {
-            console.error('Chat API Error:', error);
-            displayMessage('ai', 'Sorry, I ran into a technical error while processing your request.');
-        }
-    }
+        // Speech Recognition Logic
+        const micBtn = document.getElementById('chat-mic-btn');
+        const micIcon = micBtn.querySelector('i');
+        const inputField = document.getElementById('user-input');
 
-    sendButton.addEventListener('click', sendMessage);
-    userInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            sendMessage();
-            e.preventDefault();
-        }
-    });
-});
-</script>
+        micBtn.addEventListener('click', function() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    micIcon.classList.add('listening-active');
+                    inputField.placeholder = "Listening...";
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    inputField.value = transcript;
+                };
+
+                recognition.onend = () => {
+                    micIcon.classList.remove('listening-active');
+                    inputField.placeholder = "Ask about {{ job.name }}...";
+                };
+
+                recognition.onerror = (event) => {
+                    console.error("Speech Recognition Error: ", event.error);
+                    micIcon.classList.remove('listening-active');
+                };
+
+                recognition.start();
+            } else {
+                alert("Speech recognition is not supported in this browser. Please use Chrome.");
+            }
+        });
+    </script>
 </body>
 </html>
