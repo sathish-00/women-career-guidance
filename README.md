@@ -87,6 +87,8 @@ project/
 
 #Screenshots
 -----------------------------------------------------
+<img width="1536" height="1024" alt="ChatGPT Image Jul 12, 2026, 11_16_27 PM" src="https://github.com/user-attachments/assets/ffe53909-14ee-4746-a97b-a48d1895870c" />
+
 <img width="2048" height="1048" alt="home" src="https://github.com/user-attachments/assets/493d3837-7eed-48ef-b829-8be666082d1f" />
 <img width="1703" height="903" alt="admin-register" src="https://github.com/user-attachments/assets/ac198b3c-47b7-4ad6-8952-8c773a080052" />
 <img width="1500" height="930" alt="admin-register1" src="https://github.com/user-attachments/assets/ed912983-650d-4226-8176-69ecb15242c6" />
