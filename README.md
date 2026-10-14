@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="https://github.com/user-attachments/assets/ffe53909-14ee-4746-a97b-a48d1895870c" alt="Rural Women's Career Guidance Platform" width="700"/>
+<img src="https://github.com/user-attachments/assets/ffe53909-14ee-4746-a97b-a48d1895870c" alt="Rural Women's Job Discovery & Career Guidance Platform" width="700"/>
 
-# 🌾 Rural Women's Career Guidance Platform
+# 🌾 Rural Women's Job Discovery & Career Guidance Platform
 
-**An AI-powered full-stack web app that connects rural women with jobs, career guidance, and skill-building resources.**
+**An AI-powered full-stack platform that helps rural women discover jobs matched to their skills, prepare for interviews, and learn new skills through guided career support.**
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://women-career-guidance.onrender.com)
 ![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python&logoColor=white)
@@ -22,12 +22,18 @@
 
 ## 📌 Overview
 
-Many women in rural areas lack access to reliable career guidance, job listings, and skill-development resources. This platform brings them together in one place:
+Women in rural areas often lack access to job listings, career advice, and skill-building resources. This platform brings them together in one place:
 
-- **Job seekers** register, pick their skills, get matched jobs, and apply with a resume.
-- **Admins** post vacancies and review applicants.
-- **An AI assistant** answers career questions, suggests skills, and gives interview tips.
-- **Curated videos** help users learn new skills.
+- **Job seekers** register, select their skills, receive matched job recommendations, and apply with a resume.
+- **Admins** post vacancies, track applications, and review applicants.
+- **A Gemini-powered AI assistant** gives career guidance, interview preparation, skill suggestions, and career-path advice.
+- **Curated YouTube videos** help users learn new skills.
+
+### 💡 The Problem
+Limited awareness of suitable jobs, little access to career mentors, and few affordable learning resources keep many rural women out of formal employment.
+
+### ✅ The Solution
+A single, easy-to-use web platform that matches users to relevant jobs, guides them with AI, and points them to free learning content, while giving employers and admins simple tools to manage vacancies and applicants.
 
 ---
 
@@ -35,24 +41,26 @@ Many women in rural areas lack access to reliable career guidance, job listings,
 
 ### 👩‍💼 For Users
 - Secure registration and login
-- Personalized job recommendations based on selected skills
+- Skill selection during registration
+- Personalized job recommendations based on skills
 - Skill-based job filtering
 - Apply for jobs with resume upload
-- Dashboard with relevant opportunities
+- Dashboard showing relevant opportunities
 - AI Career Assistant for guidance
-- Career and skill videos via the YouTube Data API
+- Career and skill-learning videos via the YouTube Data API
 - Downloadable PDF application receipts
 
 ### 🏢 For Admins
 - Admin registration with a verification system
 - Post, edit, and delete job listings
+- Vacancy management
 - Dashboard with vacancy tracking and applications received
-- View applicants and their resumes
+- View applicants and review their resumes
 
 ### 🤖 AI Assistant
 - Career guidance chatbot powered by the **Google Gemini API**
 - Suggests skills, career paths, and interview tips
-- Fallback search when the AI cannot answer
+- Fallback search when the AI cannot give a direct answer
 
 ---
 
@@ -68,6 +76,7 @@ Many women in rural areas lack access to reliable career guidance, job listings,
 | Video | YouTube Data API |
 | Security | reCAPTCHA, password hashing |
 | PDF generation | WeasyPrint |
+| Deployment | Render |
 
 ---
 
@@ -79,13 +88,14 @@ Many women in rural areas lack access to reliable career guidance, job listings,
 4. Users apply and upload resumes.
 5. The AI chatbot provides career guidance.
 6. Users learn new skills through recommended videos.
+7. Users download a PDF receipt for each application.
 
 ---
 
 ## 📂 Project Structure
 
 ```
-career_guide/
+rural-women-career-platform/
 ├── app.py            # Main Flask application
 ├── templates/        # HTML templates
 ├── static/           # CSS, JS, images
@@ -108,8 +118,8 @@ career_guide/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/sathish-00/YOUR-REPO-NAME.git
-cd YOUR-REPO-NAME
+git clone https://github.com/sathish-00/rural-women-career-platform.git
+cd rural-women-career-platform
 
 # 2. (Recommended) Create a virtual environment
 python -m venv venv
@@ -183,6 +193,7 @@ RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
 - Password hashing
 - reCAPTCHA protection on forms
 - Role-based access control (user vs. admin)
+- Admin accounts require verification
 
 ---
 
@@ -193,7 +204,7 @@ RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
 - [ ] Real-time job notifications
 - [ ] Advanced AI-based job recommendations
 - [ ] Mobile application
-- [ ] Persistent cloud storage and PostgreSQL for production
+- [ ] PostgreSQL and persistent cloud storage for production use
 
 ---
 
@@ -211,14 +222,17 @@ Contributions, issues, and feature requests are welcome!
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE). *(Add a `LICENSE` file to your repo, or remove this section.)*
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
 ## 🙌 Author
 
-**Sathish**
-GitHub: [@sathish-00](https://github.com/sathish-00)
+**Sathish Kodari**
+Computer Science student, Vardhaman College of Engineering
+
+[![GitHub](https://img.shields.io/badge/GitHub-sathish--00-181717?style=flat&logo=github)](https://github.com/sathish-00)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-sathish--kodari00-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/sathish-kodari00)
 
 <div align="center">
 
