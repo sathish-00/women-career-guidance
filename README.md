@@ -1,125 +1,227 @@
+<div align="center">
+
+<img src="https://github.com/user-attachments/assets/ffe53909-14ee-4746-a97b-a48d1895870c" alt="Rural Women's Career Guidance Platform" width="700"/>
+
 # 🌾 Rural Women's Career Guidance Platform
 
-Live:https://women-career-guidance.onrender.com
+**An AI-powered full-stack web app that connects rural women with jobs, career guidance, and skill-building resources.**
 
-> 🚀 A full-stack AI-powered web application that provides career guidance, job opportunities, and skill-based learning for rural women.
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://women-career-guidance.onrender.com)
+![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-Backend-000000?style=for-the-badge&logo=flask&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![Gemini](https://img.shields.io/badge/Google-Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)
+
+[Live Demo](https://women-career-guidance.onrender.com) · [Features](#-features) · [Getting Started](#-getting-started) · [Screenshots](#-screenshots)
+
+</div>
+
+> ⏳ **Note:** The demo is hosted on a free tier, so the first load may take 30–60 seconds while the server wakes up.
 
 ---
 
 ## 📌 Overview
-This project is designed to empower rural women by connecting them with job opportunities, career guidance, and skill development resources. The platform uses AI assistance, job filtering, and admin-based job postings to create a complete career ecosystem.
+
+Many women in rural areas lack access to reliable career guidance, job listings, and skill-development resources. This platform brings them together in one place:
+
+- **Job seekers** register, pick their skills, get matched jobs, and apply with a resume.
+- **Admins** post vacancies and review applicants.
+- **An AI assistant** answers career questions, suggests skills, and gives interview tips.
+- **Curated videos** help users learn new skills.
 
 ---
 
 ## 🎯 Features
 
-### 👩‍💼 User Features
-- Secure Registration & Login system  
-- Personalized job recommendations based on skills  
-- Apply for jobs with resume upload  
-- Dashboard showing relevant opportunities  
-- Skill-based job filtering system  
-- AI Career Assistant for guidance  
-- Career videos using YouTube API  
-- Download application receipts (PDF)  
+### 👩‍💼 For Users
+- Secure registration and login
+- Personalized job recommendations based on selected skills
+- Skill-based job filtering
+- Apply for jobs with resume upload
+- Dashboard with relevant opportunities
+- AI Career Assistant for guidance
+- Career and skill videos via the YouTube Data API
+- Downloadable PDF application receipts
 
----
+### 🏢 For Admins
+- Admin registration with a verification system
+- Post, edit, and delete job listings
+- Dashboard with vacancy tracking and applications received
+- View applicants and their resumes
 
-### 🏢 Admin Features
-- Admin registration with verification system  
-- Job posting and vacancy management  
-- Admin dashboard with:
-  - Vacancy tracking  
-  - Applications received  
-- Edit/Delete job postings  
-- View applicants and resumes  
-
----
-
-### 🤖 AI Features
-- AI chatbot for career guidance (Gemini API)  
-- Suggests skills, interview tips, and career paths  
-- Smart responses with fallback search  
+### 🤖 AI Assistant
+- Career guidance chatbot powered by the **Google Gemini API**
+- Suggests skills, career paths, and interview tips
+- Fallback search when the AI cannot answer
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend:** Flask (Python)  
-- **Database:** SQLite  
-- **Frontend:** HTML, CSS, JavaScript  
-- **Authentication:** Flask-Login  
-- **AI Integration:** Google Gemini API  
-- **Video Integration:** YouTube Data API  
-- **Security:** reCAPTCHA, password hashing  
-- **PDF Generation:** WeasyPrint  
+| Layer | Technology |
+|---|---|
+| Backend | Flask (Python) |
+| Database | SQLite |
+| Frontend | HTML, CSS, JavaScript |
+| Authentication | Flask-Login |
+| AI | Google Gemini API |
+| Video | YouTube Data API |
+| Security | reCAPTCHA, password hashing |
+| PDF generation | WeasyPrint |
 
 ---
 
 ## 🧠 How It Works
 
-1. Users register and select their skills  
-2. System matches jobs based on skills  
-3. Admins post jobs and manage vacancies  
-4. Users apply for jobs and upload resumes  
-5. AI chatbot helps users with career guidance  
-6. Users can learn skills through video recommendations  
+1. Users register and select their skills.
+2. The system matches jobs to those skills.
+3. Admins post jobs and manage vacancies.
+4. Users apply and upload resumes.
+5. The AI chatbot provides career guidance.
+6. Users learn new skills through recommended videos.
 
 ---
 
 ## 📂 Project Structure
-project/
-│── app.py
-│── templates/
-│── static/
-│── uploads/
-│── database/
 
+```
+career_guide/
+├── app.py            # Main Flask application
+├── templates/        # HTML templates
+├── static/           # CSS, JS, images
+├── uploads/          # Uploaded resumes
+├── database/         # SQLite database
+├── requirements.txt  # Python dependencies
+└── .env.example      # Environment variable template
+```
 
 ---
 
-## 🚀 How to Run the Project
---------------------------------------------------------
-1. Clone the repository
-2.git clone https://github.com/yourusername/project-name.git
-3.cd carrer_guide
-4.pip install -r requirements.txt
-5.python app.py
-6.http://127.0.0.1:5000
+## 🚀 Getting Started
 
-#Screenshots
------------------------------------------------------
-<img width="1536" height="1024" alt="ChatGPT Image Jul 12, 2026, 11_16_27 PM" src="https://github.com/user-attachments/assets/ffe53909-14ee-4746-a97b-a48d1895870c" />
+### Prerequisites
+- Python 3.9+
+- API keys for Google Gemini, YouTube Data API, and Google reCAPTCHA
+- System libraries required by WeasyPrint ([installation guide](https://doc.courtbouillon.org/weasyprint/stable/first_steps.html))
 
-<img width="2048" height="1048" alt="home" src="https://github.com/user-attachments/assets/493d3837-7eed-48ef-b829-8be666082d1f" />
-<img width="1703" height="903" alt="admin-register" src="https://github.com/user-attachments/assets/ac198b3c-47b7-4ad6-8952-8c773a080052" />
-<img width="1500" height="930" alt="admin-register1" src="https://github.com/user-attachments/assets/ed912983-650d-4226-8176-69ecb15242c6" />
-<img width="1919" height="965" alt="admin-dashboard" src="https://github.com/user-attachments/assets/0b8323ca-2d3e-4600-8237-1b895498b3f8" />
-<img width="1882" height="560" alt="admin-dashboard1" src="https://github.com/user-attachments/assets/617f37e4-ab7a-4c10-99c9-e0184e1544a1" />
-<img width="1913" height="955" alt="applications" src="https://github.com/user-attachments/assets/420ba6c8-7fba-44c3-8370-0e0e3dd9f8d5" />
-<img width="1833" height="950" alt="career-options" src="https://github.com/user-attachments/assets/e1d76742-bdbd-42d8-a224-574694479e83" />
-<img width="1896" height="965" alt="AI-Assistant-Chatbot" src="https://github.com/user-attachments/assets/5d5f0716-9c24-4c00-8551-69d4abb4685b" />
-<img width="1918" height="966" alt="AI-Chatbot" src="https://github.com/user-attachments/assets/34f4b789-032a-4127-a291-6e7c644ee324" />
-<img width="1880" height="951" alt="register" src="https://github.com/user-attachments/assets/ade09f74-c809-4d24-ac6c-fe3ccfadebf4" />
-<img width="1910" height="857" alt="register1" src="https://github.com/user-attachments/assets/7144fe70-ee7c-4783-b40d-6b7e43599e5b" />
-<img width="1899" height="949" alt="contact-us" src="https://github.com/user-attachments/assets/c4a85a39-dd7a-4943-b01f-0589f2b379c2" />
+### Installation
 
+```bash
+# 1. Clone the repository
+git clone https://github.com/sathish-00/YOUR-REPO-NAME.git
+cd YOUR-REPO-NAME
 
-🔐 Security Features
----------------------------------
-Password hashing
-reCAPTCHA protection
-Role-based authentication
+# 2. (Recommended) Create a virtual environment
+python -m venv venv
+source venv/bin/activate        # On Windows: venv\Scripts\activate
 
-🎯 Future Improvements
-------------------------------------------
-Mobile application
-Real-time job notifications
-Advanced AI recommendations
-Multi-language support
+# 3. Install dependencies
+pip install -r requirements.txt
 
-🙌 Author
-------------------------------------------------
-Sathish
-GitHub: https://github.com/sathish-00
+# 4. Set up environment variables
+cp .env.example .env            # Then add your API keys
 
+# 5. Run the app
+python app.py
+```
+
+Open **http://127.0.0.1:5000** in your browser.
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+SECRET_KEY=your_flask_secret_key
+GEMINI_API_KEY=your_gemini_api_key
+YOUTUBE_API_KEY=your_youtube_api_key
+RECAPTCHA_SITE_KEY=your_recaptcha_site_key
+RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
+```
+
+> ⚠️ Never commit your `.env` file or API keys. Add `.env` and the database file to `.gitignore`.
+
+---
+
+## 📸 Screenshots
+
+| Home | Register |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/493d3837-7eed-48ef-b829-8be666082d1f" width="400"/> | <img src="https://github.com/user-attachments/assets/ade09f74-c809-4d24-ac6c-fe3ccfadebf4" width="400"/> |
+
+| Career Options | AI Assistant |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/e1d76742-bdbd-42d8-a224-574694479e83" width="400"/> | <img src="https://github.com/user-attachments/assets/5d5f0716-9c24-4c00-8551-69d4abb4685b" width="400"/> |
+
+| Admin Dashboard | Applications |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/0b8323ca-2d3e-4600-8237-1b895498b3f8" width="400"/> | <img src="https://github.com/user-attachments/assets/420ba6c8-7fba-44c3-8370-0e0e3dd9f8d5" width="400"/> |
+
+<details>
+<summary><b>View more screenshots</b></summary>
+
+<br>
+
+| Admin Registration | Admin Dashboard (Vacancies) |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/ac198b3c-47b7-4ad6-8952-8c773a080052" width="400"/> | <img src="https://github.com/user-attachments/assets/617f37e4-ab7a-4c10-99c9-e0184e1544a1" width="400"/> |
+
+| AI Chatbot | Register (Skills) |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/34f4b789-032a-4127-a291-6e7c644ee324" width="400"/> | <img src="https://github.com/user-attachments/assets/7144fe70-ee7c-4783-b40d-6b7e43599e5b" width="400"/> |
+
+| Admin Registration (Verification) | Contact Us |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/ed912983-650d-4226-8176-69ecb15242c6" width="400"/> | <img src="https://github.com/user-attachments/assets/c4a85a39-dd7a-4943-b01f-0589f2b379c2" width="400"/> |
+
+</details>
+
+---
+
+## 🔐 Security
+
+- Password hashing
+- reCAPTCHA protection on forms
+- Role-based access control (user vs. admin)
+
+---
+
+## 🔮 Future Improvements
+
+- [ ] Multi-language support (Telugu, Hindi, and more)
+- [ ] Voice input for the AI chatbot
+- [ ] Real-time job notifications
+- [ ] Advanced AI-based job recommendations
+- [ ] Mobile application
+- [ ] Persistent cloud storage and PostgreSQL for production
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m "Add your feature"`
+4. Push to the branch: `git push origin feature/your-feature`
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE). *(Add a `LICENSE` file to your repo, or remove this section.)*
+
+---
+
+## 🙌 Author
+
+**Sathish**
+GitHub: [@sathish-00](https://github.com/sathish-00)
+
+<div align="center">
+
+⭐ If you found this project useful, consider giving it a star!
+
+</div>
