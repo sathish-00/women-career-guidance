@@ -2,9 +2,9 @@
 
 <img src="https://github.com/user-attachments/assets/ffe53909-14ee-4746-a97b-a48d1895870c" alt="Rural Women's Job Discovery & Career Guidance Platform" width="700"/>
 
-# 🌾 Rural Women's Job Discovery & Career Guidance Platform
+# Rural Women's Job Discovery & Career Guidance Platform
 
-**An AI-powered full-stack platform that helps rural women discover jobs matched to their skills, prepare for interviews, and learn new skills through guided career support.**
+**An AI-powered full-stack platform that helps rural women discover the latest jobs matched to their skills, prepare for interviews, and learn new skills through guided career support.**
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://women-career-guidance.onrender.com)
 ![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python&logoColor=white)
@@ -12,15 +12,15 @@
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Gemini](https://img.shields.io/badge/Google-Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)
 
-[Live Demo](https://women-career-guidance.onrender.com) · [Features](#-features) · [Getting Started](#-getting-started) · [Screenshots](#-screenshots)
+[Live Demo](https://women-career-guidance.onrender.com) · [Aim](#aim) · [Features](#features) · [Getting Started](#getting-started) · [Screenshots](#screenshots)
 
 </div>
 
-> ⏳ **Note:** The demo is hosted on a free tier, so the first load may take 30–60 seconds while the server wakes up.
+> **Note:** The demo is hosted on a free tier, so the first load may take 30-60 seconds while the server wakes up.
 
 ---
 
-## 📌 Overview
+## Overview
 
 Women in rural areas often lack access to job listings, career advice, and skill-building resources. This platform brings them together in one place:
 
@@ -29,42 +29,58 @@ Women in rural areas often lack access to job listings, career advice, and skill
 - **A Gemini-powered AI assistant** gives career guidance, interview preparation, skill suggestions, and career-path advice.
 - **Curated YouTube videos** help users learn new skills.
 
-### 💡 The Problem
-Limited awareness of suitable jobs, little access to career mentors, and few affordable learning resources keep many rural women out of formal employment.
+---
 
-### ✅ The Solution
-A single, easy-to-use web platform that matches users to relevant jobs, guides them with AI, and points them to free learning content, while giving employers and admins simple tools to manage vacancies and applicants.
+## Aim
+
+The aim of this project is to **empower rural women with equal access to employment and career growth** by:
+
+- Making relevant, up-to-date job opportunities easy to find, with no long searches through outdated listings.
+- Matching women to jobs that fit their skills, so they apply with confidence.
+- Keeping the job board accurate: once a vacancy is filled, the post is **automatically removed**, so users never waste time on positions that are no longer open.
+- Offering personalized career advice and interview preparation through AI.
+- Helping women build new skills through free, guided learning resources.
+- Giving admins and employers simple tools to post jobs, manage vacancies, and review applicants.
+
+### The Problem
+Limited awareness of suitable jobs, outdated or closed listings, little access to career mentors, and few affordable learning resources keep many rural women out of formal employment.
+
+### The Solution
+A single, easy-to-use web platform that shows only the **latest open vacancies**, filters them by skill, guides users with AI, and points them to free learning content, while giving admins simple tools to manage the full hiring flow.
 
 ---
 
-## 🎯 Features
+## Features
 
-### 👩‍💼 For Users
+### For Users
 - Secure registration and login
 - Skill selection during registration
-- Personalized job recommendations based on skills
-- Skill-based job filtering
+- Personalized job recommendations based on selected skills
+- Latest job vacancies shown first, with only open positions displayed
+- Smart filtering to narrow jobs by skill and other criteria
 - Apply for jobs with resume upload
 - Dashboard showing relevant opportunities
 - AI Career Assistant for guidance
 - Career and skill-learning videos via the YouTube Data API
 - Downloadable PDF application receipts
 
-### 🏢 For Admins
+### For Admins
 - Admin registration with a verification system
 - Post, edit, and delete job listings
-- Vacancy management
+- Vacancy management with a set number of openings per post
+- **Automatic post removal:** when all vacancies for a job are filled, the post is deleted automatically, keeping the board current
 - Dashboard with vacancy tracking and applications received
 - View applicants and review their resumes
 
-### 🤖 AI Assistant
+### AI Assistant
 - Career guidance chatbot powered by the **Google Gemini API**
 - Suggests skills, career paths, and interview tips
 - Fallback search when the AI cannot give a direct answer
+- **In progress:** deeper LLM integration to give more personalized, context-aware career advice based on each user's skills, goals, and applications
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -72,7 +88,7 @@ A single, easy-to-use web platform that matches users to relevant jobs, guides t
 | Database | SQLite |
 | Frontend | HTML, CSS, JavaScript |
 | Authentication | Flask-Login |
-| AI | Google Gemini API |
+| AI / LLM | Google Gemini API |
 | Video | YouTube Data API |
 | Security | reCAPTCHA, password hashing |
 | PDF generation | WeasyPrint |
@@ -80,19 +96,20 @@ A single, easy-to-use web platform that matches users to relevant jobs, guides t
 
 ---
 
-## 🧠 How It Works
+## How It Works
 
 1. Users register and select their skills.
-2. The system matches jobs to those skills.
-3. Admins post jobs and manage vacancies.
-4. Users apply and upload resumes.
-5. The AI chatbot provides career guidance.
-6. Users learn new skills through recommended videos.
-7. Users download a PDF receipt for each application.
+2. The system matches jobs to those skills and shows the latest open vacancies first.
+3. Users filter the listings to find the best fit.
+4. Admins post jobs and set the number of vacancies.
+5. Users apply and upload resumes.
+6. Admins review applicants and select candidates.
+7. Once all vacancies are filled, the job post is automatically removed.
+8. The AI chatbot and learning videos support users with career advice and skill-building throughout.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 rural-women-career-platform/
@@ -107,7 +124,7 @@ rural-women-career-platform/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.9+
@@ -137,23 +154,9 @@ python app.py
 
 Open **http://127.0.0.1:5000** in your browser.
 
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```env
-SECRET_KEY=your_flask_secret_key
-GEMINI_API_KEY=your_gemini_api_key
-YOUTUBE_API_KEY=your_youtube_api_key
-RECAPTCHA_SITE_KEY=your_recaptcha_site_key
-RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
-```
-
-> ⚠️ Never commit your `.env` file or API keys. Add `.env` and the database file to `.gitignore`.
-
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 | Home | Register |
 |:---:|:---:|
@@ -188,7 +191,7 @@ RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
 
 ---
 
-## 🔐 Security
+## Security
 
 - Password hashing
 - reCAPTCHA protection on forms
@@ -197,8 +200,9 @@ RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
+- [ ] Complete the advanced LLM integration for personalized career advice (in progress)
 - [ ] Multi-language support (Telugu, Hindi, and more)
 - [ ] Voice input for the AI chatbot
 - [ ] Real-time job notifications
@@ -208,9 +212,9 @@ RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions, issues, and feature requests are welcome!
+Contributions, issues, and feature requests are welcome.
 
 1. Fork the repository
 2. Create your feature branch: `git checkout -b feature/your-feature`
@@ -220,13 +224,13 @@ Contributions, issues, and feature requests are welcome!
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-## 🙌 Author
+## Author
 
 **Sathish Kodari**
 Computer Science student, Vardhaman College of Engineering
@@ -236,6 +240,6 @@ Computer Science student, Vardhaman College of Engineering
 
 <div align="center">
 
-⭐ If you found this project useful, consider giving it a star!
+If you found this project useful, consider giving it a star.
 
 </div>
